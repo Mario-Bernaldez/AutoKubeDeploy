@@ -16,16 +16,134 @@
         <h3>Pod Template</h3>
         {{ pod_form.as_p }}
 
-        <h3>Container</h3>
-        {{ container_form.as_p }}
+        <h3>Containers</h3>
+        {{ container_formset.management_form }}
+        <div id="containers-form-container">
+            {% for form in container_formset %}
+                <div class="container-form">
+                    {{ form.as_p }}
+                    <button type="button" class="remove-form" data-prefix="containers">Eliminar contenedor</button>
+                </div>
+            {% endfor %}
+        </div>
+        <button type="button" id="add-container">Añadir otro contenedor</button>
 
-        <h3>Volume Mount</h3>
-        {{ volume_mount_form.as_p }}
+        <h3>Volumes</h3>
+        {{ volume_formset.management_form }}
+        <div id="volumes-form-container">
+            {% for form in volume_formset %}
+                <div class="volume-form">
+                    {{ form.as_p }}
+                    <button type="button" class="remove-form" data-prefix="volumes">Eliminar volumen</button>
+                </div>
+            {% endfor %}
+        </div>
+        <button type="button" id="add-volume">Añadir otro volumen</button>
 
-        <h3>Volume</h3>
-        {{ volume_form.as_p }}
+        <h3>Volume Mounts</h3>
+        {{ volume_mount_formset.management_form }}
+        <div id="volume_mounts-form-container">
+            {% for form in volume_mount_formset %}
+                <div class="volume_mount-form">
+                    {{ form.as_p }}
+                    <button type="button" class="remove-form" data-prefix="volume_mounts">Eliminar volume mount</button>
+                </div>
+            {% endfor %}
+        </div>
+        <button type="button" id="add-volume_mount">Añadir otro volume mount</button>
 
         <button type="submit">Generate JSON</button>
     </form>
+
+    <!-- Formularios vacíos ocultos para clonación -->
+    <div id="containers-empty-form" style="display: none;">
+        <div class="container-form">
+            {{ container_formset.empty_form.as_p }}
+            <button type="button" class="remove-form" data-prefix="containers">Eliminar contenedor</button>
+        </div>
+    </div>
+    <div id="volumes-empty-form" style="display: none;">
+        <div class="volume-form">
+            {{ volume_formset.empty_form.as_p }}
+            <button type="button" class="remove-form" data-prefix="volumes">Eliminar volumen</button>
+        </div>
+    </div>
+    <div id="volume_mounts-empty-form" style="display: none;">
+        <div class="volume_mount-form">
+            {{ volume_mount_formset.empty_form.as_p }}
+            <button type="button" class="remove-form" data-prefix="volume_mounts">Eliminar volume mount</button>
+        </div>
+    </div>
+
+    <script>
+        // Función para actualizar los índices de los formularios en un formset
+        function updateFormIndices(prefix) {
+            var container = document.getElementById(prefix + '-form-container');
+            var forms = container.children;
+            for (var i = 0; i < forms.length; i++) {
+                // RegExp para encontrar el índice en name e id
+                var regex = new RegExp(prefix + '-(\\d+)-');
+                var inputs = forms[i].querySelectorAll('input, select, textarea');
+                inputs.forEach(function(input) {
+                    if (input.name) {
+                        input.name = input.name.replace(regex, prefix + '-' + i + '-');
+                    }
+                    if (input.id) {
+                        input.id = input.id.replace(regex, 'id_' + prefix + '-' + i + '-');
+                    }
+                });
+            }
+            // Actualizar el valor TOTAL_FORMS en el management form
+            var totalFormsInput = document.getElementById('id_' + prefix + '-TOTAL_FORMS');
+            totalFormsInput.value = forms.length;
+        }
+
+        // Función para añadir un nuevo formulario al formset
+        function addForm(prefix) {
+            var totalForms = document.getElementById('id_' + prefix + '-TOTAL_FORMS');
+            var currentFormCount = parseInt(totalForms.value);
+            var emptyFormDiv = document.getElementById(prefix + '-empty-form');
+            var newFormHtml = emptyFormDiv.innerHTML.replace(/__prefix__/g, currentFormCount);
+            var formContainer = document.getElementById(prefix + '-form-container');
+            var newFormDiv = document.createElement('div');
+            newFormDiv.innerHTML = newFormHtml;
+            formContainer.appendChild(newFormDiv);
+            totalForms.value = currentFormCount + 1;
+        }
+
+        // Delegación de eventos para eliminar formularios en cada formset
+        function setupRemoveButtons(prefix) {
+            var container = document.getElementById(prefix + '-form-container');
+            container.addEventListener('click', function(e) {
+                if (e.target && e.target.classList.contains('remove-form')) {
+                    e.preventDefault();
+                    var formDiv = e.target.closest('.' + prefix.slice(0, -1) + '-form');
+                    if (formDiv) {
+                        formDiv.remove();
+                        updateFormIndices(prefix);
+                    }
+                }
+            });
+        }
+
+        // Configurar eventos de eliminación para cada formset
+        setupRemoveButtons('containers');
+        setupRemoveButtons('volumes');
+        setupRemoveButtons('volume_mounts');
+
+        // Eventos para agregar nuevos formularios
+        document.getElementById('add-container').addEventListener('click', function(e) {
+            e.preventDefault();
+            addForm('containers');
+        });
+        document.getElementById('add-volume').addEventListener('click', function(e) {
+            e.preventDefault();
+            addForm('volumes');
+        });
+        document.getElementById('add-volume_mount').addEventListener('click', function(e) {
+            e.preventDefault();
+            addForm('volume_mounts');
+        });
+    </script>
 </body>
 </html>
