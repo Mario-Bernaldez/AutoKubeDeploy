@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deployment Configuration</title>
+</head>
+<body>
+    <h2>Configure Your Kubernetes Deployment</h2>
+    <form method="post">
+        {% csrf_token %}
+        
+        <h3>Deployment</h3>
+        {{ deployment_form.as_p }}
+
+        <h3>Pod Template</h3>
+        {{ pod_form.as_p }}
+
+        <h3>Container</h3>
+        {{ container_form.as_p }}
+
+        <h3>Volume Mount</h3>
+        {{ volume_mount_form.as_p }}
+
+        <h3>Volume</h3>
+        {{ volume_form.as_p }}
+
+        <button type="submit">Generate JSON</button>
+    </form>
+</body>
+</html>
