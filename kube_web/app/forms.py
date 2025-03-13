@@ -1,5 +1,16 @@
 from django import forms
 
+class ObjectTypeForm(forms.Form):
+    object_type = forms.ChoiceField(
+        label="Select Object Type",
+        choices=[
+            ('deployment', 'Deployment'),
+            ('namespace', 'Namespace'),
+            ('service', 'Service')
+        ],
+        widget=forms.RadioSelect
+    )
+
 class DeploymentForm(forms.Form):
     name = forms.CharField(label="Deployment Name", max_length=100)
     namespace = forms.CharField(label="Namespace", max_length=100, required=False)
@@ -45,3 +56,17 @@ class VolumeForm(forms.Form):
         ('secret', 'Secret'),
         ('persistentVolumeClaim', 'PersistentVolumeClaim')
     ])
+
+class NamespaceForm(forms.Form):
+    namespace_name = forms.CharField(label="Namespace Name", max_length=100)
+    labels = forms.CharField(label="Namespace Labels (key=value, comma-separated)", required=False)
+
+class ServiceForm(forms.Form):
+    service_name = forms.CharField(label="Service Name", max_length=100)
+    service_type = forms.ChoiceField(label="Service Type", choices=[
+        ('ClusterIP', 'ClusterIP'),
+        ('NodePort', 'NodePort'),
+        ('LoadBalancer', 'LoadBalancer')
+    ])
+    ports = forms.CharField(label="Service Ports (comma-separated)", required=False)
+    selector = forms.CharField(label="Service Selector (key=value, comma-separated)", required=False)

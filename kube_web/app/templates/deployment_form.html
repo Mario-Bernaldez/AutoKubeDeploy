@@ -1,149 +1,354 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Deployment Configuration</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Deployment Configuration</title>
+  <style>
+    /* Estilos generales */
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f9;
+      margin: 0;
+      padding: 20px;
+    }
+    h2, h3 {
+      color: #333;
+    }
+    fieldset {
+      border: 1px solid #ccc;
+      padding: 10px 15px;
+      margin-bottom: 20px;
+      background-color: #fff;
+      border-radius: 4px;
+    }
+    legend {
+      font-weight: bold;
+      padding: 0 5px;
+    }
+    .object-section {
+      background: #fff;
+      padding: 15px;
+      margin-bottom: 20px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      display: none; /* Ocultamos todas las secciones inicialmente */
+    }
+    button {
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-top: 5px;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    /* Estilos para el árbol */
+    .tree ul {
+      list-style: none;
+      margin: 0;
+      padding-left: 20px;
+      position: relative;
+    }
+    .tree ul::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 10px;
+      border-left: 1px solid #ccc;
+      height: 100%;
+    }
+    .tree li {
+      margin: 0;
+      padding: 10px 5px;
+      position: relative;
+    }
+    .tree li::before {
+      content: "";
+      position: absolute;
+      top: 20px;
+      left: 0;
+      width: 10px;
+      border-top: 1px solid #ccc;
+    }
+    .tree li:last-child::before {
+      border-left: none;
+    }
+    .tree .tree-item {
+      padding: 10px;
+      background: #e9ecef;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      margin-bottom: 5px;
+    }
+  </style>
 </head>
 <body>
-    <h2>Configure Your Kubernetes Deployment</h2>
-    <form method="post">
-        {% csrf_token %}
-        
-        <h3>Deployment</h3>
-        {{ deployment_form.as_p }}
+  <h2>Configure Your Kubernetes Object</h2>
+  <form method="post">
+    {% csrf_token %}
+    <fieldset>
+      <legend>Select Object Type</legend>
+      {{ object_type_form.as_p }}
+    </fieldset>
 
-        <h3>Pod Template</h3>
-        {{ pod_form.as_p }}
-
-        <h3>Containers</h3>
-        {{ container_formset.management_form }}
-        <div id="containers-form-container">
+    <!-- Sección Deployment (configuración en árbol) -->
+    <div id="deployment-section" class="object-section tree">
+      <h3>Deployment Configuration</h3>
+      <ul>
+        <li>
+          <strong>Deployment</strong>
+          <div class="tree-item">
+            {{ deployment_form.as_p }}
+          </div>
+        </li>
+        <li>
+          <strong>Pod Template</strong>
+          <div class="tree-item">
+            {{ pod_form.as_p }}
+          </div>
+        </li>
+        <li>
+          <strong>Containers</strong>
+          {{ container_formset.management_form }}
+          <ul id="containers-form-container">
             {% for form in container_formset %}
-                <div class="container-form">
-                    {{ form.as_p }}
-                    <button type="button" class="remove-form" data-prefix="containers">Eliminar contenedor</button>
-                </div>
+            <li class="form-item">
+              <div class="tree-item">
+                {{ form.as_p }}
+              </div>
+              <button type="button" class="remove-form" data-prefix="containers">Remove Container</button>
+            </li>
             {% endfor %}
-        </div>
-        <button type="button" id="add-container">Añadir otro contenedor</button>
-
-        <h3>Volumes</h3>
-        {{ volume_formset.management_form }}
-        <div id="volumes-form-container">
+            <li class="add-button">
+              <button type="button" id="add-container">Add Container</button>
+            </li>
+          </ul>
+        </li>
+        <li>
+          <strong>Volumes</strong>
+          {{ volume_formset.management_form }}
+          <ul id="volumes-form-container">
             {% for form in volume_formset %}
-                <div class="volume-form">
-                    {{ form.as_p }}
-                    <button type="button" class="remove-form" data-prefix="volumes">Eliminar volumen</button>
-                </div>
+            <li class="form-item">
+              <div class="tree-item">
+                {{ form.as_p }}
+              </div>
+              <button type="button" class="remove-form" data-prefix="volumes">Remove Volume</button>
+            </li>
             {% endfor %}
-        </div>
-        <button type="button" id="add-volume">Añadir otro volumen</button>
-
-        <h3>Volume Mounts</h3>
-        {{ volume_mount_formset.management_form }}
-        <div id="volume_mounts-form-container">
+            <li class="add-button">
+              <button type="button" id="add-volume">Add Volume</button>
+            </li>
+          </ul>
+        </li>
+        <li>
+          <strong>Volume Mounts</strong>
+          {{ volume_mount_formset.management_form }}
+          <ul id="volume_mounts-form-container">
             {% for form in volume_mount_formset %}
-                <div class="volume_mount-form">
-                    {{ form.as_p }}
-                    <button type="button" class="remove-form" data-prefix="volume_mounts">Eliminar volume mount</button>
-                </div>
+            <li class="form-item">
+              <div class="tree-item">
+                {{ form.as_p }}
+              </div>
+              <button type="button" class="remove-form" data-prefix="volume_mounts">Remove Volume Mount</button>
+            </li>
             {% endfor %}
-        </div>
-        <button type="button" id="add-volume_mount">Añadir otro volume mount</button>
-
-        <button type="submit">Generate JSON</button>
-    </form>
-
-    <!-- Formularios vacíos ocultos para clonación -->
-    <div id="containers-empty-form" style="display: none;">
-        <div class="container-form">
-            {{ container_formset.empty_form.as_p }}
-            <button type="button" class="remove-form" data-prefix="containers">Eliminar contenedor</button>
-        </div>
-    </div>
-    <div id="volumes-empty-form" style="display: none;">
-        <div class="volume-form">
-            {{ volume_formset.empty_form.as_p }}
-            <button type="button" class="remove-form" data-prefix="volumes">Eliminar volumen</button>
-        </div>
-    </div>
-    <div id="volume_mounts-empty-form" style="display: none;">
-        <div class="volume_mount-form">
-            {{ volume_mount_formset.empty_form.as_p }}
-            <button type="button" class="remove-form" data-prefix="volume_mounts">Eliminar volume mount</button>
-        </div>
+            <li class="add-button">
+              <button type="button" id="add-volume_mount">Add Volume Mount</button>
+            </li>
+          </ul>
+        </li>
+      </ul>
     </div>
 
-    <script>
-        // Función para actualizar los índices de los formularios en un formset
-        function updateFormIndices(prefix) {
-            var container = document.getElementById(prefix + '-form-container');
-            var forms = container.children;
-            for (var i = 0; i < forms.length; i++) {
-                // RegExp para encontrar el índice en name e id
-                var regex = new RegExp(prefix + '-(\\d+)-');
-                var inputs = forms[i].querySelectorAll('input, select, textarea');
-                inputs.forEach(function(input) {
-                    if (input.name) {
-                        input.name = input.name.replace(regex, prefix + '-' + i + '-');
-                    }
-                    if (input.id) {
-                        input.id = input.id.replace(regex, 'id_' + prefix + '-' + i + '-');
-                    }
-                });
-            }
-            // Actualizar el valor TOTAL_FORMS en el management form
-            var totalFormsInput = document.getElementById('id_' + prefix + '-TOTAL_FORMS');
-            totalFormsInput.value = forms.length;
+    <!-- Sección Namespace -->
+    <div id="namespace-section" class="object-section tree">
+      <h3>Namespace Configuration</h3>
+      {{ namespace_formset.management_form }}
+      <ul id="namespaces-form-container">
+        {% for form in namespace_formset %}
+        <li class="form-item">
+          <div class="tree-item">
+            {{ form.as_p }}
+          </div>
+          <button type="button" class="remove-form" data-prefix="namespaces">Remove Namespace</button>
+        </li>
+        {% endfor %}
+        <li class="add-button">
+          <button type="button" id="add-namespace">Add Namespace</button>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Sección Service -->
+    <div id="service-section" class="object-section tree">
+      <h3>Service Configuration</h3>
+      {{ service_formset.management_form }}
+      <ul id="services-form-container">
+        {% for form in service_formset %}
+        <li class="form-item">
+          <div class="tree-item">
+            {{ form.as_p }}
+          </div>
+          <button type="button" class="remove-form" data-prefix="services">Remove Service</button>
+        </li>
+        {% endfor %}
+        <li class="add-button">
+          <button type="button" id="add-service">Add Service</button>
+        </li>
+      </ul>
+    </div>
+
+    <button type="submit">Generate JSON</button>
+  </form>
+
+  <!-- Formularios vacíos ocultos para clonación -->
+  <div id="containers-empty-form" style="display: none;">
+    <li class="form-item">
+      <div class="tree-item">
+        {{ container_formset.empty_form.as_p }}
+      </div>
+      <button type="button" class="remove-form" data-prefix="containers">Remove Container</button>
+    </li>
+  </div>
+  <div id="volumes-empty-form" style="display: none;">
+    <li class="form-item">
+      <div class="tree-item">
+        {{ volume_formset.empty_form.as_p }}
+      </div>
+      <button type="button" class="remove-form" data-prefix="volumes">Remove Volume</button>
+    </li>
+  </div>
+  <div id="volume_mounts-empty-form" style="display: none;">
+    <li class="form-item">
+      <div class="tree-item">
+        {{ volume_mount_formset.empty_form.as_p }}
+      </div>
+      <button type="button" class="remove-form" data-prefix="volume_mounts">Remove Volume Mount</button>
+    </li>
+  </div>
+  <div id="namespaces-empty-form" style="display: none;">
+    <li class="form-item">
+      <div class="tree-item">
+        {{ namespace_formset.empty_form.as_p }}
+      </div>
+      <button type="button" class="remove-form" data-prefix="namespaces">Remove Namespace</button>
+    </li>
+  </div>
+  <div id="services-empty-form" style="display: none;">
+    <li class="form-item">
+      <div class="tree-item">
+        {{ service_formset.empty_form.as_p }}
+      </div>
+      <button type="button" class="remove-form" data-prefix="services">Remove Service</button>
+    </li>
+  </div>
+
+  <script>
+    // Mostrar/ocultar secciones según la selección del objeto
+    document.addEventListener("DOMContentLoaded", function() {
+      function updateSections() {
+        var selected = document.querySelector('input[name="object_type"]:checked');
+        if (selected) {
+          var value = selected.value;
+          document.getElementById("deployment-section").style.display = (value === "deployment") ? "block" : "none";
+          document.getElementById("namespace-section").style.display = (value === "namespace") ? "block" : "none";
+          document.getElementById("service-section").style.display = (value === "service") ? "block" : "none";
+        } else {
+          document.getElementById("deployment-section").style.display = "none";
+          document.getElementById("namespace-section").style.display = "none";
+          document.getElementById("service-section").style.display = "none";
         }
+      }
+      var radios = document.querySelectorAll('input[name="object_type"]');
+      radios.forEach(function(radio) {
+        radio.addEventListener("change", updateSections);
+      });
+      updateSections();
+    });
 
-        // Función para añadir un nuevo formulario al formset
-        function addForm(prefix) {
-            var totalForms = document.getElementById('id_' + prefix + '-TOTAL_FORMS');
-            var currentFormCount = parseInt(totalForms.value);
-            var emptyFormDiv = document.getElementById(prefix + '-empty-form');
-            var newFormHtml = emptyFormDiv.innerHTML.replace(/__prefix__/g, currentFormCount);
-            var formContainer = document.getElementById(prefix + '-form-container');
-            var newFormDiv = document.createElement('div');
-            newFormDiv.innerHTML = newFormHtml;
-            formContainer.appendChild(newFormDiv);
-            totalForms.value = currentFormCount + 1;
+    // Función para actualizar índices solo de los elementos con clase "form-item"
+    function updateFormIndices(prefix) {
+      var container = document.getElementById(prefix + '-form-container');
+      // Seleccionamos solo los <li> que tengan la clase "form-item"
+      var formItems = container.querySelectorAll('li.form-item');
+      formItems.forEach(function(li, index) {
+          var regex = new RegExp(prefix + '-(\\d+)-');
+          var inputs = li.querySelectorAll('input, select, textarea');
+          inputs.forEach(function(input) {
+              if (input.name) {
+                  input.name = input.name.replace(regex, prefix + '-' + index + '-');
+              }
+              if (input.id) {
+                  input.id = input.id.replace(regex, 'id_' + prefix + '-' + index + '-');
+              }
+          });
+      });
+      var totalFormsInput = document.getElementById('id_' + prefix + '-TOTAL_FORMS');
+      totalFormsInput.value = formItems.length;
+    }
+
+    // Función para agregar un nuevo formulario al formset
+    function addForm(prefix) {
+      var totalForms = document.getElementById('id_' + prefix + '-TOTAL_FORMS');
+      var currentFormCount = parseInt(totalForms.value);
+      var emptyFormDiv = document.getElementById(prefix + '-empty-form');
+      var newFormHtml = emptyFormDiv.innerHTML.replace(/__prefix__/g, currentFormCount);
+      var formContainer = document.getElementById(prefix + '-form-container');
+      // Crear un contenedor temporal y luego insertar el <li> en el contenedor
+      var tempDiv = document.createElement('div');
+      tempDiv.innerHTML = newFormHtml;
+      formContainer.insertBefore(tempDiv.firstElementChild, formContainer.lastElementChild);
+      totalForms.value = currentFormCount + 1;
+    }
+
+    // Configurar eliminación: usamos e.target.closest('li') para eliminar el <li> completo
+    function setupRemoveButtons(prefix) {
+      var container = document.getElementById(prefix + '-form-container');
+      container.addEventListener('click', function(e) {
+        if (e.target && e.target.classList.contains('remove-form')) {
+          e.preventDefault();
+          var liElement = e.target.closest('li');
+          if (liElement) {
+            liElement.remove();
+            updateFormIndices(prefix);
+          }
         }
+      });
+    }
 
-        // Delegación de eventos para eliminar formularios en cada formset
-        function setupRemoveButtons(prefix) {
-            var container = document.getElementById(prefix + '-form-container');
-            container.addEventListener('click', function(e) {
-                if (e.target && e.target.classList.contains('remove-form')) {
-                    e.preventDefault();
-                    var formDiv = e.target.closest('.' + prefix.slice(0, -1) + '-form');
-                    if (formDiv) {
-                        formDiv.remove();
-                        updateFormIndices(prefix);
-                    }
-                }
-            });
-        }
+    setupRemoveButtons('containers');
+    setupRemoveButtons('volumes');
+    setupRemoveButtons('volume_mounts');
+    setupRemoveButtons('namespaces');
+    setupRemoveButtons('services');
 
-        // Configurar eventos de eliminación para cada formset
-        setupRemoveButtons('containers');
-        setupRemoveButtons('volumes');
-        setupRemoveButtons('volume_mounts');
-
-        // Eventos para agregar nuevos formularios
-        document.getElementById('add-container').addEventListener('click', function(e) {
-            e.preventDefault();
-            addForm('containers');
-        });
-        document.getElementById('add-volume').addEventListener('click', function(e) {
-            e.preventDefault();
-            addForm('volumes');
-        });
-        document.getElementById('add-volume_mount').addEventListener('click', function(e) {
-            e.preventDefault();
-            addForm('volume_mounts');
-        });
-    </script>
+    // Eventos para agregar nuevos formularios
+    document.getElementById('add-container').addEventListener('click', function(e) {
+      e.preventDefault();
+      addForm('containers');
+    });
+    document.getElementById('add-volume').addEventListener('click', function(e) {
+      e.preventDefault();
+      addForm('volumes');
+    });
+    document.getElementById('add-volume_mount').addEventListener('click', function(e) {
+      e.preventDefault();
+      addForm('volume_mounts');
+    });
+    document.getElementById('add-namespace').addEventListener('click', function(e) {
+      e.preventDefault();
+      addForm('namespaces');
+    });
+    document.getElementById('add-service').addEventListener('click', function(e) {
+      e.preventDefault();
+      addForm('services');
+    });
+  </script>
 </body>
 </html>
