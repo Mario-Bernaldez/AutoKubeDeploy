@@ -11,8 +11,6 @@ def deployment_config_view(request):
     ContainerFormSet = formset_factory(ContainerForm, extra=1)
     VolumeFormSet = formset_factory(VolumeForm, extra=1)
     VolumeMountFormSet = formset_factory(VolumeMountForm, extra=1)
-    NamespaceFormSet = formset_factory(NamespaceForm, extra=1)
-    ServiceFormSet = formset_factory(ServiceForm, extra=1)
     
     if request.method == "POST":
         object_type_form = ObjectTypeForm(request.POST)
@@ -39,17 +37,17 @@ def deployment_config_view(request):
                 }
                 return JsonResponse(user_input_data, json_dumps_params={'indent': 4})
         elif obj_type == 'namespace':
-            namespace_formset = NamespaceFormSet(request.POST, prefix="namespaces")
-            if namespace_formset.is_valid():
+            namespace_form = NamespaceForm(request.POST)
+            if namespace_form.is_valid():
                 user_input_data = {
-                    "namespaces": [form.cleaned_data for form in namespace_formset]
+                    "namespace": namespace_form.cleaned_data
                 }
                 return JsonResponse(user_input_data, json_dumps_params={'indent': 4})
         elif obj_type == 'service':
-            service_formset = ServiceFormSet(request.POST, prefix="services")
-            if service_formset.is_valid():
+            service_form = ServiceForm(request.POST)
+            if service_form.is_valid():
                 user_input_data = {
-                    "services": [form.cleaned_data for form in service_formset]
+                    "service": service_form.cleaned_data
                 }
                 return JsonResponse(user_input_data, json_dumps_params={'indent': 4})
     else:
@@ -60,8 +58,8 @@ def deployment_config_view(request):
         container_formset = ContainerFormSet(prefix="containers")
         volume_formset = VolumeFormSet(prefix="volumes")
         volume_mount_formset = VolumeMountFormSet(prefix="volume_mounts")
-        namespace_formset = NamespaceFormSet(prefix="namespaces")
-        service_formset = ServiceFormSet(prefix="services")
+        namespace_form = NamespaceForm()
+        service_form = ServiceForm()
         obj_type = 'deployment'  # selección por defecto
 
     return render(request, "deployment_form.html", {
@@ -72,6 +70,6 @@ def deployment_config_view(request):
         "container_formset": container_formset,
         "volume_formset": volume_formset,
         "volume_mount_formset": volume_mount_formset,
-        "namespace_formset": namespace_formset,
-        "service_formset": service_formset,
+        "namespace_form": namespace_form,
+        "service_form": service_form,
     })

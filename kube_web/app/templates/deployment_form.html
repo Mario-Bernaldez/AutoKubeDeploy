@@ -169,39 +169,18 @@
     <!-- Sección Namespace -->
     <div id="namespace-section" class="object-section tree">
       <h3>Namespace Configuration</h3>
-      {{ namespace_formset.management_form }}
-      <ul id="namespaces-form-container">
-        {% for form in namespace_formset %}
-        <li class="form-item">
-          <div class="tree-item">
-            {{ form.as_p }}
-          </div>
-          <button type="button" class="remove-form" data-prefix="namespaces">Remove Namespace</button>
-        </li>
-        {% endfor %}
-        <li class="add-button">
-          <button type="button" id="add-namespace">Add Namespace</button>
-        </li>
-      </ul>
+        <div class="tree-item">
+          {{ namespace_form.as_p }}
+        </div>
     </div>
 
     <!-- Sección Service -->
     <div id="service-section" class="object-section tree">
       <h3>Service Configuration</h3>
       {{ service_formset.management_form }}
-      <ul id="services-form-container">
-        {% for form in service_formset %}
-        <li class="form-item">
-          <div class="tree-item">
-            {{ form.as_p }}
-          </div>
-          <button type="button" class="remove-form" data-prefix="services">Remove Service</button>
-        </li>
-        {% endfor %}
-        <li class="add-button">
-          <button type="button" id="add-service">Add Service</button>
-        </li>
-      </ul>
+      <div class="tree-item">
+        {{ service_form.as_p }}
+      </div>
     </div>
 
     <button type="submit">Generate JSON</button>
@@ -232,45 +211,46 @@
       <button type="button" class="remove-form" data-prefix="volume_mounts">Remove Volume Mount</button>
     </li>
   </div>
-  <div id="namespaces-empty-form" style="display: none;">
-    <li class="form-item">
-      <div class="tree-item">
-        {{ namespace_formset.empty_form.as_p }}
-      </div>
-      <button type="button" class="remove-form" data-prefix="namespaces">Remove Namespace</button>
-    </li>
-  </div>
-  <div id="services-empty-form" style="display: none;">
-    <li class="form-item">
-      <div class="tree-item">
-        {{ service_formset.empty_form.as_p }}
-      </div>
-      <button type="button" class="remove-form" data-prefix="services">Remove Service</button>
-    </li>
-  </div>
 
   <script>
-    // Mostrar/ocultar secciones según la selección del objeto
     document.addEventListener("DOMContentLoaded", function() {
-      function updateSections() {
-        var selected = document.querySelector('input[name="object_type"]:checked');
-        if (selected) {
-          var value = selected.value;
-          document.getElementById("deployment-section").style.display = (value === "deployment") ? "block" : "none";
-          document.getElementById("namespace-section").style.display = (value === "namespace") ? "block" : "none";
-          document.getElementById("service-section").style.display = (value === "service") ? "block" : "none";
+  function updateSections() {
+    var selected = document.querySelector('input[name="object_type"]:checked');
+    var value = selected ? selected.value : null;
+
+    // Lista de secciones disponibles (los IDs deben coincidir con los usados en el HTML)
+    var sections = ["deployment", "namespace", "service"];
+
+    sections.forEach(function(section) {
+      var container = document.getElementById(section + "-section");
+      if (container) {
+        if (section === value) {
+          container.style.display = "block";
+          // Habilitar todos los elementos del formulario en la sección visible
+          container.querySelectorAll("input, select, textarea").forEach(function(el) {
+            el.disabled = false;
+          });
         } else {
-          document.getElementById("deployment-section").style.display = "none";
-          document.getElementById("namespace-section").style.display = "none";
-          document.getElementById("service-section").style.display = "none";
+          container.style.display = "none";
+          // Deshabilitar todos los elementos del formulario en las secciones ocultas
+          container.querySelectorAll("input, select, textarea").forEach(function(el) {
+            el.disabled = true;
+          });
         }
       }
-      var radios = document.querySelectorAll('input[name="object_type"]');
-      radios.forEach(function(radio) {
-        radio.addEventListener("change", updateSections);
-      });
-      updateSections();
     });
+  }
+
+  // Asignar el evento "change" a cada botón de radio para actualizar las secciones al cambiar la selección
+  var radios = document.querySelectorAll('input[name="object_type"]');
+  radios.forEach(function(radio) {
+    radio.addEventListener("change", updateSections);
+  });
+
+  // Llamar la función al cargar la página para establecer el estado inicial
+  updateSections();
+});
+
 
     // Función para actualizar índices solo de los elementos con clase "form-item"
     function updateFormIndices(prefix) {
@@ -325,8 +305,6 @@
     setupRemoveButtons('containers');
     setupRemoveButtons('volumes');
     setupRemoveButtons('volume_mounts');
-    setupRemoveButtons('namespaces');
-    setupRemoveButtons('services');
 
     // Eventos para agregar nuevos formularios
     document.getElementById('add-container').addEventListener('click', function(e) {
@@ -340,14 +318,6 @@
     document.getElementById('add-volume_mount').addEventListener('click', function(e) {
       e.preventDefault();
       addForm('volume_mounts');
-    });
-    document.getElementById('add-namespace').addEventListener('click', function(e) {
-      e.preventDefault();
-      addForm('namespaces');
-    });
-    document.getElementById('add-service').addEventListener('click', function(e) {
-      e.preventDefault();
-      addForm('services');
     });
   </script>
 </body>

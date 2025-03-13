@@ -9,3 +9,4 @@ urlpatterns = [
     path("", redirect_to_configure, name="home"),
     path("configure/", deployment_config_view, name="configure_deployment"),
 ]
+5
