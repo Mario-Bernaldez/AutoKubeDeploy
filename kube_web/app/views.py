@@ -28,13 +28,13 @@ def deployment_config_view(request):
             if (deployment_form.is_valid() and pod_form.is_valid() and 
                 container_formset.is_valid() and volume_formset.is_valid() and 
                 volume_mount_formset.is_valid()):
-                user_input_data = {
+                user_input_data = { "deployment": {
                     "deployment": deployment_form.cleaned_data,
                     "pod_template": pod_form.cleaned_data,
                     "containers": [form.cleaned_data for form in container_formset],
                     "volumes": [form.cleaned_data for form in volume_formset],
                     "volume_mounts": [form.cleaned_data for form in volume_mount_formset]
-                }
+                }}
                 return JsonResponse(user_input_data, json_dumps_params={'indent': 4})
         elif obj_type == 'namespace':
             namespace_form = NamespaceForm(request.POST)
