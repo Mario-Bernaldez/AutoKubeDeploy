@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Resultado YAML</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 30px; background: #f4f4f4; }
+    pre {
+      background: #fff; padding: 15px; border: 1px solid #ccc; overflow-x: auto;
+    }
+    .section { margin-bottom: 30px; }
+    #explanation {
+      background: #e9ecef; border-left: 4px solid #007bff; padding: 15px; white-space: pre-wrap;
+    }
+    button {
+      padding: 8px 12px; background-color: #007bff; color: white;
+      border: none; border-radius: 4px; cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="section">
+    <h2>📝 YAML Generado</h2>
+    <pre>{{ yaml_output }}</pre>
+  </div>
+
+  <form method="post" action="{% url 'explain_yaml' %}">
+    {% csrf_token %}
+    <input type="hidden" name="yaml_generated" value="{{ yaml_output|escape }}">
+    <button type="submit">Obtener explicación</button>
+  </form>  
+
+  {% if explanation %}
+  <div class="section">
+    <h2>💬 Explicación</h2>
+    <div id="explanation">{{ explanation }}</div>
+  </div>
+  {% endif %}
+
+</body>
+</html>

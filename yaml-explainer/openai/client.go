@@ -12,7 +12,7 @@ import (
 )
 
 const endpoint = "https://openrouter.ai/api/v1/chat/completions"
-const model = "mistralai/mistral-small-3.1-24b-instruct:free" // Puedes cambiar por otro gratuito
+const model = "open-r1/olympiccoder-7b:free" // Puedes cambiar por otro gratuito
 
 func ExplainYAML(yaml string) (string, error) {
 	payload := models.OpenAIRequest{

@@ -1,12 +1,8 @@
 from django.urls import path
-from django.shortcuts import redirect
-from .views import deployment_config_view
-
-def redirect_to_configure(request):
-    return redirect("configure_deployment")
+from . import views
 
 urlpatterns = [
-    path("", redirect_to_configure, name="home"),
-    path("configure/", deployment_config_view, name="configure_deployment"),
+    path("", views.redirect_to_configure, name="home"),
+    path("configure/", views.deployment_config_view, name="configure_deployment"),
+    path("explain/", views.explain_yaml_view, name="explain_yaml"),
 ]
-5

@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 	"yaml-explainer/models"
 	"yaml-explainer/openai"
@@ -9,6 +10,8 @@ import (
 )
 
 func ExplainHandler(w http.ResponseWriter, r *http.Request) {
+	log.Println("Nueva petición recibida en /explain")
+
 	if r.Method != http.MethodPost {
 		http.Error(w, "Método no permitido", http.StatusMethodNotAllowed)
 		return
