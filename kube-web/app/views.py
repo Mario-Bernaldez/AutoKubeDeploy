@@ -1,6 +1,7 @@
+import requests
 from django.forms import formset_factory
 from django.shortcuts import render
-from django.http import JsonResponse
+from django.http import HttpResponse, JsonResponse
 from .forms import (
     ObjectTypeForm, DeploymentForm, PodTemplateForm, ContainerForm,
     VolumeMountForm, VolumeForm, NamespaceForm, ServiceForm
@@ -35,21 +36,28 @@ def deployment_config_view(request):
                     "volumes": [form.cleaned_data for form in volume_formset],
                     "volume_mounts": [form.cleaned_data for form in volume_mount_formset]
                 }}
-                return JsonResponse(user_input_data, json_dumps_params={'indent': 4})
         elif obj_type == 'namespace':
             namespace_form = NamespaceForm(request.POST)
             if namespace_form.is_valid():
                 user_input_data = {
                     "namespace": namespace_form.cleaned_data
                 }
-                return JsonResponse(user_input_data, json_dumps_params={'indent': 4})
         elif obj_type == 'service':
             service_form = ServiceForm(request.POST)
             if service_form.is_valid():
                 user_input_data = {
                     "service": service_form.cleaned_data
                 }
-                return JsonResponse(user_input_data, json_dumps_params={'indent': 4})
+        if user_input_data:
+            # Enviar los datos a la API externa
+            response = requests.post("http://generator-engine/generate", json=user_input_data)
+
+            if response.status_code == 200:
+                yaml_output = response.text  # Obtenemos la respuesta en YAML
+                return HttpResponse(yaml_output, content_type="text/yaml")
+            else:
+                return HttpResponse(f"Error en la API: {response.status_code}", status=response.status_code)
+
     else:
         object_type_form = ObjectTypeForm()
         # Instanciar todos los formularios, pero se mostrará solo uno según la selección
