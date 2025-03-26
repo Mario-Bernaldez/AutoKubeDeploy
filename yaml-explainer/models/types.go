@@ -1,7 +1,8 @@
 package models
 
 type RequestPayload struct {
-	YAML string `json:"yaml"`
+	YAML   string `json:"yaml"`
+	Model  string `json:"model"`
 }
 
 type ResponsePayload struct {

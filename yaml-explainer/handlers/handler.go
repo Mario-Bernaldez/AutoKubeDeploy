@@ -28,13 +28,15 @@ func ExplainHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response, err := openai.ExplainYAML(payload.YAML)
+	response, statusCode, err := openai.ExplainYAMLWithModel(payload.YAML, payload.Model)
 	if err != nil {
-		http.Error(w, "Error en OpenAI: "+err.Error(), http.StatusInternalServerError)
+		log.Printf("Error (%d): %v\n", statusCode, err)
+		http.Error(w, err.Error(), statusCode)
 		return
-	}
+	}	
 
 	json.NewEncoder(w).Encode(models.ResponsePayload{
 		Explanation: response,
 	})
 }
+

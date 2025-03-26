@@ -1,42 +1,174 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8">
   <title>Resultado YAML</title>
   <style>
-    body { font-family: Arial, sans-serif; padding: 30px; background: #f4f4f4; }
+    body {
+      font-family: Arial, sans-serif;
+      padding: 30px;
+      background: #f4f4f4;
+    }
+
     pre {
-      background: #fff; padding: 15px; border: 1px solid #ccc; overflow-x: auto;
+      background: #fff;
+      padding: 15px;
+      border: 1px solid #ccc;
+      overflow-x: auto;
     }
-    .section { margin-bottom: 30px; }
+
+    .section {
+      margin-bottom: 30px;
+    }
+
     #explanation {
-      background: #e9ecef; border-left: 4px solid #007bff; padding: 15px; white-space: pre-wrap;
+      background: #e9ecef;
+      border-left: 4px solid #007bff;
+      padding: 15px;
+      white-space: pre-wrap;
     }
-    button {
-      padding: 8px 12px; background-color: #007bff; color: white;
-      border: none; border-radius: 4px; cursor: pointer;
+
+    .btn {
+      display: inline-block;
+      padding: 10px 16px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      text-decoration: none;
+      font-size: 14px;
+      margin-right: 10px;
+    }
+
+    #loader {
+      display: none;
+      margin-top: 10px;
+      font-style: italic;
+      color: #007bff;
+    }
+
+    .spinner {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(0, 123, 255, 0.3);
+      border-top-color: #007bff;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      vertical-align: middle;
+      margin-right: 5px;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
     }
   </style>
+  <script src="https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.js"></script>
 </head>
+
 <body>
+  {% with default_model=None %}
+
+  <a href="/configure/" class="back-btn">⬅ Volver</a>
 
   <div class="section">
     <h2>📝 YAML Generado</h2>
-    <pre>{{ yaml_output }}</pre>
+    <pre id="yamlContent">{{ yaml_output }}</pre>
+    <a href="#" class="btn" onclick="downloadYAML()">📥 Descargar YAML</a>
   </div>
 
-  <form method="post" action="{% url 'explain_yaml' %}">
+  <form id="yamlForm" method="post" action="{% url 'explain_yaml' %}" onsubmit="mostrarLoader()">
     {% csrf_token %}
     <input type="hidden" name="yaml_generated" value="{{ yaml_output|escape }}">
-    <button type="submit">Obtener explicación</button>
-  </form>  
+
+    <div style="margin: 10px 0;">
+      <label>
+        <input type="checkbox" id="filterFreeModels" onchange="filtrarModelosGratuitos()"> Mostrar solo modelos gratuitos
+      </label>
+    </div>
+
+    <label for="selected_model"><strong>Selecciona un modelo:</strong></label>
+    <select name="selected_model" id="selected_model" class="btn">
+      {% for model in models %}
+        <option value="{{ model.id }}" data-free="{{ model.free }}"
+          {% if selected_model %}
+            {% if model.id == selected_model %}selected{% endif %}
+          {% else %}
+            {% if model.id == default_model %}selected{% endif %}
+          {% endif %}>
+          {{ model.name }}
+        </option>
+      {% endfor %}
+    </select>    
+    
+    
+    {% endwith %}
+    <button type="submit" id="explainBtn" class="btn">💡 Obtener explicación</button>
+    <div id="loader"><span class="spinner"></span>Cargando explicación...</div>
+  </form>
+
 
   {% if explanation %}
   <div class="section">
     <h2>💬 Explicación</h2>
-    <div id="explanation">{{ explanation }}</div>
+    <div id="explanation">{{ explanation|safe }}</div>
   </div>
   {% endif %}
 
+  <script>
+    function downloadYAML() {
+      const yamlText = document.getElementById("yamlContent").innerText;
+
+      try {
+        const parsedYAML = jsyaml.load(yamlText);
+        const kind = parsedYAML.kind || 'archivo';
+        const name = parsedYAML.metadata?.name || 'sin_nombre';
+        const fileName = `${kind.toLowerCase()}-${name.toLowerCase()}.yaml`;
+
+        const blob = new Blob([yamlText], { type: "text/yaml;charset=utf-8;" });
+        const url = URL.createObjectURL(blob);
+
+        const link = document.createElement("a");
+        link.setAttribute("href", url);
+        link.setAttribute("download", fileName);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      } catch (e) {
+        alert("Error al procesar el YAML: " + e.message);
+      }
+    }
+
+    function mostrarLoader() {
+      document.getElementById("explainBtn").style.display = "none";
+      document.getElementById("loader").style.display = "inline-block";
+    }
+
+    function filtrarModelosGratuitos() {
+  const select = document.getElementById("selected_model");
+  const mostrarSoloGratis = document.getElementById("filterFreeModels").checked;
+
+  for (const option of select.options) {
+    const esGratis = option.getAttribute("data-free") === "True" || option.getAttribute("data-free") === "true";
+    option.style.display = (!mostrarSoloGratis || esGratis) ? "block" : "none";
+  }
+
+  // Asegura que la opción visible esté seleccionada si la actual se oculta
+  const selected = select.options[select.selectedIndex];
+  if (selected.style.display === "none") {
+    const firstVisible = [...select.options].find(o => o.style.display === "block");
+    if (firstVisible) {
+      firstVisible.selected = true;
+    }
+  }
+}
+
+  </script>
+
 </body>
+
 </html>

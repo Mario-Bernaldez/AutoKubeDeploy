@@ -55,9 +55,13 @@ def deployment_config_view(request):
             response = requests.post("http://generator-engine/generate", json=user_input_data)
             if response.status_code == 200:
                 yaml_output = response.text
+                models, default_model = get_model_options()
+
                 return render(request, "yaml_result.html", {
                     "yaml_output": yaml_output,
-                    "explanation": None
+                    "explanation": None,
+                    "models": models,
+                    "default_model": default_model
                 })
             else:
                 return HttpResponse(f"Error en la API: {response.status_code}", status=response.status_code)
@@ -80,23 +84,51 @@ def deployment_config_view(request):
 def explain_yaml_view(request):
     if request.method == "POST":
         yaml_output = request.POST.get("yaml_generated", "")
-        explanation_response = requests.post(
-            "http://yaml-explainer:8080/explain",
-            json={"yaml": yaml_output}
-        )
+        selected_model = request.POST.get("selected_model", "")
+
+        payload = {
+            "yaml": yaml_output,
+            "model": selected_model
+        }
+
+        explanation_response = requests.post("http://yaml-explainer:8080/explain", json=payload)
 
         if explanation_response.status_code == 200:
             explanation = explanation_response.json().get("explanation", "Sin explicación disponible.")
+        elif explanation_response.status_code == 429:
+            explanation = "⚠️ Modelo no disponible actualmente. Por favor, inténtelo de nuevo más tarde."
+        elif explanation_response.status_code == 402:
+            explanation = (
+                "💳 Créditos insuficientes. "
+                "Puedes añadir más en <a href='https://openrouter.ai/settings/credits' target='_blank'>OpenRouter</a> "
+                "o utilizar un modelo gratuito."
+            )
         else:
-            explanation = f"Error al obtener explicación: {explanation_response.status_code}"
+            explanation = f"❌ Error al obtener explicación: {explanation_response.status_code}"
 
+        models, default_model = get_model_options()
         return render(request, "yaml_result.html", {
             "yaml_output": yaml_output,
-            "explanation": explanation
+            "explanation": explanation,
+            "models": models,
+            "selected_model": selected_model,
+            "default_model": default_model
         })
     else:
         return redirect("configure_deployment")
 
 
+
 def redirect_to_configure(request):
     return redirect("configure_deployment")
+
+def get_model_options():
+    try:
+        response = requests.get("http://yaml-explainer:8080/models", timeout=5)
+        if response.status_code == 200:
+            models = response.json()
+            default_model = next((m["id"] for m in models if m.get("free")), None)
+            return models, default_model
+    except Exception:
+        pass
+    return [], None
