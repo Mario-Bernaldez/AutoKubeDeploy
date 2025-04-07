@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+
+<head>
+    <meta charset="UTF-8">
+    <title>Service Configuration</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+
+<body>
+    <a href="{% url 'object_selector' %}"
+        style="display: inline-block; margin-bottom: 20px; text-decoration: none; color: #007bff;">
+        ⬅
+    </a>
+    <h2>Configure Service</h2>
+    <form method="post">
+        {% csrf_token %}
+        <div class="tree">
+            <div class="tree-item">{{ service_form.as_p }}</div>
+        </div>
+        <button type="submit">Generate YAML</button>
+    </form>
+</body>
+
+</html>

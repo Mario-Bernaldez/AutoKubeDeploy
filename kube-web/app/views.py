@@ -8,55 +8,45 @@ from .forms import (
 )
 
 
+def object_selector(request):
+    if request.method == "POST":
+        selected = request.POST.get("object_type")
+        if selected == "deployment":
+            return redirect("configure_deployment")
+        elif selected == "service":
+            return redirect("configure_service")
+        elif selected == "namespace":
+            return redirect("configure_namespace")
+    return render(request, "object_selector.html")
+
 def deployment_config_view(request):
     ContainerFormSet = formset_factory(ContainerForm, extra=1)
     VolumeFormSet = formset_factory(VolumeForm, extra=1)
     VolumeMountFormSet = formset_factory(VolumeMountForm, extra=1)
 
     if request.method == "POST":
-        object_type_form = ObjectTypeForm(request.POST)
-        if object_type_form.is_valid():
-            obj_type = object_type_form.cleaned_data['object_type']
-        else:
-            obj_type = 'deployment'
+        deployment_form = DeploymentForm(request.POST)
+        pod_form = PodTemplateForm(request.POST)
+        container_formset = ContainerFormSet(request.POST, prefix="containers")
+        volume_formset = VolumeFormSet(request.POST, prefix="volumes")
+        volume_mount_formset = VolumeMountFormSet(request.POST, prefix="volume_mounts")
 
-        user_input_data = None
+        if (deployment_form.is_valid() and pod_form.is_valid() and 
+            container_formset.is_valid() and volume_formset.is_valid() and 
+            volume_mount_formset.is_valid()):
 
-        if obj_type == 'deployment':
-            deployment_form = DeploymentForm(request.POST)
-            pod_form = PodTemplateForm(request.POST)
-            container_formset = ContainerFormSet(request.POST, prefix="containers")
-            volume_formset = VolumeFormSet(request.POST, prefix="volumes")
-            volume_mount_formset = VolumeMountFormSet(request.POST, prefix="volume_mounts")
+            user_input_data = { "deployment": {
+                "deployment": deployment_form.cleaned_data,
+                "pod_template": pod_form.cleaned_data,
+                "containers": [form.cleaned_data for form in container_formset],
+                "volumes": [form.cleaned_data for form in volume_formset],
+                "volume_mounts": [form.cleaned_data for form in volume_mount_formset]
+            }}
 
-            if (deployment_form.is_valid() and pod_form.is_valid() and 
-                container_formset.is_valid() and volume_formset.is_valid() and 
-                volume_mount_formset.is_valid()):
-
-                user_input_data = { "deployment": {
-                    "deployment": deployment_form.cleaned_data,
-                    "pod_template": pod_form.cleaned_data,
-                    "containers": [form.cleaned_data for form in container_formset],
-                    "volumes": [form.cleaned_data for form in volume_formset],
-                    "volume_mounts": [form.cleaned_data for form in volume_mount_formset]
-                }}
-
-        elif obj_type == 'namespace':
-            namespace_form = NamespaceForm(request.POST)
-            if namespace_form.is_valid():
-                user_input_data = { "namespace": namespace_form.cleaned_data }
-
-        elif obj_type == 'service':
-            service_form = ServiceForm(request.POST)
-            if service_form.is_valid():
-                user_input_data = { "service": service_form.cleaned_data }
-
-        if user_input_data:
             response = requests.post("http://generator-engine/generate", json=user_input_data)
             if response.status_code == 200:
                 yaml_output = response.text
                 models, default_model = get_model_options()
-
                 return render(request, "yaml_result.html", {
                     "yaml_output": yaml_output,
                     "explanation": None,
@@ -67,19 +57,69 @@ def deployment_config_view(request):
                 return HttpResponse(f"Error en la API: {response.status_code}", status=response.status_code)
 
     else:
-        # GET: mostrar formularios vacíos
-        return render(request, "deployment_form.html", {
-            "object_type_form": ObjectTypeForm(),
-            "selected_obj_type": 'deployment',
-            "deployment_form": DeploymentForm(),
-            "pod_form": PodTemplateForm(),
-            "container_formset": ContainerFormSet(prefix="containers"),
-            "volume_formset": VolumeFormSet(prefix="volumes"),
-            "volume_mount_formset": VolumeMountFormSet(prefix="volume_mounts"),
-            "namespace_form": NamespaceForm(),
-            "service_form": ServiceForm(),
-        })
+        deployment_form = DeploymentForm()
+        pod_form = PodTemplateForm()
+        container_formset = ContainerFormSet(prefix="containers")
+        volume_formset = VolumeFormSet(prefix="volumes")
+        volume_mount_formset = VolumeMountFormSet(prefix="volume_mounts")
 
+    return render(request, "deployment_config.html", {
+        "deployment_form": deployment_form,
+        "pod_form": pod_form,
+        "container_formset": container_formset,
+        "volume_formset": volume_formset,
+        "volume_mount_formset": volume_mount_formset,
+    })
+
+def service_config_view(request):
+    if request.method == "POST":
+        service_form = ServiceForm(request.POST)
+        if service_form.is_valid():
+            user_input_data = { "service": service_form.cleaned_data }
+
+            response = requests.post("http://generator-engine/generate", json=user_input_data)
+            if response.status_code == 200:
+                yaml_output = response.text
+                models, default_model = get_model_options()
+                return render(request, "yaml_result.html", {
+                    "yaml_output": yaml_output,
+                    "explanation": None,
+                    "models": models,
+                    "default_model": default_model
+                })
+            else:
+                return HttpResponse(f"Error en la API: {response.status_code}", status=response.status_code)
+    else:
+        service_form = ServiceForm()
+
+    return render(request, "service_config.html", {
+        "service_form": service_form
+    })
+
+def namespace_config_view(request):
+    if request.method == "POST":
+        namespace_form = NamespaceForm(request.POST)
+        if namespace_form.is_valid():
+            user_input_data = { "namespace": namespace_form.cleaned_data }
+
+            response = requests.post("http://generator-engine/generate", json=user_input_data)
+            if response.status_code == 200:
+                yaml_output = response.text
+                models, default_model = get_model_options()
+                return render(request, "yaml_result.html", {
+                    "yaml_output": yaml_output,
+                    "explanation": None,
+                    "models": models,
+                    "default_model": default_model
+                })
+            else:
+                return HttpResponse(f"Error en la API: {response.status_code}", status=response.status_code)
+    else:
+        namespace_form = NamespaceForm()
+
+    return render(request, "namespace_config.html", {
+        "namespace_form": namespace_form
+    })
 
 def explain_yaml_view(request):
     if request.method == "POST":

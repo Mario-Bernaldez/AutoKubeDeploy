@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+
+<head>
+  <meta charset="UTF-8">
+  <title>Configure Deployment</title>
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+
+<body>
+
+  <a href="{% url 'object_selector' %}"
+    style="display: inline-block; margin-bottom: 20px; text-decoration: none; color: #007bff;">
+    ⬅
+  </a>
+  <h2>Configure Deployment</h2>
+  <form method="post">
+    {% csrf_token %}
+
+    <div class="tree">
+      <ul>
+        <li>
+          <strong>Deployment</strong>
+          <div class="tree-item">{{ deployment_form.as_p }}</div>
+        </li>
+        <li>
+          <strong>Pod Template</strong>
+          <div class="tree-item">{{ pod_form.as_p }}</div>
+        </li>
+        <li>
+          <strong>Containers</strong>
+          {{ container_formset.management_form }}
+          <ul id="containers-form-container">
+            {% for form in container_formset %}
+            <li class="form-item">
+              <div class="tree-item">{{ form.as_p }}</div>
+              <button type="button" class="remove-form" data-prefix="containers">Remove</button>
+            </li>
+            {% endfor %}
+            <li><button type="button" id="add-container">Add Container</button></li>
+          </ul>
+        </li>
+        <li>
+          <strong>Volumes</strong>
+          {{ volume_formset.management_form }}
+          <ul id="volumes-form-container">
+            {% for form in volume_formset %}
+            <li class="form-item">
+              <div class="tree-item">{{ form.as_p }}</div>
+              <button type="button" class="remove-form" data-prefix="volumes">Remove</button>
+            </li>
+            {% endfor %}
+            <li><button type="button" id="add-volume">Add Volume</button></li>
+          </ul>
+        </li>
+        <li>
+          <strong>Volume Mounts</strong>
+          {{ volume_mount_formset.management_form }}
+          <ul id="volume_mounts-form-container">
+            {% for form in volume_mount_formset %}
+            <li class="form-item">
+              <div class="tree-item">{{ form.as_p }}</div>
+              <button type="button" class="remove-form" data-prefix="volume_mounts">Remove</button>
+            </li>
+            {% endfor %}
+            <li><button type="button" id="add-volume_mount">Add Volume Mount</button></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+
+    <button type="submit">Generate YAML</button>
+  </form>
+
+  <!-- Formularios vacíos -->
+  <div id="containers-empty-form" style="display: none;">
+    <li class="form-item">
+      <div class="tree-item">{{ container_formset.empty_form.as_p }}</div>
+      <button type="button" class="remove-form" data-prefix="containers">Remove</button>
+    </li>
+  </div>
+  <div id="volumes-empty-form" style="display: none;">
+    <li class="form-item">
+      <div class="tree-item">{{ volume_formset.empty_form.as_p }}</div>
+      <button type="button" class="remove-form" data-prefix="volumes">Remove</button>
+    </li>
+  </div>
+  <div id="volume_mounts-empty-form" style="display: none;">
+    <li class="form-item">
+      <div class="tree-item">{{ volume_mount_formset.empty_form.as_p }}</div>
+      <button type="button" class="remove-form" data-prefix="volume_mounts">Remove</button>
+    </li>
+  </div>
+
+  <script>
+    function updateFormIndices(prefix) {
+      const container = document.getElementById(prefix + '-form-container');
+      const formItems = container.querySelectorAll('li.form-item');
+      formItems.forEach((li, index) => {
+        const regex = new RegExp(prefix + '-(\\d+)-', 'g');
+        li.querySelectorAll('input, select, textarea').forEach(input => {
+          if (input.name) input.name = input.name.replace(regex, `${prefix}-${index}-`);
+          if (input.id) input.id = input.id.replace(regex, `id_${prefix}-${index}-`);
+        });
+      });
+      const totalForms = document.getElementById(`id_${prefix}-TOTAL_FORMS`);
+      totalForms.value = formItems.length;
+    }
+
+    function addForm(prefix) {
+      const totalForms = document.getElementById(`id_${prefix}-TOTAL_FORMS`);
+      const currentCount = parseInt(totalForms.value);
+      const emptyForm = document.getElementById(`${prefix}-empty-form`).innerHTML.replace(/__prefix__/g, currentCount);
+      const container = document.getElementById(`${prefix}-form-container`);
+      const temp = document.createElement('div');
+      temp.innerHTML = emptyForm;
+      container.insertBefore(temp.firstElementChild, container.lastElementChild);
+      totalForms.value = currentCount + 1;
+    }
+
+    function setupRemoveButtons(prefix) {
+      const container = document.getElementById(`${prefix}-form-container`);
+      container.addEventListener('click', function (e) {
+        if (e.target.classList.contains('remove-form')) {
+          e.preventDefault();
+          const li = e.target.closest('li');
+          if (li) {
+            li.remove();
+            updateFormIndices(prefix);
+          }
+        }
+      });
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+      setupRemoveButtons('containers');
+      setupRemoveButtons('volumes');
+      setupRemoveButtons('volume_mounts');
+
+      document.getElementById('add-container').addEventListener('click', e => {
+        e.preventDefault();
+        addForm('containers');
+      });
+      document.getElementById('add-volume').addEventListener('click', e => {
+        e.preventDefault();
+        addForm('volumes');
+      });
+      document.getElementById('add-volume_mount').addEventListener('click', e => {
+        e.preventDefault();
+        addForm('volume_mounts');
+      });
+    });
+  </script>
+</body>
+
+</html>

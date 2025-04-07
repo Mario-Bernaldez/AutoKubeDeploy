@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Selecciona Tipo de Objeto</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f4f6f8;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+
+    .container {
+      background: #fff;
+      padding: 30px 40px;
+      border-radius: 12px;
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 400px;
+      text-align: center;
+    }
+
+    h2 {
+      margin-bottom: 25px;
+      color: #333;
+    }
+
+    .radio-group {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      margin: 20px 0;
+      gap: 12px;
+    }
+
+    .radio-group label {
+      display: flex;
+      align-items: center;
+      font-size: 16px;
+      cursor: pointer;
+      color: #444;
+    }
+
+    .radio-group input[type="radio"] {
+      margin-right: 10px;
+    }
+
+    button {
+      margin-top: 10px;
+      padding: 10px 20px;
+      background: #007bff;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <form method="post" class="container">
+    {% csrf_token %}
+    <h2>¿Qué objeto deseas configurar?</h2>
+    
+    <div class="radio-group">
+      <label><input type="radio" name="object_type" value="deployment" required> Deployment</label>
+      <label><input type="radio" name="object_type" value="service"> Service</label>
+      <label><input type="radio" name="object_type" value="namespace"> Namespace</label>
+    </div>
+
+    <button type="submit">Continuar</button>
+  </form>
+</body>
+</html>
