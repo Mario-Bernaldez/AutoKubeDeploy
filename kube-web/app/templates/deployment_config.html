@@ -31,12 +31,30 @@
         <li>
           <strong>Containers</strong>
           {{ container_formset.management_form }}
+          {% if container_formset.non_form_errors %}
+          <div class="errorlist">
+            {% for error in container_formset.non_form_errors %}
+            <p style="color: red;">{{ error }}</p>
+            {% endfor %}
+          </div>
+          {% endif %}
           <ul id="containers-form-container">
             {% for form in container_formset %}
             <li class="form-item">
-              <div class="tree-item">{{ form.as_p }}</div>
-              <button type="button" class="remove-form" data-prefix="containers">Remove</button>
+              <div class="tree-item">{{ form.as_p }} <strong>Volume Mounts</strong>
+                {{ volume_mount_formset.management_form }}
+                <ul class="volume_mounts-form-container">
+                  {% for form in volume_mount_formset %}
+                  <li>
+                    <div class="tree-item">{{ form.as_p }}</div>
+                    <button type="button" class="remove-form" data-prefix="volume_mounts">Remove</button>
+                  </li>
+                  {% endfor %}
+                  <li><button type="button" class="add-volume_mount">Add Volume Mount</button></li>
+                </ul>
+              </div>
             </li>
+            <li><button type="button" class="remove-form" data-prefix="containers">Remove</button></li>
             {% endfor %}
             <li><button type="button" id="add-container">Add Container</button></li>
           </ul>
@@ -54,19 +72,6 @@
             <li><button type="button" id="add-volume">Add Volume</button></li>
           </ul>
         </li>
-        <li>
-          <strong>Volume Mounts</strong>
-          {{ volume_mount_formset.management_form }}
-          <ul id="volume_mounts-form-container">
-            {% for form in volume_mount_formset %}
-            <li class="form-item">
-              <div class="tree-item">{{ form.as_p }}</div>
-              <button type="button" class="remove-form" data-prefix="volume_mounts">Remove</button>
-            </li>
-            {% endfor %}
-            <li><button type="button" id="add-volume_mount">Add Volume Mount</button></li>
-          </ul>
-        </li>
       </ul>
     </div>
 
@@ -76,7 +81,18 @@
   <!-- Formularios vacíos -->
   <div id="containers-empty-form" style="display: none;">
     <li class="form-item">
-      <div class="tree-item">{{ container_formset.empty_form.as_p }}</div>
+      <div class="tree-item">{{ container_formset.empty_form.as_p }}
+        <strong>Volume Mounts</strong>
+        <ul class="volume_mounts-form-container">
+          {% for form in volume_mount_formset %}
+          <li>
+            <div class="tree-item">{{ form.as_p }}</div>
+            <button type="button" class="remove-form" data-prefix="volume_mounts">Remove</button>
+          </li>
+          {% endfor %}
+          <li><button type="button" class="add-volume_mount">Add Volume Mount</button></li>
+        </ul>
+      </div>
       <button type="button" class="remove-form" data-prefix="containers">Remove</button>
     </li>
   </div>
@@ -108,15 +124,65 @@
       totalForms.value = formItems.length;
     }
 
-    function addForm(prefix) {
-      const totalForms = document.getElementById(`id_${prefix}-TOTAL_FORMS`);
-      const currentCount = parseInt(totalForms.value);
-      const emptyForm = document.getElementById(`${prefix}-empty-form`).innerHTML.replace(/__prefix__/g, currentCount);
-      const container = document.getElementById(`${prefix}-form-container`);
-      const temp = document.createElement('div');
-      temp.innerHTML = emptyForm;
-      container.insertBefore(temp.firstElementChild, container.lastElementChild);
-      totalForms.value = currentCount + 1;
+    let volumeMountsCounter = 0;
+
+    function addForm(prefix, container, finalCount) {
+      if (!container) {
+        container = document.getElementById(`${prefix}-form-container`);
+      }
+
+
+      const totalFormsInput = document.querySelector(`input[name="${prefix}-TOTAL_FORMS"]`);
+      let currentCount;
+
+      if (!finalCount) {
+        if (prefix === 'volume_mounts') {
+          currentCount = volumeMountsCounter;
+        } else {
+          const formsetWrapper = container.closest('.tree-item') || container.parentElement;
+          const input = formsetWrapper.querySelector(`input[name="${prefix}-TOTAL_FORMS"]`);
+          currentCount = parseInt(input.value, 10);
+        }
+      } else {
+        currentCount = finalCount;
+      }
+
+      emptyFormHtml = document
+        .getElementById(`${prefix}-empty-form`)
+        .innerHTML
+        .replace(/__prefix__/g, currentCount);
+
+      if (prefix === 'containers') {
+        emptyFormHtml = emptyFormHtml
+          .replace(/name="volume_mounts-\d+-/g, `name="volume_mounts-${currentCount}-`)
+          .replace(/id="id_volume_mounts-\d+-/g, `id="id_volume_mounts-${currentCount}-`)
+          .replace(/for="id_volume_mounts-\d+-/g, `for="id_volume_mounts-${currentCount}-`);
+      }
+
+
+      const tempDiv = document.createElement('div');
+      tempDiv.innerHTML = emptyFormHtml;
+      const newFormLi = tempDiv.firstElementChild;
+      container.insertBefore(newFormLi, container.lastElementChild);
+
+      if (prefix === 'volume_mounts') {
+        volumeMountsCounter += 1;
+        totalFormsInput.value = volumeMountsCounter;
+      } else {
+        totalFormsInput.value = currentCount + 1;
+      }
+
+      if (prefix === 'volumes') {
+        const select = newFormLi.querySelector("select[id$='_volume_type']");
+        if (select) {
+          toggleVolumeFields(select);
+          updateRequiredFields(select);
+          select.addEventListener('change', function () {
+            toggleVolumeFields(this);
+            updateRequiredFields(this);
+          });
+        }
+      }
     }
 
     function setupRemoveButtons(prefix) {
@@ -133,25 +199,134 @@
       });
     }
 
+    function toggleRollingUpdateFields() {
+      const strategySelect = document.getElementById("id_strategy");
+      if (!strategySelect) return;
+      const maxUnavailableField = document.getElementById("id_max_unavailable").closest("p");
+      const maxSurgeField = document.getElementById("id_max_surge").closest("p");
+      const isRollingUpdate = strategySelect.value === "RollingUpdate";
+      maxUnavailableField.style.display = isRollingUpdate ? "block" : "none";
+      maxSurgeField.style.display = isRollingUpdate ? "block" : "none";
+
+      strategySelect.addEventListener("change", function () {
+        const isRollingUpdate = this.value === "RollingUpdate";
+        maxUnavailableField.style.display = isRollingUpdate ? "block" : "none";
+        maxSurgeField.style.display = isRollingUpdate ? "block" : "none";
+      });
+    }
+
+    function toggleVolumeFields(volumeTypeSelect) {
+      const selectedType = volumeTypeSelect.value;
+      const formItem = volumeTypeSelect.closest(".tree-item");
+
+      const fields = {
+        emptyDir: ["id_medium", "id_size_limit"],
+        hostPath: ["id_path", "id_hostpath_type"],
+        configMap: ["id_config_map_name"],
+        secret: ["id_secret_name"],
+        persistentVolumeClaim: ["id_pvc_claim_name"],
+      };
+
+      for (const fieldList of Object.values(fields)) {
+        for (const id of fieldList) {
+          const input = formItem.querySelector(`#${id}`);
+          if (input) input.closest("p").style.display = "none";
+        }
+      }
+
+      const toShow = fields[selectedType] || [];
+      for (const id of toShow) {
+        const input = formItem.querySelector(`#${id}`);
+        if (input) input.closest("p").style.display = "block";
+      }
+    }
+
+    function updateRequiredFields(volumeTypeSelect) {
+      const selectedType = volumeTypeSelect.value;
+      const formItem = volumeTypeSelect.closest(".tree-item");
+
+      const allRequiredFields = [
+        "id_path",
+        "id_config_map_name",
+        "id_secret_name",
+        "id_pvc_claim_name"
+      ];
+
+      allRequiredFields.forEach(id => {
+        const input = formItem.querySelector(`#${id}`);
+        if (input) input.removeAttribute("required");
+      });
+
+      const requiredMap = {
+        hostPath: ["id_path"],
+        configMap: ["id_config_map_name"],
+        secret: ["id_secret_name"],
+        persistentVolumeClaim: ["id_pvc_claim_name"]
+      };
+
+      const requiredForType = requiredMap[selectedType] || [];
+      requiredForType.forEach(id => {
+        const input = formItem.querySelector(`#${id}`);
+        if (input) input.setAttribute("required", "required");
+      });
+    }
+
     document.addEventListener("DOMContentLoaded", function () {
       setupRemoveButtons('containers');
       setupRemoveButtons('volumes');
-      setupRemoveButtons('volume_mounts');
 
       document.getElementById('add-container').addEventListener('click', e => {
         e.preventDefault();
         addForm('containers');
       });
+
       document.getElementById('add-volume').addEventListener('click', e => {
         e.preventDefault();
         addForm('volumes');
       });
-      document.getElementById('add-volume_mount').addEventListener('click', e => {
-        e.preventDefault();
-        addForm('volume_mounts');
+
+      document
+        .getElementById('containers-form-container')
+        .addEventListener('click', function (e) {
+          if (e.target.matches('button.add-volume_mount')) {
+            e.preventDefault();
+            const mountsUl = e.target
+              .closest('.tree-item')
+              .querySelector('ul.volume_mounts-form-container');
+            container = document.getElementById(`containers-form-container`);
+            const formsetWrapper = container.closest('.tree-item') || container.parentElement;
+            const input = formsetWrapper.querySelector(`input[name="containers-TOTAL_FORMS"]`);
+            currentCount = parseInt(input.value, 10) - 1;
+            console.log(currentCount)
+            addForm('volume_mounts', mountsUl, currentCount);
+          }
+        });
+
+      toggleRollingUpdateFields();
+
+      document.querySelectorAll("select[id$='-volume_type']").forEach(select => {
+        toggleVolumeFields(select);
+        updateRequiredFields(select);
+
+        select.addEventListener("change", function () {
+          toggleVolumeFields(this);
+          updateRequiredFields(this);
+        });
       });
+
+      const baseVolumeSelect = document.getElementById("id_volume_type");
+      if (baseVolumeSelect) {
+        toggleVolumeFields(baseVolumeSelect);
+        updateRequiredFields(baseVolumeSelect);
+
+        baseVolumeSelect.addEventListener("change", function () {
+          toggleVolumeFields(this);
+          updateRequiredFields(this);
+        });
+      }
     });
   </script>
+
 </body>
 
 </html>

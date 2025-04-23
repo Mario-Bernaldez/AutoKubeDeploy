@@ -4,23 +4,124 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Service Configuration</title>
+    <title>Configure Service</title>
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 </head>
 
 <body>
+
     <a href="{% url 'object_selector' %}"
         style="display: inline-block; margin-bottom: 20px; text-decoration: none; color: #007bff;">
-        ⬅
+        ⬅ Volver
     </a>
     <h2>Configure Service</h2>
     <form method="post">
         {% csrf_token %}
+
         <div class="tree">
-            <div class="tree-item">{{ service_form.as_p }}</div>
+            <ul>
+                <li>
+                    <strong>Service</strong>
+                    <div class="tree-item">{{ service_form.as_p }}</div>
+                </li>
+                <li>
+                    <strong>Ports</strong>
+                    {{ port_formset.management_form }}
+                    <ul id="ports-form-container">
+                        {% for form in port_formset %}
+                        <li class="form-item">
+                            <div class="tree-item">{{ form.as_p }}</div>
+                            <button type="button" class="remove-form" data-prefix="ports">Remove</button>
+                        </li>
+                        {% endfor %}
+                        <li><button type="button" id="add-port">Add Port</button></li>
+                    </ul>
+                </li>
+            </ul>
         </div>
+
         <button type="submit">Generate YAML</button>
     </form>
+
+    <!-- Formulario vacío para clonar -->
+    <div id="ports-empty-form" style="display: none;">
+        <li class="form-item">
+            <div class="tree-item">{{ port_formset.empty_form.as_p }}</div>
+            <button type="button" class="remove-form" data-prefix="ports">Remove</button>
+        </li>
+    </div>
+
+    <script>
+        function updateFormIndices(prefix) {
+            const container = document.getElementById(prefix + '-form-container');
+            const formItems = container.querySelectorAll('li.form-item');
+            formItems.forEach((li, index) => {
+                const regex = new RegExp(prefix + '-(\\d+)-', 'g');
+                li.querySelectorAll('input, select, textarea').forEach(input => {
+                    if (input.name) input.name = input.name.replace(regex, `${prefix}-${index}-`);
+                    if (input.id) input.id = input.id.replace(regex, `id_${prefix}-${index}-`);
+                });
+            });
+            const totalForms = document.getElementById(`id_${prefix}-TOTAL_FORMS`);
+            totalForms.value = formItems.length;
+        }
+
+        function addForm(prefix) {
+            const totalForms = document.getElementById(`id_${prefix}-TOTAL_FORMS`);
+            const currentCount = parseInt(totalForms.value);
+            const emptyForm = document.getElementById(`${prefix}-empty-form`).innerHTML.replace(/__prefix__/g, currentCount);
+            const container = document.getElementById(`${prefix}-form-container`);
+            const temp = document.createElement('div');
+            temp.innerHTML = emptyForm;
+            container.insertBefore(temp.firstElementChild, container.lastElementChild);
+            totalForms.value = currentCount + 1;
+            toggleNodePortVisibility(); // Agregado para manejar el nuevo formulario
+        }
+
+        function setupRemoveButtons(prefix) {
+            const container = document.getElementById(`${prefix}-form-container`);
+            container.addEventListener('click', function (e) {
+                if (e.target.classList.contains('remove-form')) {
+                    e.preventDefault();
+                    const li = e.target.closest('li');
+                    if (li) {
+                        li.remove();
+                        updateFormIndices(prefix);
+                    }
+                }
+            });
+        }
+
+        function toggleNodePortVisibility() {
+            const serviceTypeSelect = document.querySelector('#id_service_type');
+            const isNodePort = serviceTypeSelect && serviceTypeSelect.value === 'NodePort';
+            const nodePortFields = document.querySelectorAll('.node-port-field');
+
+            nodePortFields.forEach(field => {
+                const parent = field.closest('p') || field.closest('div');
+                if (parent) {
+                    parent.style.display = isNodePort ? 'block' : 'none';
+                }
+                field.required = isNodePort;
+            });
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            setupRemoveButtons('ports');
+
+            document.getElementById('add-port').addEventListener('click', e => {
+                e.preventDefault();
+                addForm('ports');
+            });
+
+            const serviceTypeField = document.querySelector('#id_service_type');
+            if (serviceTypeField) {
+                serviceTypeField.addEventListener('change', toggleNodePortVisibility);
+            }
+
+            toggleNodePortVisibility(); // Llama al cargar la página
+        });
+    </script>
 </body>
 
 </html>
