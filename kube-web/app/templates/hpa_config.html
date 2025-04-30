@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+
+<head>
+    <meta charset="UTF-8">
+    <title>Configure HPA</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+
+<body>
+
+    <a href="{% url 'object_selector' %}"
+        style="display: inline-block; margin-bottom: 20px; text-decoration: none; color: #007bff;">
+        ⬅ Volver
+    </a>
+    <h2>Configure Horizontal Pod Autoscaler</h2>
+
+    <form method="post">
+        {% csrf_token %}
+        <div class="tree">
+            <ul>
+                <li>
+                    <strong>HPA Configuration</strong>
+                    <div class="tree-item">
+                        {{ hpa_form.as_p }}
+                    </div>
+                </li>
+
+                <li>
+                    <strong>Metrics</strong>
+                    {{ metric_formset.management_form }}
+                    <ul id="metrics-form-container">
+                        {% for form in metric_formset %}
+                        <li class="form-item">
+                            <div class="tree-item">{{ form.as_p }}</div>
+                            <button type="button" class="remove-form" data-prefix="metrics">Remove</button>
+                        </li>
+                        {% endfor %}
+                        <li><button type="button" id="add-metric">Add Metric</button></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+
+        <button type="submit">Generate YAML</button>
+    </form>
+
+    <!-- Formulario vacío para clonar -->
+    <div id="metrics-empty-form" style="display: none;">
+        <li class="form-item">
+            <div class="tree-item">{{ metric_formset.empty_form.as_p }}</div>
+            <button type="button" class="remove-form" data-prefix="metrics">Remove</button>
+        </li>
+    </div>
+
+    <script>
+        function updateFormIndices(prefix) {
+            const container = document.getElementById(prefix + '-form-container');
+            const formItems = container.querySelectorAll('li.form-item');
+            formItems.forEach((li, index) => {
+                const regex = new RegExp(prefix + '-(\\d+)-', 'g');
+                li.querySelectorAll('input, select, textarea').forEach(input => {
+                    if (input.name) input.name = input.name.replace(regex, `${prefix}-${index}-`);
+                    if (input.id) input.id = input.id.replace(regex, `id_${prefix}-${index}-`);
+                });
+            });
+            const totalForms = document.getElementById(`id_${prefix}-TOTAL_FORMS`);
+            totalForms.value = formItems.length;
+        }
+
+        function addForm(prefix) {
+            const totalForms = document.getElementById(`id_${prefix}-TOTAL_FORMS`);
+            const currentCount = parseInt(totalForms.value);
+            const emptyForm = document.getElementById(`${prefix}-empty-form`).innerHTML.replace(/__prefix__/g, currentCount);
+            const container = document.getElementById(`${prefix}-form-container`);
+            const temp = document.createElement('div');
+            temp.innerHTML = emptyForm;
+            container.insertBefore(temp.firstElementChild, container.lastElementChild);
+            totalForms.value = currentCount + 1;
+        }
+
+        function setupRemoveButtons(prefix) {
+            const container = document.getElementById(`${prefix}-form-container`);
+            container.addEventListener('click', function (e) {
+                if (e.target.classList.contains('remove-form')) {
+                    e.preventDefault();
+                    const li = e.target.closest('li');
+                    if (li) {
+                        li.remove();
+                        updateFormIndices(prefix);
+                    }
+                }
+            });
+        }
+
+        function validateReplicas() {
+            const minReplicasInput = document.getElementById('id_min_replicas');
+            const maxReplicasInput = document.getElementById('id_max_replicas');
+
+            if (minReplicasInput && maxReplicasInput) {
+                const minReplicas = parseInt(minReplicasInput.value, 10);
+                const maxReplicas = parseInt(maxReplicasInput.value, 10);
+
+                if (!isNaN(minReplicas) && !isNaN(maxReplicas)) {
+                    if (minReplicas > maxReplicas) {
+                        minReplicasInput.setCustomValidity("Minimum Replicas cannot be greater than Maximum Replicas.");
+                        maxReplicasInput.setCustomValidity("Maximum Replicas must be greater than or equal to Minimum Replicas.");
+                        return false;
+                    }
+                }
+            }
+            // Si es válido, limpiar cualquier mensaje anterior
+            minReplicasInput.setCustomValidity("");
+            maxReplicasInput.setCustomValidity("");
+            return true;
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            setupRemoveButtons('metrics');
+
+            document.getElementById('add-metric').addEventListener('click', function (e) {
+                e.preventDefault();
+                addForm('metrics');
+            });
+
+            const form = document.querySelector('form');
+            form.addEventListener('submit', function (e) {
+                validateReplicas(); // Actualiza validaciones antes del envío
+            });
+
+            // Además, validamos en tiempo real mientras escribe
+            const minInput = document.getElementById('id_min_replicas');
+            const maxInput = document.getElementById('id_max_replicas');
+            if (minInput && maxInput) {
+                minInput.addEventListener('input', validateReplicas);
+                maxInput.addEventListener('input', validateReplicas);
+            }
+        });
+    </script>
+
+
+</body>
+
+</html>

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8">
   <title>Selecciona Tipo de Objeto</title>
@@ -67,18 +68,28 @@
     }
   </style>
 </head>
+
 <body>
   <form method="post" class="container">
     {% csrf_token %}
     <h2>¿Qué objeto deseas configurar?</h2>
-    
+
     <div class="radio-group">
       <label><input type="radio" name="object_type" value="deployment" required> Deployment</label>
       <label><input type="radio" name="object_type" value="service"> Service</label>
       <label><input type="radio" name="object_type" value="namespace"> Namespace</label>
+      <label><input type="radio" name="object_type" value="hpa"> Horizontal Pod Autoscaler</label>
+      <label><input type="radio" name="object_type" value="configMap"> ConfigMap</label>
+      <label><input type="radio" name="object_type" value="secret"> Secrets</label>
+      <label><input type="radio" name="object_type" value="pvc"> Persistent Volumen Claim</label>
+      <label><input type="radio" name="object_type" value="ingress"> Ingress</label>
+      <label><input type="radio" name="object_type" value="sa"> Service Account</label>
+      <label><input type="radio" name="object_type" value="rbac"> RBAC</label>
+      <label><input type="radio" name="object_type" value="networkpolicy"> Network Policy</label>
     </div>
 
     <button type="submit">Continuar</button>
   </form>
 </body>
+
 </html>

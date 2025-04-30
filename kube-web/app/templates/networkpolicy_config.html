@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+
+<head>
+    <meta charset="UTF-8">
+    <title>Configure NetworkPolicy</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+
+<body>
+
+    <a href="{% url 'object_selector' %}"
+        style="display: inline-block; margin-bottom: 20px; text-decoration: none; color: #007bff;">
+        ⬅ Volver
+    </a>
+
+    <h2>Configure NetworkPolicy</h2>
+
+    <form method="post">
+        {% csrf_token %}
+        <div class="tree">
+            <ul>
+                <li>
+                    <strong>NetworkPolicy Configuration</strong>
+                    <div class="tree-item">
+                        {{ networkpolicy_form.as_p }}
+                    </div>
+                </li>
+
+                <li>
+                    <strong>Traffic Rules</strong>
+                    {{ rule_formset.management_form }}
+                    <ul id="rules-form-container">
+                        {% for form in rule_formset %}
+                        <li class="form-item">
+                            <div class="tree-item">{{ form.as_p }}</div>
+                            <button type="button" class="remove-form" data-prefix="rules">Remove</button>
+                        </li>
+                        {% endfor %}
+                        <li><button type="button" id="add-rule">Add Rule</button></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+
+        <button type="submit">Generate YAML</button>
+    </form>
+
+    <!-- Formulario vacío para clonar -->
+    <div id="rules-empty-form" style="display: none;">
+        <li class="form-item">
+            <div class="tree-item">{{ rule_formset.empty_form.as_p }}</div>
+            <button type="button" class="remove-form" data-prefix="rules">Remove</button>
+        </li>
+    </div>
+
+    <script>
+        function updateFormIndices(prefix) {
+            const container = document.getElementById(prefix + '-form-container');
+            const formItems = container.querySelectorAll('li.form-item');
+            formItems.forEach((li, index) => {
+                const regex = new RegExp(prefix + '-(\\d+)-', 'g');
+                li.querySelectorAll('input, select, textarea').forEach(input => {
+                    if (input.name) input.name = input.name.replace(regex, `${prefix}-${index}-`);
+                    if (input.id) input.id = input.id.replace(regex, `id_${prefix}-${index}-`);
+                });
+            });
+            const totalForms = document.getElementById(`id_${prefix}-TOTAL_FORMS`);
+            totalForms.value = formItems.length;
+        }
+
+        function addForm(prefix) {
+            const totalForms = document.getElementById(`id_${prefix}-TOTAL_FORMS`);
+            const currentCount = parseInt(totalForms.value);
+            const emptyForm = document.getElementById(`${prefix}-empty-form`).innerHTML.replace(/__prefix__/g, currentCount);
+            const container = document.getElementById(`${prefix}-form-container`);
+            const temp = document.createElement('div');
+            temp.innerHTML = emptyForm;
+            container.insertBefore(temp.firstElementChild, container.lastElementChild);
+            totalForms.value = currentCount + 1;
+        }
+
+        function setupRemoveButtons(prefix) {
+            const container = document.getElementById(`${prefix}-form-container`);
+            container.addEventListener('click', function (e) {
+                if (e.target.classList.contains('remove-form')) {
+                    e.preventDefault();
+                    const li = e.target.closest('li');
+                    if (li) {
+                        li.remove();
+                        updateFormIndices(prefix);
+                    }
+                }
+            });
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            setupRemoveButtons('rules');
+
+            document.getElementById('add-rule').addEventListener('click', function (e) {
+                e.preventDefault();
+                addForm('rules');
+            });
+        });
+    </script>
+
+</body>
+
+</html>
