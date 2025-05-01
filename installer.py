@@ -4,6 +4,7 @@ import sys
 import os
 import getpass
 import argparse
+import time
 
 def is_command_available(command):
     """Verifica si un comando está disponible en el sistema."""
@@ -125,10 +126,14 @@ def configure_kubeconfig():
         sys.exit(1)
 
 def build_and_push_docker_image(modules):
-    """Construye la imagen Docker y la sube al registro local de MicroK8s."""
+    """Construye imágenes con tag único y las sube al registro local."""
+    tags = {}
+
     for module in modules:
-        image_name = f"localhost:32000/{module}:latest"
-        print(f"\n🔧 Construyendo la imagen Docker {module}...")
+        tag = str(int(time.time()))
+        image_name = f"localhost:32000/{module}:{tag}"
+        print(f"\n🔧 Construyendo imagen Docker {image_name}...")
+
         try:
             subprocess.run(["docker", "build", "-t", image_name, module], check=True)
         except subprocess.CalledProcessError:
@@ -143,8 +148,10 @@ def build_and_push_docker_image(modules):
             sys.exit(1)
 
         print(f"\n✅ Imagen '{image_name}' subida correctamente.")
+        tags[module] = tag
 
-def deploy_helm_chart(modules):
+    return tags
+def deploy_helm_chart(modules, tags):
     """Instala o actualiza el paquete Helm en Kubernetes."""
     for module in modules:
         release_name = module
@@ -158,7 +165,12 @@ def deploy_helm_chart(modules):
         if release_name in installed_releases:
             print("\n🔄 Actualizando el despliegue existente con Helm...")
             try:
-                subprocess.run(["helm", "upgrade", release_name, chart_path], check=True)
+                subprocess.run([
+                    "helm", "upgrade", release_name, chart_path,
+                    "--install",
+                    "--set", f"image.repository=localhost:32000/{module}",
+                    "--set", f"image.tag={tags[module]}"
+                ], check=True)
             except subprocess.CalledProcessError:
                 print("❌ Error al actualizar el despliegue con Helm.")
                 sys.exit(1)
@@ -200,13 +212,15 @@ def main():
         if not args.modules:
             print("⚠️ Debes especificar al menos un módulo con -m para construir.")
             sys.exit(1)
-        build_and_push_docker_image(args.modules)
+        module_tags = build_and_push_docker_image(args.modules)
+    else:
+        module_tags = {}
 
     if args.all or args.deploy:
         if not args.modules:
             print("⚠️ Debes especificar al menos un módulo con -m para desplegar.")
             sys.exit(1)
-        deploy_helm_chart(args.modules)
+        deploy_helm_chart(args.modules, module_tags)
 
     print("\n✅ Proceso completado correctamente.")
 

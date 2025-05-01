@@ -2,11 +2,10 @@ package models
 
 // DeploymentObject define la estructura para crear un Deployment en Kubernetes.
 type DeploymentObject struct {
-	Deployment   DeploymentSpec   `json:"deployment"`
-	PodTemplate  PodTemplateSpec  `json:"pod_template"`
-	Containers   []Container      `json:"containers"`
-	Volumes      []Volume         `json:"volumes"`
-	VolumeMounts []VolumeMount    `json:"volume_mounts"`
+	Deployment  DeploymentSpec  `json:"deployment"`
+	PodTemplate PodTemplateSpec `json:"pod_template"`
+	Containers  []Container     `json:"containers"`
+	Volumes     []Volume        `json:"volumes"`
 }
 
 // DeploymentSpec contiene los datos del deployment.
@@ -15,8 +14,8 @@ type DeploymentSpec struct {
 	Namespace      string `json:"namespace"`
 	Replicas       int    `json:"replicas"`
 	Strategy       string `json:"strategy"`
-	MaxUnavailable int    `json:"max_unavailable"`
-	MaxSurge       int    `json:"max_surge"`
+	MaxUnavailable string    `json:"max_unavailable"`
+	MaxSurge       string    `json:"max_surge"`
 }
 
 // PodTemplateSpec contiene los datos de la plantilla de pod.
@@ -27,17 +26,25 @@ type PodTemplateSpec struct {
 
 // Container define la estructura de un contenedor.
 type Container struct {
-	ContainerName   string `json:"container_name"`
-	Image           string `json:"image"`
-	ImagePullPolicy string `json:"image_pull_policy"`
-	Ports           string `json:"ports"`
-	EnvVars         string `json:"env_vars"`
+	ContainerName   string        `json:"container_name"`
+	Image           string        `json:"image"`
+	ImagePullPolicy string        `json:"image_pull_policy"`
+	Ports           string        `json:"ports"`
+	EnvVars         string        `json:"env_vars"`
+	VolumeMounts    []VolumeMount `json:"volume_mounts"`
 }
 
 // Volume define la estructura de un volumen.
 type Volume struct {
-	VolumeName string `json:"volume_name"`
-	VolumeType string `json:"volume_type"`
+	VolumeName     string `json:"volume_name"`
+	VolumeType     string `json:"volume_type"`
+	Medium         string `json:"medium"`
+	SizeLimit      string `json:"size_limit"`
+	Path           string `json:"path"`
+	HostpathType   string `json:"hostpath_type"`
+	ConfigMapName  string `json:"config_map_name"`
+	SecretName     string `json:"secret_name"`
+	PvcClaimName   string `json:"pvc_claim_name"`
 }
 
 // VolumeMount define la estructura para montar un volumen.

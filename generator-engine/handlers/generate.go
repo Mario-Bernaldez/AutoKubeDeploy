@@ -3,13 +3,13 @@ package handlers
 import (
 	"encoding/json"
 	"io/ioutil"
+	"log"
 	"net/http"
 
 	"generator-engine/models"
 	"generator-engine/utils"
 )
 
-// GenerateHandler procesa la petición POST en /generate y devuelve el YAML generado.
 func GenerateHandler(w http.ResponseWriter, r *http.Request) {
 	var req models.GenerateRequest
 
@@ -21,7 +21,8 @@ func GenerateHandler(w http.ResponseWriter, r *http.Request) {
 
 	err = json.Unmarshal(body, &req)
 	if err != nil {
-		http.Error(w, "Error al parsear JSON", http.StatusBadRequest)
+		log.Println("Error al parsear JSON:", err)
+		http.Error(w, "Error al parsear JSON: "+err.Error(), http.StatusBadRequest)
 		return
 	}
 
@@ -42,6 +43,48 @@ func GenerateHandler(w http.ResponseWriter, r *http.Request) {
 		yamlResult, err = utils.GenerateServiceYAML(*req.Service)
 		if err != nil {
 			http.Error(w, "Error generando YAML para Service", http.StatusInternalServerError)
+			return
+		}
+	} else if req.HPA != nil {
+		yamlResult, err = utils.GenerateHPAYAML(*req.HPA)
+		if err != nil {
+			http.Error(w, "Error generando YAML para HPA", http.StatusInternalServerError)
+			return
+		}
+	} else if req.ConfigMap != nil {
+		yamlResult, err = utils.GenerateConfigMapYAML(*req.ConfigMap)
+		if err != nil {
+			http.Error(w, "Error generando YAML para ConfigMap", http.StatusInternalServerError)
+			return
+		}
+	} else if req.Secret != nil {
+		yamlResult, err = utils.GenerateSecretYAML(*req.Secret)
+		if err != nil {
+			http.Error(w, "Error generando YAML para Secret", http.StatusInternalServerError)
+			return
+		}
+	} else if req.PVC != nil {
+		yamlResult, err = utils.GeneratePVCYAML(*req.PVC)
+		if err != nil {
+			http.Error(w, "Error generando YAML para PersistentVolumeClaim", http.StatusInternalServerError)
+			return
+		}
+	} else if req.Ingress != nil {
+		yamlResult, err = utils.GenerateIngressYAML(*req.Ingress)
+		if err != nil {
+			http.Error(w, "Error generando YAML para Ingress", http.StatusInternalServerError)
+			return
+		}
+	} else if req.ServiceAccount != nil {
+		yamlResult, err = utils.GenerateServiceAccountYAML(*req.ServiceAccount)
+		if err != nil {
+			http.Error(w, "Error generando YAML para ServiceAccount", http.StatusInternalServerError)
+			return
+		}
+	} else if req.Role != nil {
+		yamlResult, err = utils.GenerateRBACYAML(*req.Role)
+		if err != nil {
+			http.Error(w, "Error generando YAML para Role/RoleBinding", http.StatusInternalServerError)
 			return
 		}
 	} else {

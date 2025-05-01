@@ -1,0 +1,44 @@
+package utils
+
+import (
+	"generator-engine/models"
+	"gopkg.in/yaml.v2"
+)
+
+func GenerateServiceYAML(svc models.ServiceObject) (string, error) {
+	selector := parseLabels(svc.Selector)
+
+	// Construir la lista de puertos
+	ports := make([]map[string]interface{}, 0)
+	for _, p := range svc.Ports {
+		portEntry := map[string]interface{}{
+			"port":       p.Port,
+			"targetPort": p.TargetPort,
+			"protocol":   p.Protocol,
+		}
+		// Solo incluir nodePort si es un NodePort y el valor no es cero
+		if svc.ServiceType == "NodePort" && p.NodePort != 0 {
+			portEntry["nodePort"] = p.NodePort
+		}
+		ports = append(ports, portEntry)
+	}
+
+	serviceYAML := map[string]interface{}{
+		"apiVersion": "v1",
+		"kind":       "Service",
+		"metadata": map[string]interface{}{
+			"name": svc.ServiceName,
+		},
+		"spec": map[string]interface{}{
+			"type":     svc.ServiceType,
+			"selector": selector,
+			"ports":    ports,
+		},
+	}
+
+	out, err := yaml.Marshal(serviceYAML)
+	if err != nil {
+		return "", err
+	}
+	return string(out), nil
+}

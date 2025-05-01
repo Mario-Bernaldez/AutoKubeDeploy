@@ -4,8 +4,8 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/gorilla/mux"
 	"generator-engine/handlers"
+	"github.com/gorilla/mux"
 )
 
 func main() {
