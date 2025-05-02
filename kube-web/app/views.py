@@ -3,6 +3,7 @@ from django.forms import formset_factory
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseBadRequest
 from django.contrib import messages
+from django.views.decorators.csrf import csrf_exempt
 from .forms import (
     ConfigMapForm,
     ConfigMapKeyForm,
@@ -854,6 +855,29 @@ def explore_resources(request):
     return render(
         request, "explore.html", {"resource": resource, "names": names, "error": None}
     )
+
+
+@csrf_exempt
+def delete_resource(request):
+    if request.method != "POST":
+        return HttpResponseBadRequest("Solo se permite POST")
+
+    resource = request.POST.get("resource")
+    name = request.POST.get("name")
+
+    try:
+        requests.delete(
+            "http://kube-manager:8080/resource",
+            params={
+                "type": resource,
+                "name": name,
+                "namespace": "default",
+            },
+        )
+    except Exception as e:
+        print(f"Error eliminando: {e}")
+
+    return redirect(f"/explore/?resource={resource}")
 
 
 def redirect_to_configure(request):
