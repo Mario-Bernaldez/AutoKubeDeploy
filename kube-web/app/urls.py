@@ -33,4 +33,5 @@ urlpatterns = [
         name="configure_network_policy",
     ),
     path("explain/", views.explain_yaml_view, name="explain_yaml"),
+    path("apply/", views.apply_yaml, name="apply_yaml"),
 ]

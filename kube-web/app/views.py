@@ -1,8 +1,8 @@
-from django.http import JsonResponse
 import requests
 from django.forms import formset_factory
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
+from django.contrib import messages
 from .forms import (
     ConfigMapForm,
     ConfigMapKeyForm,
@@ -796,6 +796,37 @@ def explain_yaml_view(request):
         )
     else:
         return redirect("configure_deployment")
+
+
+def apply_yaml(request):
+    if request.method == "POST":
+        yaml_text = request.POST.get("yaml_generated", "")
+        try:
+            response = requests.post(
+                "http://kube-deployer-service:8080/deploy",
+                data=yaml_text.encode("utf-8"),
+                headers={"Content-Type": "application/x-yaml"},
+                timeout=10,
+            )
+            if response.status_code == 200:
+                messages.success(
+                    request, "✅ YAML desplegado exitosamente en Kubernetes."
+                )
+            else:
+                messages.error(request, f"❌ Error al aplicar YAML: {response.text}")
+        except Exception as e:
+            messages.error(request, f"❌ Fallo al conectarse al microservicio: {e}")
+    models, default_model = get_model_options()
+    return render(
+        request,
+        "yaml_result.html",
+        {
+            "yaml_output": yaml_text,
+            "explanation": None,
+            "models": models,
+            "default_model": default_model,
+        },
+    )
 
 
 def redirect_to_configure(request):

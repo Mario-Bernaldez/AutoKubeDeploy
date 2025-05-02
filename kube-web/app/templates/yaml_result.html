@@ -87,27 +87,25 @@
 
     <div style="margin: 10px 0;">
       <label>
-        <input type="checkbox" id="filterFreeModels" onchange="filtrarModelosGratuitos()"> Mostrar solo modelos gratuitos
+        <input type="checkbox" id="filterFreeModels" onchange="filtrarModelosGratuitos()"> Mostrar solo modelos
+        gratuitos
       </label>
     </div>
 
     <label for="selected_model"><strong>Selecciona un modelo:</strong></label>
     <select name="selected_model" id="selected_model" class="btn">
       {% for model in models %}
-        <option value="{{ model.id }}" data-free="{{ model.free }}"
-          {% if selected_model %}
-            {% if model.id == selected_model %}selected{% endif %}
-          {% else %}
-            {% if model.id == default_model %}selected{% endif %}
-          {% endif %}>
-          {{ model.name }}
-        </option>
+      <option value="{{ model.id }}" data-free="{{ model.free }}" {% if selected_model %} {% if model.id==selected_model
+        %}selected{% endif %} {% else %} {% if model.id==default_model %}selected{% endif %} {% endif %}>
+        {{ model.name }}
+      </option>
       {% endfor %}
-    </select>    
-    
-    
+    </select>
+
+
     {% endwith %}
     <button type="submit" id="explainBtn" class="btn">💡 Obtener explicación</button>
+    <button type="submit" formaction="{% url 'apply_yaml' %}" class="btn">🚀 Aplicar en Kubernetes</button>
     <div id="loader"><span class="spinner"></span>Cargando explicación...</div>
   </form>
 
@@ -116,6 +114,17 @@
   <div class="section">
     <h2>💬 Explicación</h2>
     <div id="explanation">{{ explanation|safe }}</div>
+  </div>
+  {% endif %}
+
+  {% if messages %}
+  <div class="section">
+    {% for message in messages %}
+    <div
+      style="padding: 10px; background: {% if message.tags == 'success' %}#d4edda{% else %}#f8d7da{% endif %}; border-left: 4px solid {% if message.tags == 'success' %}#28a745{% else %}#dc3545{% endif %}; margin-bottom: 15px;">
+      {{ message }}
+    </div>
+    {% endfor %}
   </div>
   {% endif %}
 
@@ -149,23 +158,23 @@
     }
 
     function filtrarModelosGratuitos() {
-  const select = document.getElementById("selected_model");
-  const mostrarSoloGratis = document.getElementById("filterFreeModels").checked;
+      const select = document.getElementById("selected_model");
+      const mostrarSoloGratis = document.getElementById("filterFreeModels").checked;
 
-  for (const option of select.options) {
-    const esGratis = option.getAttribute("data-free") === "True" || option.getAttribute("data-free") === "true";
-    option.style.display = (!mostrarSoloGratis || esGratis) ? "block" : "none";
-  }
+      for (const option of select.options) {
+        const esGratis = option.getAttribute("data-free") === "True" || option.getAttribute("data-free") === "true";
+        option.style.display = (!mostrarSoloGratis || esGratis) ? "block" : "none";
+      }
 
-  // Asegura que la opción visible esté seleccionada si la actual se oculta
-  const selected = select.options[select.selectedIndex];
-  if (selected.style.display === "none") {
-    const firstVisible = [...select.options].find(o => o.style.display === "block");
-    if (firstVisible) {
-      firstVisible.selected = true;
+      // Asegura que la opción visible esté seleccionada si la actual se oculta
+      const selected = select.options[select.selectedIndex];
+      if (selected.style.display === "none") {
+        const firstVisible = [...select.options].find(o => o.style.display === "block");
+        if (firstVisible) {
+          firstVisible.selected = true;
+        }
+      }
     }
-  }
-}
 
   </script>
 
