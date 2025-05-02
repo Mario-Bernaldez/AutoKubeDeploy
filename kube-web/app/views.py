@@ -803,7 +803,7 @@ def apply_yaml(request):
         yaml_text = request.POST.get("yaml_generated", "")
         try:
             response = requests.post(
-                "http://kube-deployer-service:8080/deploy",
+                "http://kube-deployer:8080/deploy",
                 data=yaml_text.encode("utf-8"),
                 headers={"Content-Type": "application/x-yaml"},
                 timeout=10,

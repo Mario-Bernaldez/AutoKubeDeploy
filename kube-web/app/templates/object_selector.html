@@ -16,7 +16,14 @@
       height: 100vh;
     }
 
-    .container {
+    .layout {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 40px;
+      justify-content: center;
+    }
+
+    .card {
       background: #fff;
       padding: 30px 40px;
       border-radius: 12px;
@@ -51,7 +58,7 @@
       margin-right: 10px;
     }
 
-    button {
+    .btn {
       margin-top: 10px;
       padding: 10px 20px;
       background: #007bff;
@@ -61,35 +68,79 @@
       cursor: pointer;
       font-size: 16px;
       transition: background 0.3s;
+      text-decoration: none;
+      display: inline-block;
     }
 
-    button:hover {
+    .btn:hover {
       background: #0056b3;
+    }
+
+    .btn-secondary {
+      background: #28a745;
+    }
+
+    .btn-secondary:hover {
+      background: #1e7e34;
+    }
+
+    p {
+      color: #444;
+      font-size: 15px;
+      margin: 15px 0;
+    }
+
+    .layout {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 40px;
+      justify-content: center;
+      align-items: flex-start;
+    }
+
+    .card {
+      flex: 1 1 350px;
+      max-width: 400px;
+      background: white;
+      padding: 30px 40px;
+      border-radius: 12px;
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+      box-sizing: border-box;
     }
   </style>
 </head>
 
 <body>
-  <form method="post" class="container">
-    {% csrf_token %}
-    <h2>¿Qué objeto deseas configurar?</h2>
+  <div class="layout">
 
-    <div class="radio-group">
-      <label><input type="radio" name="object_type" value="deployment" required> Deployment</label>
-      <label><input type="radio" name="object_type" value="service"> Service</label>
-      <label><input type="radio" name="object_type" value="namespace"> Namespace</label>
-      <label><input type="radio" name="object_type" value="hpa"> Horizontal Pod Autoscaler</label>
-      <label><input type="radio" name="object_type" value="configMap"> ConfigMap</label>
-      <label><input type="radio" name="object_type" value="secret"> Secrets</label>
-      <label><input type="radio" name="object_type" value="pvc"> Persistent Volumen Claim</label>
-      <label><input type="radio" name="object_type" value="ingress"> Ingress</label>
-      <label><input type="radio" name="object_type" value="sa"> Service Account</label>
-      <label><input type="radio" name="object_type" value="rbac"> RBAC</label>
-      <label><input type="radio" name="object_type" value="networkpolicy"> Network Policy</label>
+    <!-- Tarjeta de configuración -->
+    <form method="post" class="card">
+      {% csrf_token %}
+      <h2>⚙️ ¿Qué objeto deseas configurar?</h2>
+      <div class="radio-group">
+        <label><input type="radio" name="object_type" value="deployment" required> Deployment</label>
+        <label><input type="radio" name="object_type" value="service"> Service</label>
+        <label><input type="radio" name="object_type" value="namespace"> Namespace</label>
+        <label><input type="radio" name="object_type" value="hpa"> Horizontal Pod Autoscaler</label>
+        <label><input type="radio" name="object_type" value="configMap"> ConfigMap</label>
+        <label><input type="radio" name="object_type" value="secret"> Secrets</label>
+        <label><input type="radio" name="object_type" value="pvc"> Persistent Volumen Claim</label>
+        <label><input type="radio" name="object_type" value="ingress"> Ingress</label>
+        <label><input type="radio" name="object_type" value="sa"> Service Account</label>
+        <label><input type="radio" name="object_type" value="rbac"> RBAC</label>
+        <label><input type="radio" name="object_type" value="networkpolicy"> Network Policy</label>
+      </div>
+      <button type="submit" class="btn">Continuar</button>
+    </form>
+
+    <!-- Tarjeta de monitorización -->
+    <div class="card">
+      <h2>📈 Monitorización</h2>
+      <p>Accede a las métricas del clúster con Grafana.</p>
+      <a href="http://localhost:3000" target="_blank" class="btn btn-secondary">🌐 Ir a Grafana</a>
     </div>
 
-    <button type="submit">Continuar</button>
-  </form>
+  </div>
 </body>
 
 </html>
