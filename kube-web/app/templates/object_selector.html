@@ -107,6 +107,10 @@
       box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
       box-sizing: border-box;
     }
+
+    .column .card+.card {
+      margin-top: 50px;
+    }
   </style>
 </head>
 
@@ -133,13 +137,37 @@
       <button type="submit" class="btn">Continuar</button>
     </form>
 
-    <!-- Tarjeta de monitorización -->
-    <div class="card">
-      <h2>📈 Monitorización</h2>
-      <p>Accede a las métricas del clúster con Grafana.</p>
-      <a href="http://localhost:3000" target="_blank" class="btn btn-secondary">🌐 Ir a Grafana</a>
-    </div>
+    <!-- Columna derecha: Grafana + Exploración -->
+    <div class="column">
+      <div class="card">
+        <h2>📈 Monitorización</h2>
+        <p>Accede a las métricas del clúster con Grafana.</p>
+        <a href="http://localhost:3000" target="_blank" class="btn btn-secondary">🌐 Ir a Grafana</a>
+      </div>
 
+      <div class="card">
+        <h2>🔍 Explorar Recursos</h2>
+        <p>Consulta los recursos existentes en el clúster.</p>
+        <form method="get" action="/explore">
+          <label for="resource-select" style="display: block; margin-bottom: 10px; color: #444;">Selecciona un
+            recurso:</label>
+          <select name="resource" id="resource-select" class="btn" style="width: 100%; text-align: left;">
+            <option value="pods">Pods</option>
+            <option value="deployments">Deployments</option>
+            <option value="services">Services</option>
+            <option value="namespaces">Namespaces</option>
+            <option value="hpa">Horizontal Pod Autoscalers</option>
+            <option value="configmaps">ConfigMaps</option>
+            <option value="secrets">Secrets</option>
+            <option value="pvc">Persistent Volume Claims</option>
+            <option value="ingress">Ingress</option>
+            <option value="serviceaccounts">Service Accounts</option>
+            <option value="networkpolicies">Network Policies</option>
+          </select>
+          <button type="submit" class="btn" style="margin-top: 15px;">🔎 Ver Recursos</button>
+        </form>
+      </div>
+    </div>
   </div>
 </body>
 

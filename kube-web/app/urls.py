@@ -34,4 +34,5 @@ urlpatterns = [
     ),
     path("explain/", views.explain_yaml_view, name="explain_yaml"),
     path("apply/", views.apply_yaml, name="apply_yaml"),
+    path("explore/", views.explore_resources, name="explore_resources"),
 ]

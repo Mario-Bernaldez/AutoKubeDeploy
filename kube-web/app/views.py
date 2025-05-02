@@ -1,7 +1,7 @@
 import requests
 from django.forms import formset_factory
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseBadRequest
 from django.contrib import messages
 from .forms import (
     ConfigMapForm,
@@ -803,7 +803,7 @@ def apply_yaml(request):
         yaml_text = request.POST.get("yaml_generated", "")
         try:
             response = requests.post(
-                "http://kube-deployer:8080/deploy",
+                "http://kube-manager:8080/deploy",
                 data=yaml_text.encode("utf-8"),
                 headers={"Content-Type": "application/x-yaml"},
                 timeout=10,
@@ -826,6 +826,33 @@ def apply_yaml(request):
             "models": models,
             "default_model": default_model,
         },
+    )
+
+
+def explore_resources(request):
+    resource = request.GET.get("resource")
+    if not resource:
+        return HttpResponseBadRequest("Falta el parámetro 'resource'.")
+
+    try:
+        response = requests.get(
+            "http://kube-manager:8080/list", params={"resource": resource}
+        )
+        response.raise_for_status()
+        names = response.json()
+    except Exception as e:
+        return render(
+            request,
+            "explore.html",
+            {
+                "resource": resource,
+                "error": f"Error consultando recursos: {str(e)}",
+                "names": [],
+            },
+        )
+
+    return render(
+        request, "explore.html", {"resource": resource, "names": names, "error": None}
     )
 
 
