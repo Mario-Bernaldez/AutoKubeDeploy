@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Historial de Despliegues</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f8;
+            padding: 30px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        th,
+        td {
+            padding: 12px 16px;
+            border-bottom: 1px solid #ddd;
+            text-align: left;
+        }
+
+        th {
+            background: #007bff;
+            color: white;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        .code {
+            font-family: monospace;
+            background: #f1f1f1;
+            padding: 5px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>📜 Historial de Despliegues</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Fecha</th>
+                <th>Tipo</th>
+                <th>Nombre</th>
+                <th>YAML</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in history %}
+            <tr>
+                <td>{{ item.created_at|date:"Y-m-d H:i" }}</td>
+                <td>{{ item.resource_type }}</td>
+                <td>{{ item.resource_name }}</td>
+                <td><a href="{% url 'view_deployment_yaml' 1 %}">📄 Ver</a></td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4">No hay despliegues registrados aún.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <br>
+    <a href="/">⬅ Volver al inicio</a>
+</body>
+
+</html>

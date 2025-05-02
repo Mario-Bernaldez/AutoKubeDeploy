@@ -1,9 +1,11 @@
 import requests
 from django.forms import formset_factory
-from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404, render, redirect
 from django.http import HttpResponse, HttpResponseBadRequest
 from django.contrib import messages
 from django.views.decorators.csrf import csrf_exempt
+import yaml
+from .models import DeploymentHistory
 from .forms import (
     ConfigMapForm,
     ConfigMapKeyForm,
@@ -813,6 +815,20 @@ def apply_yaml(request):
                 messages.success(
                     request, "✅ YAML desplegado exitosamente en Kubernetes."
                 )
+                try:
+                    parsed_yaml = yaml.safe_load(yaml_text)
+                    resource_type = parsed_yaml.get("kind", "unknown")
+                    resource_name = parsed_yaml.get("metadata", {}).get(
+                        "name", "unknown"
+                    )
+
+                    DeploymentHistory.objects.create(
+                        resource_type=resource_type,
+                        resource_name=resource_name,
+                        yaml_content=yaml_text,
+                    )
+                except Exception as e:
+                    print(f"⚠️ No se pudo guardar el historial: {e}")
             else:
                 messages.error(request, f"❌ Error al aplicar YAML: {response.text}")
         except Exception as e:
@@ -878,6 +894,26 @@ def delete_resource(request):
         print(f"Error eliminando: {e}")
 
     return redirect(f"/explore/?resource={resource}")
+
+
+def deployment_history_view(request):
+    history = DeploymentHistory.objects.order_by("-created_at")
+    return render(request, "history.html", {"history": history})
+
+
+def view_deployment_yaml(request, pk):
+    history_item = get_object_or_404(DeploymentHistory, pk=pk)
+    models, default_model = get_model_options()
+    return render(
+        request,
+        "yaml_result.html",
+        {
+            "yaml_output": history_item.yaml_content,
+            "explanation": None,
+            "models": models,
+            "default_model": default_model,
+        },
+    )
 
 
 def redirect_to_configure(request):

@@ -16,21 +16,30 @@
       height: 100vh;
     }
 
-    .layout {
+    .row {
       display: flex;
-      flex-wrap: wrap;
+      align-items: stretch;
       gap: 40px;
       justify-content: center;
     }
 
+    .column {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      flex: 1;
+    }
+
     .card {
       background: #fff;
-      padding: 30px 40px;
+      padding: 10px 40px;
       border-radius: 12px;
       box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
       width: 100%;
+      box-sizing: border-box;
       max-width: 400px;
       text-align: center;
+      flex-grow: 1;
     }
 
     h2 {
@@ -87,57 +96,46 @@
     p {
       color: #444;
       font-size: 15px;
-      margin: 15px 0;
+      margin: 10px 0;
     }
 
-    .layout {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 40px;
-      justify-content: center;
-      align-items: flex-start;
-    }
-
-    .card {
-      flex: 1 1 350px;
-      max-width: 400px;
-      background: white;
-      padding: 30px 40px;
-      border-radius: 12px;
-      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
-      box-sizing: border-box;
-    }
-
-    .column .card+.card {
-      margin-top: 50px;
+    select {
+      width: 100%;
+      padding: 10px;
+      font-size: 15px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      margin-bottom: 10px;
     }
   </style>
 </head>
 
 <body>
-  <div class="layout">
+  <div class="row">
 
-    <!-- Tarjeta de configuración -->
-    <form method="post" class="card">
-      {% csrf_token %}
-      <h2>⚙️ ¿Qué objeto deseas configurar?</h2>
-      <div class="radio-group">
-        <label><input type="radio" name="object_type" value="deployment" required> Deployment</label>
-        <label><input type="radio" name="object_type" value="service"> Service</label>
-        <label><input type="radio" name="object_type" value="namespace"> Namespace</label>
-        <label><input type="radio" name="object_type" value="hpa"> Horizontal Pod Autoscaler</label>
-        <label><input type="radio" name="object_type" value="configMap"> ConfigMap</label>
-        <label><input type="radio" name="object_type" value="secret"> Secrets</label>
-        <label><input type="radio" name="object_type" value="pvc"> Persistent Volumen Claim</label>
-        <label><input type="radio" name="object_type" value="ingress"> Ingress</label>
-        <label><input type="radio" name="object_type" value="sa"> Service Account</label>
-        <label><input type="radio" name="object_type" value="rbac"> RBAC</label>
-        <label><input type="radio" name="object_type" value="networkpolicy"> Network Policy</label>
-      </div>
-      <button type="submit" class="btn">Continuar</button>
-    </form>
+    <!-- Columna izquierda (Formulario de configuración) -->
+    <div class="column">
+      <form method="post" class="card">
+        {% csrf_token %}
+        <h2>⚙️ ¿Qué objeto deseas configurar?</h2>
+        <div class="radio-group">
+          <label><input type="radio" name="object_type" value="deployment" required> Deployment</label>
+          <label><input type="radio" name="object_type" value="service"> Service</label>
+          <label><input type="radio" name="object_type" value="namespace"> Namespace</label>
+          <label><input type="radio" name="object_type" value="hpa"> Horizontal Pod Autoscaler</label>
+          <label><input type="radio" name="object_type" value="configMap"> ConfigMap</label>
+          <label><input type="radio" name="object_type" value="secret"> Secrets</label>
+          <label><input type="radio" name="object_type" value="pvc"> Persistent Volumen Claim</label>
+          <label><input type="radio" name="object_type" value="ingress"> Ingress</label>
+          <label><input type="radio" name="object_type" value="sa"> Service Account</label>
+          <label><input type="radio" name="object_type" value="rbac"> RBAC</label>
+          <label><input type="radio" name="object_type" value="networkpolicy"> Network Policy</label>
+        </div>
+        <button type="submit" class="btn">Continuar</button>
+      </form>
+    </div>
 
-    <!-- Columna derecha: Grafana + Exploración -->
+    <!-- Columna derecha (monitorización, exploración e historial) -->
     <div class="column">
       <div class="card">
         <h2>📈 Monitorización</h2>
@@ -149,9 +147,7 @@
         <h2>🔍 Explorar Recursos</h2>
         <p>Consulta los recursos existentes en el clúster.</p>
         <form method="get" action="/explore">
-          <label for="resource-select" style="display: block; margin-bottom: 10px; color: #444;">Selecciona un
-            recurso:</label>
-          <select name="resource" id="resource-select" class="btn" style="width: 100%; text-align: left;">
+          <select name="resource" id="resource-select">
             <option value="pods">Pods</option>
             <option value="deployments">Deployments</option>
             <option value="services">Services</option>
@@ -164,10 +160,17 @@
             <option value="serviceaccounts">Service Accounts</option>
             <option value="networkpolicies">Network Policies</option>
           </select>
-          <button type="submit" class="btn" style="margin-top: 15px;">🔎 Ver Recursos</button>
+          <button type="submit" class="btn">🔎 Ver Recursos</button>
         </form>
       </div>
+
+      <div class="card">
+        <h2>📜 Historial de Despliegues</h2>
+        <p>Revisa los YAML desplegados recientemente y vuelve a aplicarlos.</p>
+        <a href="/history/" class="btn btn-secondary">🕓 Ver Historial</a>
+      </div>
     </div>
+
   </div>
 </body>
 

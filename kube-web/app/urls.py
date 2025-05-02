@@ -36,4 +36,10 @@ urlpatterns = [
     path("apply/", views.apply_yaml, name="apply_yaml"),
     path("explore/", views.explore_resources, name="explore_resources"),
     path("delete-resource/", views.delete_resource, name="delete_resource"),
+    path("history/", views.deployment_history_view, name="deployment_history"),
+    path(
+        "history/view/<int:pk>/",
+        views.view_deployment_yaml,
+        name="view_deployment_yaml",
+    ),
 ]
