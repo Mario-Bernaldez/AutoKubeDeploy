@@ -1,0 +1,11 @@
+modules:
+  kube-deployer:
+    type: internal
+  yaml-explainer:
+    type: internal
+  generator-engine:
+    type: internal
+  grafana:
+    type: external
+  prometheus:
+    type: external
