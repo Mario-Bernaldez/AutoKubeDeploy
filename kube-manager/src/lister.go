@@ -2,20 +2,16 @@ package k8s
 
 import (
     "context"
+    "errors"
     "fmt"
-    "strings"
 
-    "k8s.io/apimachinery/pkg/apis/meta/v1"
+    metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
     "k8s.io/apimachinery/pkg/runtime/schema"
-    "k8s.io/apimachinery/pkg/api/meta"
-    "k8s.io/client-go/discovery"
-    "k8s.io/client-go/discovery/cached/memory"
     "k8s.io/client-go/dynamic"
     "k8s.io/client-go/rest"
-    "k8s.io/client-go/restmapper"
 )
 
-func ListResourceNames(resource string, namespace string) ([]string, error) {
+func ListResourceNames(kind string, namespace string) ([]string, error) {
     config, err := rest.InClusterConfig()
     if err != nil {
         return nil, fmt.Errorf("error cargando configuración del clúster: %w", err)
@@ -26,11 +22,9 @@ func ListResourceNames(resource string, namespace string) ([]string, error) {
         return nil, fmt.Errorf("error creando cliente dinámico: %w", err)
     }
 
-    mapper := restMapper(config)
-
-    gvr, err := resolveGVR(mapper, resource)
+    gvr, err := resolveGVRStatic(kind)
     if err != nil {
-        return nil, fmt.Errorf("error resolviendo GVR: %w", err)
+        return nil, fmt.Errorf("error resolviendo GVR estático: %w", err)
     }
 
     var ri dynamic.ResourceInterface
@@ -40,7 +34,7 @@ func ListResourceNames(resource string, namespace string) ([]string, error) {
         ri = client.Resource(gvr).Namespace(namespace)
     }
 
-    list, err := ri.List(context.Background(), v1.ListOptions{})
+    list, err := ri.List(context.Background(), metav1.ListOptions{})
     if err != nil {
         return nil, fmt.Errorf("error listando recursos: %w", err)
     }
@@ -53,12 +47,9 @@ func ListResourceNames(resource string, namespace string) ([]string, error) {
     return names, nil
 }
 
-func resolveGVR(mapper meta.RESTMapper, resource string) (schema.GroupVersionResource, error) {
-    resource = strings.ToLower(resource)
-    gk := schema.GroupKind{Kind: resource}
-    mappings, err := mapper.RESTMappings(gk)
-    if err != nil {
-        return schema.GroupVersionResource{}, err
+func resolveGVRStatic(kind string) (schema.GroupVersionResource, error) {
+    if gvr, ok := resourceGVRMap[kind]; ok {
+        return gvr, nil
     }
-    return mappings[0].Resource, nil
+    return schema.GroupVersionResource{}, errors.New("tipo de recurso no reconocido o no soportado")
 }

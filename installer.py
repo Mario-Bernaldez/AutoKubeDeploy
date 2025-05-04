@@ -261,11 +261,10 @@ def main():
     modules_config = load_modules_config()
     module_tags = {}
 
-    if args.all or args.build:
-        if not args.modules:
-            print("⚠️ Debes especificar al menos un módulo con -m para construir.")
-            sys.exit(1)
+    if not args.modules:
+        args.modules = list(modules_config.keys())
 
+    if args.all or args.build:
         to_build = []
         for module in args.modules:
             module_type = modules_config.get(module, {}).get("type", "internal")
@@ -280,9 +279,6 @@ def main():
             module_tags.update(tags)
 
     if args.all or args.deploy:
-        if not args.modules:
-            print("⚠️ Debes especificar al menos un módulo con -m para desplegar.")
-            sys.exit(1)
         deploy_helm_chart(args.modules, module_tags)
 
     print("\n✅ Proceso completado correctamente.")

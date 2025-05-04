@@ -1,6 +1,8 @@
 modules:
   kube-manager:
     type: internal
+  kube-web:
+    type: internal
   yaml-explainer:
     type: internal
   generator-engine:

@@ -5,7 +5,7 @@ import (
     "io"
     "net/http"
 
-    "kube-manager/src/k8s"
+    "kube-manager/src"
 )
 
 func DeployHandler(w http.ResponseWriter, r *http.Request) {

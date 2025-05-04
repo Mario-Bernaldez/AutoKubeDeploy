@@ -3,9 +3,8 @@ package handlers
 import (
     "encoding/json"
     "net/http"
-    "strings"
 
-    "kube-manager/src/k8s"
+    "kube-manager/src"
 )
 
 func ListHandler(w http.ResponseWriter, r *http.Request) {

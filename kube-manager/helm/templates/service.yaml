@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "kube-manager.fullname" . }}
+  name: kube-manager
 spec:
   type: {{ .Values.service.type }}
   selector:

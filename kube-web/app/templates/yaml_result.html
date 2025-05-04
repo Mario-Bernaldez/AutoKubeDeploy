@@ -95,10 +95,14 @@
     <label for="selected_model"><strong>Selecciona un modelo:</strong></label>
     <select name="selected_model" id="selected_model" class="btn">
       {% for model in models %}
-      <option value="{{ model.id }}" data-free="{{ model.free }}" {% if selected_model %} {% if model.id==selected_model
-        %}selected{% endif %} {% else %} {% if model.id==default_model %}selected{% endif %} {% endif %}>
-        {{ model.name }}
-      </option>
+      <option value="{{ model.id }}" data-free="{{ model.free }}"
+      {% if selected_model %}
+        {% if model.id == selected_model %}selected{% endif %}
+      {% elif default_model %}
+        {% if model.id == default_model %}selected{% endif %}
+      {% endif %}>
+      {{ model.name }}
+    </option>
       {% endfor %}
     </select>
 

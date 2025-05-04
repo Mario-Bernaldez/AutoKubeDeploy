@@ -3,17 +3,12 @@ package k8s
 import (
     "context"
     "fmt"
+    "strings"
 
-    "k8s.io/client-go/discovery"
     "k8s.io/client-go/dynamic"
-    "k8s.io/client-go/kubernetes/scheme"
     "k8s.io/client-go/rest"
-    "k8s.io/client-go/restmapper"
-    "k8s.io/apimachinery/pkg/api/meta"
     "k8s.io/apimachinery/pkg/apis/meta/v1"
     "k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
-    "k8s.io/apimachinery/pkg/runtime/schema"
-    "k8s.io/client-go/discovery/cached/memory"
     "k8s.io/apimachinery/pkg/runtime/serializer/yaml"
 )
 
@@ -36,25 +31,36 @@ func ApplyYAML(yamlBytes []byte) error {
         return fmt.Errorf("error decodificando YAML: %w", err)
     }
 
-    mapper := restMapper(config)
-    mapping, err := mapper.RESTMapping(schema.GroupKind{
-        Group: gvk.Group,
-        Kind:  gvk.Kind,
-    }, gvk.Version)
-    if err != nil {
-        return fmt.Errorf("error obteniendo RESTMapping: %w", err)
+    kind := strings.Title(obj.GetKind())
+    gvr, ok := resourceGVRMap[kind]
+    if !ok {
+        return fmt.Errorf("tipo de recurso no soportado: %s", kind)
     }
 
-    resourceClient := client.Resource(mapping.Resource).Namespace(obj.GetNamespace())
-    _, err = resourceClient.Create(context.Background(), obj, v1.CreateOptions{})
+    // Validación opcional: asegurar coherencia entre YAML y mapa
+    if gvk.Group != gvr.Group || gvk.Version != gvr.Version {
+        return fmt.Errorf("la versión o grupo del recurso no coincide con el mapa: YAML=%s/%s, Mapa=%s/%s",
+            gvk.Group, gvk.Version, gvr.Group, gvr.Version)
+    }
+
+    // Asignar namespace por defecto si no está definido y el recurso lo requiere
+    ns := obj.GetNamespace()
+    if ns == "" && gvr.Resource != "namespaces" && !strings.HasPrefix(gvr.Resource, "cluster") {
+        ns = "default"
+        obj.SetNamespace(ns)
+    }
+
+    var ri dynamic.ResourceInterface
+    if gvr.Resource == "namespaces" || ns == "" {
+        ri = client.Resource(gvr)
+    } else {
+        ri = client.Resource(gvr).Namespace(ns)
+    }
+
+    _, err = ri.Create(context.Background(), obj, v1.CreateOptions{})
     if err != nil {
         return fmt.Errorf("error creando recurso en Kubernetes: %w", err)
     }
 
     return nil
-}
-
-func restMapper(config *rest.Config) meta.RESTMapper {
-    dc, _ := discovery.NewDiscoveryClientForConfig(config)
-    return restmapper.NewDeferredDiscoveryRESTMapper(memory.NewMemCacheClient(dc))
 }

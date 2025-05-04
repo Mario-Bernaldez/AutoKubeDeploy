@@ -4,7 +4,7 @@ import (
     "fmt"
     "net/http"
 
-    "kube-manager/src/k8s"
+    "kube-manager/src"
 )
 
 func DeleteHandler(w http.ResponseWriter, r *http.Request) {

@@ -148,17 +148,21 @@
         <p>Consulta los recursos existentes en el clúster.</p>
         <form method="get" action="/explore">
           <select name="resource" id="resource-select">
-            <option value="pods">Pods</option>
-            <option value="deployments">Deployments</option>
-            <option value="services">Services</option>
-            <option value="namespaces">Namespaces</option>
-            <option value="hpa">Horizontal Pod Autoscalers</option>
-            <option value="configmaps">ConfigMaps</option>
-            <option value="secrets">Secrets</option>
-            <option value="pvc">Persistent Volume Claims</option>
-            <option value="ingress">Ingress</option>
-            <option value="serviceaccounts">Service Accounts</option>
-            <option value="networkpolicies">Network Policies</option>
+            <option value="Pod">Pods</option>
+            <option value="Deployment">Deployments</option>
+            <option value="Service">Services</option>
+            <option value="Namespace">Namespaces</option>
+            <option value="HorizontalPodAutoscaler">Horizontal Pod Autoscalers</option>
+            <option value="ConfigMap">ConfigMaps</option>
+            <option value="Secret">Secrets</option>
+            <option value="PersistentVolumeClaim">Persistent Volume Claims</option>
+            <option value="Ingress">Ingress</option>
+            <option value="ServiceAccount">Service Accounts</option>
+            <option value="Role">Role</option>
+            <option value="RoleBinding">Role Binding</option>
+            <option value="ClusterRole">Cluster Role</option>
+            <option value="ClusterRoleBinding">Cluster Role Binding</option>
+            <option value="NetworkPolicy">Network Policies</option>
           </select>
           <button type="submit" class="btn">🔎 Ver Recursos</button>
         </form>
