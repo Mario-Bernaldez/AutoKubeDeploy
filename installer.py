@@ -9,19 +9,19 @@ import yaml
 
 
 def load_modules_config():
-    """Carga el archivo modules.yaml para obtener la configuración de los módulos."""
+    """Loads the modules.yaml file to get module configuration."""
     config_path = os.path.join(os.path.dirname(__file__), "modules.yaml")
     try:
         with open(config_path, "r") as f:
             config = yaml.safe_load(f)
         return config.get("modules", {})
     except Exception as e:
-        print(f"❌ Error cargando modules.yaml: {e}")
+        print(f"❌ Error loading modules.yaml: {e}")
         sys.exit(1)
 
 
 def is_command_available(command):
-    """Verifica si un comando está disponible en el sistema."""
+    """Checks if a command is available in the system."""
     result = subprocess.run(
         ["which", command], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True
     )
@@ -29,112 +29,109 @@ def is_command_available(command):
 
 
 def install_microk8s():
-    """Instala MicroK8s usando Snap si no está instalado y habilita el registro local."""
-    print("Instalando MicroK8s...")
+    """Installs MicroK8s using Snap if not installed and enables the local registry."""
+    print("Installing MicroK8s...")
     try:
         subprocess.run(["sudo", "snap", "install", "microk8s", "--classic"], check=True)
     except subprocess.CalledProcessError:
-        print("❌ Error al instalar MicroK8s.")
+        print("❌ Failed to install MicroK8s.")
         sys.exit(1)
 
-    print("✅ MicroK8s instalado correctamente.")
+    print("✅ MicroK8s installed successfully.")
 
-    # Agregar el usuario al grupo microk8s para evitar usar sudo constantemente
-    print("Añadiendo el usuario al grupo microk8s...")
+    print("Adding user to microk8s group...")
     try:
         subprocess.run(["sudo", "usermod", "-aG", "microk8s", "$USER"], check=True)
     except subprocess.CalledProcessError:
         print(
-            "⚠️ Error al añadir el usuario al grupo microk8s. Es posible que necesites reiniciar tu sesión."
+            "⚠️ Failed to add user to microk8s group. You may need to log out and back in."
         )
 
-    # Habilitar el registro local en MicroK8s
-    print("🔧 Habilitando el registro interno de MicroK8s...")
+    print("🔧 Enabling MicroK8s built-in registry...")
     try:
         subprocess.run(["microk8s", "enable", "registry"], check=True)
     except subprocess.CalledProcessError:
-        print("❌ Error al habilitar el registro local de MicroK8s.")
+        print("❌ Failed to enable MicroK8s registry.")
         sys.exit(1)
 
-    print("✅ Registro de MicroK8s habilitado correctamente en localhost:32000.")
+    print("✅ MicroK8s registry enabled on localhost:32000.")
 
-    # Reiniciar MicroK8s para aplicar los cambios
-    print("♻️ Reiniciando MicroK8s para aplicar cambios...")
+    print("♻️ Restarting MicroK8s to apply changes...")
     try:
         subprocess.run(["microk8s", "stop"], check=True)
         subprocess.run(["microk8s", "start"], check=True)
     except subprocess.CalledProcessError:
-        print("❌ Error al reiniciar MicroK8s.")
+        print("❌ Failed to restart MicroK8s.")
         sys.exit(1)
 
-    print("✅ MicroK8s listo para usar.")
+    print("✅ MicroK8s is ready to use.")
 
 
 def start_microk8s():
-    """Inicia MicroK8s."""
-    print("Iniciando MicroK8s...")
+    """Starts MicroK8s."""
+    print("Starting MicroK8s...")
     try:
         subprocess.run(["sudo", "microk8s", "start"], check=True)
     except subprocess.CalledProcessError:
-        print("Error al iniciar MicroK8s.")
+        print("Failed to start MicroK8s.")
         sys.exit(1)
 
 
 def configure_kubectl():
-    """Configura el alias de kubectl si no está instalado."""
+    """Sets up kubectl alias if not installed."""
     if is_command_available("kubectl"):
-        print("kubectl ya está instalado.")
+        print("kubectl is already installed.")
     else:
-        print("Creando alias para kubectl...")
+        print("Creating alias for kubectl...")
         try:
             subprocess.run(
                 ["sudo", "snap", "alias", "microk8s.kubectl", "kubectl"], check=True
             )
         except subprocess.CalledProcessError:
-            print("Error al crear alias para kubectl.")
+            print("Failed to create alias for kubectl.")
             sys.exit(1)
 
 
 def configure_permissions():
-    """Configura permisos y agrega el usuario al grupo microk8s."""
+    """Sets permissions and adds the user to the microk8s group."""
     user = getpass.getuser()
-    print(f"Añadiendo el usuario '{user}' al grupo microk8s...")
+    print(f"Adding user '{user}' to microk8s group...")
 
     try:
         subprocess.run(["sudo", "usermod", "-a", "-G", "microk8s", user], check=True)
     except subprocess.CalledProcessError:
-        print(f"Error al añadir el usuario '{user}' al grupo microk8s.")
+        print(f"Failed to add user '{user}' to microk8s group.")
         sys.exit(1)
 
     kube_dir = os.path.expanduser("~/.kube")
     if not os.path.exists(kube_dir):
         os.makedirs(kube_dir, exist_ok=True)
 
-    print(f"Cambiando la propiedad de {kube_dir} al usuario '{user}'...")
+    print(f"Changing ownership of {kube_dir} to user '{user}'...")
     try:
         subprocess.run(["sudo", "chown", "-R", user, kube_dir], check=True)
     except subprocess.CalledProcessError:
-        print(f"Error al cambiar la propiedad de {kube_dir}.")
+        print(f"Failed to change ownership of {kube_dir}.")
         sys.exit(1)
 
-    print("Permisos configurados correctamente.")
+    print("Permissions configured successfully.")
 
 
 def apply_group_changes():
-    """Recarga los grupos del usuario actual sin necesidad de cerrar sesión."""
-    print("Aplicando cambios de grupo sin cerrar sesión...")
+    """Applies group changes without requiring a logout."""
+    print("Applying group changes without logging out...")
 
     try:
         subprocess.run(["newgrp", "microk8s"], check=True)
     except subprocess.CalledProcessError:
-        print("Error al aplicar el grupo microk8s. Intenta cerrar sesión o reiniciar.")
+        print("Failed to apply microk8s group. Try logging out or rebooting.")
         sys.exit(1)
 
 
 def configure_kubeconfig():
-    """Configura el archivo ~/.kube/config con la configuración de MicroK8s."""
+    """Sets the ~/.kube/config file with MicroK8s configuration."""
     kube_config_path = os.path.expanduser("~/.kube/config")
-    print("Configurando Kubernetes config...")
+    print("Configuring Kubernetes config...")
 
     try:
         result = subprocess.run(
@@ -147,43 +144,43 @@ def configure_kubeconfig():
         with open(kube_config_path, "w") as f:
             f.write(result.stdout)
 
-        print(f"Configuración de Kubernetes guardada en {kube_config_path}")
+        print(f"Kubernetes configuration saved at {kube_config_path}")
 
     except subprocess.CalledProcessError:
-        print("Error al obtener la configuración de Kubernetes desde MicroK8s.")
+        print("Failed to get Kubernetes config from MicroK8s.")
         sys.exit(1)
 
 
 def build_and_push_docker_image(modules):
-    """Construye imágenes con tag único y las sube al registro local."""
+    """Builds Docker images with unique tags and pushes them to the local registry."""
     tags = {}
 
     for module in modules:
         tag = str(int(time.time()))
         image_name = f"localhost:32000/{module}:{tag}"
-        print(f"\n🔧 Construyendo imagen Docker {image_name}...")
+        print(f"\n🔧 Building Docker image {image_name}...")
 
         try:
             subprocess.run(["docker", "build", "-t", image_name, module], check=True)
         except subprocess.CalledProcessError:
-            print("❌ Error al construir la imagen Docker.")
+            print("❌ Failed to build Docker image.")
             sys.exit(1)
 
-        print("\n📤 Subiendo la imagen al registro local de MicroK8s...")
+        print("\n📤 Pushing image to local MicroK8s registry...")
         try:
             subprocess.run(["docker", "push", image_name], check=True)
         except subprocess.CalledProcessError:
-            print("❌ Error al subir la imagen Docker al registro local.")
+            print("❌ Failed to push Docker image to local registry.")
             sys.exit(1)
 
-        print(f"\n✅ Imagen '{image_name}' subida correctamente.")
+        print(f"\n✅ Image '{image_name}' pushed successfully.")
         tags[module] = tag
 
     return tags
 
 
 def deploy_helm_chart(modules, tags):
-    """Instala o actualiza el paquete Helm en Kubernetes."""
+    """Installs or updates the Helm chart in Kubernetes."""
     modules_config = load_modules_config()
 
     for module in modules:
@@ -191,7 +188,7 @@ def deploy_helm_chart(modules, tags):
         chart_path = f"{module}/helm"
         module_type = modules_config.get(module, {}).get("type", "internal")
 
-        print(f"\n🚀 Desplegando '{module}' ({module_type}) con Helm...")
+        print(f"\n🚀 Deploying '{module}' ({module_type}) with Helm...")
 
         helm_cmd = ["helm", "upgrade", "--install", release_name, chart_path]
 
@@ -206,40 +203,38 @@ def deploy_helm_chart(modules, tags):
         try:
             subprocess.run(helm_cmd, check=True)
         except subprocess.CalledProcessError:
-            print(f"❌ Error al desplegar '{module}' con Helm.")
+            print(f"❌ Failed to deploy '{module}' with Helm.")
             sys.exit(1)
 
-        print(f"✅ '{module}' desplegado correctamente.")
+        print(f"✅ '{module}' deployed successfully.")
 
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Script para instalar y configurar MicroK8s, construir imágenes Docker y desplegar con Helm."
+        description="Script to install and configure MicroK8s, build Docker images, and deploy using Helm."
     )
 
     parser.add_argument(
-        "--install", action="store_true", help="Instala y configura MicroK8s."
+        "--install", action="store_true", help="Install and configure MicroK8s."
     )
     parser.add_argument(
         "--build",
         action="store_true",
-        help="Construye y sube imágenes Docker para los módulos especificados.",
+        help="Build and push Docker images for the specified modules.",
     )
     parser.add_argument(
         "--deploy",
         action="store_true",
-        help="Despliega la aplicación con Helm usando los módulos especificados.",
+        help="Deploy the application using Helm with the specified modules.",
     )
     parser.add_argument(
-        "--all",
-        action="store_true",
-        help="Ejecuta todas las opciones: instalación, construcción y despliegue.",
+        "--all", action="store_true", help="Run all: install, build, and deploy."
     )
     parser.add_argument(
         "-m",
         "--modules",
         action="append",
-        help="Lista de módulos a procesar.",
+        help="List of modules to process.",
         default=[],
     )
 
@@ -247,10 +242,10 @@ def main():
 
     if args.all or args.install:
         if not is_command_available("microk8s"):
-            print("MicroK8s no está instalado. Procediendo con la instalación...")
+            print("MicroK8s is not installed. Proceeding with installation...")
             install_microk8s()
         else:
-            print("✅ MicroK8s ya está instalado.")
+            print("✅ MicroK8s is already installed.")
 
         start_microk8s()
         configure_kubectl()
@@ -269,7 +264,7 @@ def main():
         for module in args.modules:
             module_type = modules_config.get(module, {}).get("type", "internal")
             if module_type == "external":
-                print(f"🔹 '{module}' es externo, se omite build.")
+                print(f"🔹 '{module}' is external, skipping build.")
                 module_tags[module] = None
             else:
                 to_build.append(module)
@@ -281,7 +276,7 @@ def main():
     if args.all or args.deploy:
         deploy_helm_chart(args.modules, module_tags)
 
-    print("\n✅ Proceso completado correctamente.")
+    print("\n✅ Process completed successfully.")
 
 
 if __name__ == "__main__":

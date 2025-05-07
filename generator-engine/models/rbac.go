@@ -9,19 +9,19 @@ type Rule struct {
 type Subject struct {
 	Kind      string `json:"kind"`
 	Name      string `json:"name"`
-	Namespace string `json:"namespace,omitempty"` // solo para ServiceAccount
+	Namespace string `json:"namespace,omitempty"` // only for ServiceAccount
 }
 
 type RoleBinding struct {
 	Name      string    `json:"name"`
-	Namespace string    `json:"namespace,omitempty"` // solo para RoleBinding
+	Namespace string    `json:"namespace,omitempty"` // only for RoleBinding
 	Subjects  []Subject `json:"subjects"`
 }
 
 type RoleObject struct {
-	Type      string      `json:"type"` // "Role" o "ClusterRole"
+	Type      string      `json:"type"` // "Role" or "ClusterRole"
 	Name      string      `json:"name"`
-	Namespace string      `json:"namespace,omitempty"` // solo para Role
+	Namespace string      `json:"namespace,omitempty"` // only for Role
 	Rules     []Rule      `json:"rules"`
 	Binding   RoleBinding `json:"binding"`
 }

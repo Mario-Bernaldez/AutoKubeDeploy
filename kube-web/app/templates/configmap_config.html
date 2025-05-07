@@ -12,7 +12,7 @@
 
     <a href="{% url 'object_selector' %}"
         style="display: inline-block; margin-bottom: 20px; text-decoration: none; color: #007bff;">
-        ⬅ Volver
+        ⬅ Back
     </a>
 
     <h2>Configure ConfigMap</h2>
@@ -29,8 +29,7 @@
                 </li>
 
                 <li>
-                    <strong>Properties</strong>
-                    {{ configmap_key_formset.management_form }}
+                    <strong>Properties</strong> {{ configmap_key_formset.management_form }}
                     <ul id="properties-form-container">
                         {% for form in configmap_key_formset %}
                         <li class="form-item">
@@ -47,7 +46,7 @@
         <button type="submit">Generate YAML</button>
     </form>
 
-    <!-- Formulario vacío para clonar -->
+    <!-- Empty form to clone -->
     <div id="properties-empty-form" style="display: none;">
         <li class="form-item">
             <div class="tree-item">{{ configmap_key_formset.empty_form.as_p }}</div>

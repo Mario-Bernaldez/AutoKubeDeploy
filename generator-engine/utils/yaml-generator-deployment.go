@@ -9,21 +9,21 @@ import (
 )
 
 func parseIntOrString(value string) interface{} {
-	// Intenta convertir a entero
+	// Try to convert to integer
 	if i, err := strconv.Atoi(value); err == nil {
 		return i
 	}
-	// Si no es entero, devuelve el string como está
+	// If not an integer, return the string as is
 	return value
 }
 
 func GenerateDeploymentYAML(dep models.DeploymentObject) (string, error) {
 	podLabels := parseLabels(dep.PodTemplate.Labels)
 
-	// Procesar contenedores individualmente
+	// Process containers individually
 	containers := make([]map[string]interface{}, 0)
 	for _, container := range dep.Containers {
-		// Procesar puertos (pueden venir separados por coma)
+		// Process ports (can be comma-separated)
 		portList := make([]map[string]int, 0)
 		portStrs := strings.Split(container.Ports, ",")
 		for _, p := range portStrs {
@@ -39,7 +39,7 @@ func GenerateDeploymentYAML(dep models.DeploymentObject) (string, error) {
 			}
 		}
 
-		// Procesar variables de entorno
+		// Process environment variables
 		envMap := parseEnvVars(container.EnvVars)
 		envVarsList := make([]map[string]string, 0)
 		for k, v := range envMap {
@@ -49,7 +49,7 @@ func GenerateDeploymentYAML(dep models.DeploymentObject) (string, error) {
 			})
 		}
 
-		// Procesar volumeMounts propios del contenedor
+		// Process container-specific volumeMounts
 		volumeMounts := make([]map[string]interface{}, 0)
 		for _, vm := range container.VolumeMounts {
 			volumeMounts = append(volumeMounts, map[string]interface{}{
@@ -69,7 +69,6 @@ func GenerateDeploymentYAML(dep models.DeploymentObject) (string, error) {
 		containers = append(containers, c)
 	}
 
-	// Procesar volúmenes (solo se implementa emptyDir por ahora)
 	volumes := make([]map[string]interface{}, 0)
 	for _, volume := range dep.Volumes {
 		switch volume.VolumeType {
@@ -85,7 +84,7 @@ func GenerateDeploymentYAML(dep models.DeploymentObject) (string, error) {
 				"name":     volume.VolumeName,
 				"emptyDir": emptyDir,
 			})
-	
+
 		case "hostPath":
 			if volume.Path != "" {
 				hostPath := map[string]interface{}{
@@ -99,7 +98,7 @@ func GenerateDeploymentYAML(dep models.DeploymentObject) (string, error) {
 					"hostPath": hostPath,
 				})
 			}
-	
+
 		case "configMap":
 			if volume.ConfigMapName != "" {
 				volumes = append(volumes, map[string]interface{}{
@@ -109,7 +108,7 @@ func GenerateDeploymentYAML(dep models.DeploymentObject) (string, error) {
 					},
 				})
 			}
-	
+
 		case "secret":
 			if volume.SecretName != "" {
 				volumes = append(volumes, map[string]interface{}{
@@ -119,7 +118,7 @@ func GenerateDeploymentYAML(dep models.DeploymentObject) (string, error) {
 					},
 				})
 			}
-	
+
 		case "pvc":
 			if volume.PvcClaimName != "" {
 				volumes = append(volumes, map[string]interface{}{
@@ -131,7 +130,6 @@ func GenerateDeploymentYAML(dep models.DeploymentObject) (string, error) {
 			}
 		}
 	}
-	
 
 	deploymentYAML := map[string]interface{}{
 		"apiVersion": "apps/v1",

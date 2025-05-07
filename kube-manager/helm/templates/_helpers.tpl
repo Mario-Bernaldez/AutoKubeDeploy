@@ -1,12 +1,12 @@
 {{- /*
-Genera el nombre base del chart
+Generates the base name of the chart
 */ -}}
 {{- define "kube-manager.name" -}}
 {{ .Chart.Name }}
 {{- end }}
 
 {{- /*
-Genera el nombre completo del release
+Generates the full name of the release
 */ -}}
 {{- define "kube-manager.fullname" -}}
 {{- if .Values.fullnameOverride }}
@@ -19,14 +19,14 @@ Genera el nombre completo del release
 {{- end }}
 
 {{- /*
-Etiqueta común para seleccionar el app
+Common selector label for the app
 */ -}}
 {{- define "kube-manager.selectorLabels" -}}
 app: {{ include "kube-manager.name" . }}
 {{- end }}
 
 {{- /*
-Etiquetas comunes de metadatos
+Common metadata labels
 */ -}}
 {{- define "kube-manager.labels" -}}
 helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}

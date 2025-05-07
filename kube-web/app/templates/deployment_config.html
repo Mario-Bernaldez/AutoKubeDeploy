@@ -29,9 +29,7 @@
           <div class="tree-item">{{ pod_form.as_p }}</div>
         </li>
         <li>
-          <strong>Containers</strong>
-          {{ container_formset.management_form }}
-          {% if container_formset.non_form_errors %}
+          <strong>Containers</strong> {{ container_formset.management_form }} {% if container_formset.non_form_errors %}
           <div class="errorlist">
             {% for error in container_formset.non_form_errors %}
             <p style="color: red;">{{ error }}</p>
@@ -41,8 +39,8 @@
           <ul id="containers-form-container">
             {% for form in container_formset %}
             <li class="form-item">
-              <div class="tree-item">{{ form.as_p }} <strong>Volume Mounts</strong>
-                {{ volume_mount_formset.management_form }}
+              <div class="tree-item">{{ form.as_p }} <strong>Volume Mounts</strong> {{
+                volume_mount_formset.management_form }}
                 <ul class="volume_mounts-form-container">
                   {% for form in volume_mount_formset %}
                   <li>
@@ -60,8 +58,7 @@
           </ul>
         </li>
         <li>
-          <strong>Volumes</strong>
-          {{ volume_formset.management_form }}
+          <strong>Volumes</strong> {{ volume_formset.management_form }}
           <ul id="volumes-form-container">
             {% for form in volume_formset %}
             <li class="form-item">
@@ -78,7 +75,6 @@
     <button type="submit">Generate YAML</button>
   </form>
 
-  <!-- Formularios vacíos -->
   <div id="containers-empty-form" style="display: none;">
     <li class="form-item">
       <div class="tree-item">{{ container_formset.empty_form.as_p }}

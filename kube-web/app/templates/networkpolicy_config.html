@@ -12,7 +12,7 @@
 
     <a href="{% url 'object_selector' %}"
         style="display: inline-block; margin-bottom: 20px; text-decoration: none; color: #007bff;">
-        ⬅ Volver
+        ⬅ Back
     </a>
 
     <h2>Configure NetworkPolicy</h2>
@@ -29,8 +29,7 @@
                 </li>
 
                 <li>
-                    <strong>Traffic Rules</strong>
-                    {{ rule_formset.management_form }}
+                    <strong>Traffic Rules</strong> {{ rule_formset.management_form }}
                     <ul id="rules-form-container">
                         {% for form in rule_formset %}
                         <li class="form-item">
@@ -47,7 +46,7 @@
         <button type="submit">Generate YAML</button>
     </form>
 
-    <!-- Formulario vacío para clonar -->
+    <!-- Empty form template for cloning -->
     <div id="rules-empty-form" style="display: none;">
         <li class="form-item">
             <div class="tree-item">{{ rule_formset.empty_form.as_p }}</div>

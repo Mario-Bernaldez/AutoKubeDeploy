@@ -8,7 +8,7 @@ import (
 func GenerateServiceYAML(svc models.ServiceObject) (string, error) {
 	selector := parseLabels(svc.Selector)
 
-	// Construir la lista de puertos
+	// Build the list of ports
 	ports := make([]map[string]interface{}, 0)
 	for _, p := range svc.Ports {
 		portEntry := map[string]interface{}{
@@ -16,7 +16,7 @@ func GenerateServiceYAML(svc models.ServiceObject) (string, error) {
 			"targetPort": p.TargetPort,
 			"protocol":   p.Protocol,
 		}
-		// Solo incluir nodePort si es un NodePort y el valor no es cero
+		// Include nodePort only if it's a NodePort service and value is not zero
 		if svc.ServiceType == "NodePort" && p.NodePort != 0 {
 			portEntry["nodePort"] = p.NodePort
 		}

@@ -12,17 +12,17 @@ import (
 func DeleteResource(kind, name, namespace string) error {
     config, err := rest.InClusterConfig()
     if err != nil {
-        return fmt.Errorf("error cargando configuración del clúster: %w", err)
+        return fmt.Errorf("error loading cluster configuration: %w", err)
     }
 
     client, err := dynamic.NewForConfig(config)
     if err != nil {
-        return fmt.Errorf("error creando cliente dinámico: %w", err)
+        return fmt.Errorf("error creating dynamic client: %w", err)
     }
 
     gvr, ok := resourceGVRMap[kind]
     if !ok {
-        return fmt.Errorf("tipo de recurso no soportado: %s", kind)
+        return fmt.Errorf("unsupported resource type: %s", kind)
     }
 
     var ri dynamic.ResourceInterface
@@ -34,7 +34,7 @@ func DeleteResource(kind, name, namespace string) error {
 
     err = ri.Delete(context.Background(), name, metav1.DeleteOptions{})
     if err != nil {
-        return fmt.Errorf("error eliminando recurso %s/%s: %w", kind, name, err)
+        return fmt.Errorf("error deleting resource %s/%s: %w", kind, name, err)
     }
 
     return nil

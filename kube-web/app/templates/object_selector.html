@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>Selecciona Tipo de Objeto</title>
+  <title>Select Object Type</title>
   <style>
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -113,11 +113,11 @@
 <body>
   <div class="row">
 
-    <!-- Columna izquierda (Formulario de configuración) -->
+    <!-- Left Column (Configuration Form) -->
     <div class="column">
       <form method="post" class="card">
         {% csrf_token %}
-        <h2>⚙️ ¿Qué objeto deseas configurar?</h2>
+        <h2>⚙️ Which object do you want to configure?</h2>
         <div class="radio-group">
           <label><input type="radio" name="object_type" value="deployment" required> Deployment</label>
           <label><input type="radio" name="object_type" value="service"> Service</label>
@@ -125,27 +125,27 @@
           <label><input type="radio" name="object_type" value="hpa"> Horizontal Pod Autoscaler</label>
           <label><input type="radio" name="object_type" value="configMap"> ConfigMap</label>
           <label><input type="radio" name="object_type" value="secret"> Secrets</label>
-          <label><input type="radio" name="object_type" value="pvc"> Persistent Volumen Claim</label>
+          <label><input type="radio" name="object_type" value="pvc"> Persistent Volume Claim</label>
           <label><input type="radio" name="object_type" value="ingress"> Ingress</label>
           <label><input type="radio" name="object_type" value="sa"> Service Account</label>
           <label><input type="radio" name="object_type" value="rbac"> RBAC</label>
           <label><input type="radio" name="object_type" value="networkpolicy"> Network Policy</label>
         </div>
-        <button type="submit" class="btn">Continuar</button>
+        <button type="submit" class="btn">Continue</button>
       </form>
     </div>
 
-    <!-- Columna derecha (monitorización, exploración e historial) -->
+    <!-- Right Column (Monitoring, Explore, History) -->
     <div class="column">
       <div class="card">
-        <h2>📈 Monitorización</h2>
-        <p>Accede a las métricas del clúster con Grafana.</p>
-        <a href="http://localhost:3000" target="_blank" class="btn btn-secondary">🌐 Ir a Grafana</a>
+        <h2>📈 Monitoring</h2>
+        <p>Access cluster metrics with Grafana.</p>
+        <a href="http://localhost:3000" target="_blank" class="btn btn-secondary">🌐 Go to Grafana</a>
       </div>
 
       <div class="card">
-        <h2>🔍 Explorar Recursos</h2>
-        <p>Consulta los recursos existentes en el clúster.</p>
+        <h2>🔍 Explore Resources</h2>
+        <p>Browse existing resources in the cluster.</p>
         <form method="get" action="/explore">
           <select name="resource" id="resource-select">
             <option value="Pod">Pods</option>
@@ -164,14 +164,14 @@
             <option value="ClusterRoleBinding">Cluster Role Binding</option>
             <option value="NetworkPolicy">Network Policies</option>
           </select>
-          <button type="submit" class="btn">🔎 Ver Recursos</button>
+          <button type="submit" class="btn">🔎 View Resources</button>
         </form>
       </div>
 
       <div class="card">
-        <h2>📜 Historial de Despliegues</h2>
-        <p>Revisa los YAML desplegados recientemente y vuelve a aplicarlos.</p>
-        <a href="/history/" class="btn btn-secondary">🕓 Ver Historial</a>
+        <h2>📜 Deployment History</h2>
+        <p>Review recently deployed YAMLs and re-apply them.</p>
+        <a href="/history/" class="btn btn-secondary">🕓 View History</a>
       </div>
     </div>
 

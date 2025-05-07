@@ -10,21 +10,21 @@ import (
 )
 
 func ExplainHandler(w http.ResponseWriter, r *http.Request) {
-	log.Println("Nueva petición recibida en /explain")
+	log.Println("New request received at /explain")
 
 	if r.Method != http.MethodPost {
-		http.Error(w, "Método no permitido", http.StatusMethodNotAllowed)
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
 
 	var payload models.RequestPayload
 	if err := json.NewDecoder(r.Body).Decode(&payload); err != nil {
-		http.Error(w, "Error leyendo el cuerpo", http.StatusBadRequest)
+		http.Error(w, "Error reading request body", http.StatusBadRequest)
 		return
 	}
 
 	if !utils.IsValidYAML(payload.YAML) {
-		http.Error(w, "YAML inválido", http.StatusBadRequest)
+		http.Error(w, "Invalid YAML", http.StatusBadRequest)
 		return
 	}
 
@@ -33,10 +33,9 @@ func ExplainHandler(w http.ResponseWriter, r *http.Request) {
 		log.Printf("Error (%d): %v\n", statusCode, err)
 		http.Error(w, err.Error(), statusCode)
 		return
-	}	
+	}
 
 	json.NewEncoder(w).Encode(models.ResponsePayload{
 		Explanation: response,
 	})
 }
-

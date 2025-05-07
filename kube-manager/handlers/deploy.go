@@ -10,21 +10,21 @@ import (
 
 func DeployHandler(w http.ResponseWriter, r *http.Request) {
     if r.Method != http.MethodPost {
-        http.Error(w, "Método no permitido", http.StatusMethodNotAllowed)
+        http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
         return
     }
 
     body, err := io.ReadAll(r.Body)
     if err != nil {
-        http.Error(w, "Error leyendo el cuerpo", http.StatusBadRequest)
+        http.Error(w, "Error reading request body", http.StatusBadRequest)
         return
     }
 
     err = k8s.ApplyYAML(body)
     if err != nil {
-        http.Error(w, fmt.Sprintf("Error desplegando YAML: %v", err), http.StatusInternalServerError)
+        http.Error(w, fmt.Sprintf("Error applying YAML: %v", err), http.StatusInternalServerError)
         return
     }
 
-    fmt.Fprintln(w, "YAML desplegado exitosamente")
+    fmt.Fprintln(w, "YAML successfully deployed")
 }

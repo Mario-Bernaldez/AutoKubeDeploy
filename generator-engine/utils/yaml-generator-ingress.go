@@ -10,7 +10,7 @@ func GenerateIngressYAML(ing models.IngressObject) (string, error) {
 	for _, p := range ing.Paths {
 		paths = append(paths, map[string]interface{}{
 			"path":     p.Path,
-			"pathType": "Prefix", // puedes parametrizarlo si quieres
+			"pathType": "Prefix",
 			"backend": map[string]interface{}{
 				"service": map[string]interface{}{
 					"name": p.ServiceName,

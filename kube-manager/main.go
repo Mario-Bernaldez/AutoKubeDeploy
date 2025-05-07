@@ -13,6 +13,6 @@ func main() {
     http.HandleFunc("/list", handlers.ListHandler)
     http.HandleFunc("/resource", handlers.DeleteHandler)
 
-    fmt.Println("Escuchando en :8080...")
+    fmt.Println("Listening on :8080...")
     log.Fatal(http.ListenAndServe(":8080", nil))
 }

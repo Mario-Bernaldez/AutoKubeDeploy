@@ -11,15 +11,15 @@ import (
 const modelsEndpoint = "https://openrouter.ai/api/v1/models"
 
 type RawModel struct {
-	ID          string `json:"id"`
-	Name        string `json:"name,omitempty"`
-	Tiers       []string `json:"tiers,omitempty"` // algunos modelos pueden tener esto
+	ID    string   `json:"id"`
+	Name  string   `json:"name,omitempty"`
+	Tiers []string `json:"tiers,omitempty"` // some models may include this
 }
 
 type SimplifiedModel struct {
-	ID    string `json:"id"`
-	Name  string `json:"name"`
-	Free  bool   `json:"free"`
+	ID   string `json:"id"`
+	Name string `json:"name"`
+	Free bool   `json:"free"`
 }
 
 func FetchSimplifiedModels() ([]SimplifiedModel, error) {
@@ -51,7 +51,7 @@ func FetchSimplifiedModels() ([]SimplifiedModel, error) {
 		return nil, err
 	}
 
-	// Transformar a nuestra estructura simplificada
+	// Transform into our simplified structure
 	var result []SimplifiedModel
 	for _, m := range response.Data {
 		model := SimplifiedModel{

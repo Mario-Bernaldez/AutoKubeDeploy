@@ -12,7 +12,7 @@
 
     <a href="{% url 'object_selector' %}"
         style="display: inline-block; margin-bottom: 20px; text-decoration: none; color: #007bff;">
-        ⬅ Volver
+        ⬅ Back
     </a>
     <h2>Configure Horizontal Pod Autoscaler</h2>
 
@@ -28,8 +28,7 @@
                 </li>
 
                 <li>
-                    <strong>Metrics</strong>
-                    {{ metric_formset.management_form }}
+                    <strong>Metrics</strong> {{ metric_formset.management_form }}
                     <ul id="metrics-form-container">
                         {% for form in metric_formset %}
                         <li class="form-item">
@@ -46,7 +45,7 @@
         <button type="submit">Generate YAML</button>
     </form>
 
-    <!-- Formulario vacío para clonar -->
+    <!-- Empty form template for cloning -->
     <div id="metrics-empty-form" style="display: none;">
         <li class="form-item">
             <div class="tree-item">{{ metric_formset.empty_form.as_p }}</div>
@@ -110,7 +109,7 @@
                     }
                 }
             }
-            // Si es válido, limpiar cualquier mensaje anterior
+            // If valid, clear previous messages
             minReplicasInput.setCustomValidity("");
             maxReplicasInput.setCustomValidity("");
             return true;
@@ -126,10 +125,10 @@
 
             const form = document.querySelector('form');
             form.addEventListener('submit', function (e) {
-                validateReplicas(); // Actualiza validaciones antes del envío
+                validateReplicas(); // Run validation before submit
             });
 
-            // Además, validamos en tiempo real mientras escribe
+            // Real-time validation while typing
             const minInput = document.getElementById('id_min_replicas');
             const maxInput = document.getElementById('id_max_replicas');
             if (minInput && maxInput) {
@@ -138,7 +137,6 @@
             }
         });
     </script>
-
 
 </body>
 

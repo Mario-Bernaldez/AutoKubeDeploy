@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
-    <title>Historial de Despliegues</title>
+    <title>Deployment History</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -55,13 +55,13 @@
 </head>
 
 <body>
-    <h1>📜 Historial de Despliegues</h1>
+    <h1>📜 Deployment History</h1>
     <table>
         <thead>
             <tr>
-                <th>Fecha</th>
-                <th>Tipo</th>
-                <th>Nombre</th>
+                <th>Date</th>
+                <th>Type</th>
+                <th>Name</th>
                 <th>YAML</th>
             </tr>
         </thead>
@@ -71,17 +71,17 @@
                 <td>{{ item.created_at|date:"Y-m-d H:i" }}</td>
                 <td>{{ item.resource_type }}</td>
                 <td>{{ item.resource_name }}</td>
-                <td><a href="{% url 'view_deployment_yaml' 1 %}">📄 Ver</a></td>
+                <td><a href="{% url 'view_deployment_yaml' 1 %}">📄 View</a></td>
             </tr>
             {% empty %}
             <tr>
-                <td colspan="4">No hay despliegues registrados aún.</td>
+                <td colspan="4">No deployments have been recorded yet.</td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
     <br>
-    <a href="/">⬅ Volver al inicio</a>
+    <a href="/">⬅ Back to Home</a>
 </body>
 
 </html>

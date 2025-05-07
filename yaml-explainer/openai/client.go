@@ -12,7 +12,7 @@ import (
 )
 
 const endpoint = "https://openrouter.ai/api/v1/chat/completions"
-const model = "open-r1/olympiccoder-7b:free" // Puedes cambiar por otro gratuito
+const model = "open-r1/olympiccoder-7b:free" // You can replace this with another free one
 
 func ExplainYAMLWithModel(yaml string, model string) (string, int, error) {
 	if model == "" {
@@ -22,7 +22,10 @@ func ExplainYAMLWithModel(yaml string, model string) (string, int, error) {
 	payload := models.OpenAIRequest{
 		Model: model,
 		Messages: []models.OpenAIMessage{
-			{Role: "system", Content: "Eres un experto en DevOps. Explica directamente y con precisión qué hace este manifiesto YAML de Kubernetes, sin introducir, resumir ni aplicar estilo. No utilices formatos especiales como listas, markdown, emojis ni encabezados. Tu salida debe ser exclusivamente una explicación directa y neutral."},
+			{
+				Role:    "system",
+				Content: "Eres un experto en DevOps. Explica directamente y con precisión qué hace este manifiesto YAML de Kubernetes, sin introducir, resumir ni aplicar estilo. No utilices formatos especiales como listas, markdown, emojis ni encabezados. Tu salida debe ser exclusivamente una explicación directa y neutral.",
+			},
 			{Role: "user", Content: yaml},
 		},
 	}
@@ -31,7 +34,7 @@ func ExplainYAMLWithModel(yaml string, model string) (string, int, error) {
 
 	apiKey := os.Getenv("OPENROUTER_API_KEY")
 	if apiKey == "" {
-		return "", http.StatusInternalServerError, errors.New("la variable de entorno OPENROUTER_API_KEY no está definida")
+		return "", http.StatusInternalServerError, errors.New("environment variable OPENROUTER_API_KEY is not defined")
 	}
 
 	req, err := http.NewRequest("POST", endpoint, bytes.NewBuffer(body))
@@ -41,7 +44,7 @@ func ExplainYAMLWithModel(yaml string, model string) (string, int, error) {
 
 	req.Header.Set("Authorization", "Bearer "+apiKey)
 	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("HTTP-Referer", "https://tu-proyecto.com")
+	req.Header.Set("HTTP-Referer", "https://your-project.com")
 	req.Header.Set("X-Title", "yaml-explainer")
 
 	client := &http.Client{}
@@ -69,13 +72,12 @@ func ExplainYAMLWithModel(yaml string, model string) (string, int, error) {
 
 	var result models.OpenAIResponse
 	if err := json.Unmarshal(respBody, &result); err != nil {
-		return "", http.StatusInternalServerError, fmt.Errorf("error al parsear respuesta JSON: %v\nContenido: %s", err, string(respBody))
+		return "", http.StatusInternalServerError, fmt.Errorf("error parsing JSON response: %v\nContent: %s", err, string(respBody))
 	}
 
 	if len(result.Choices) == 0 {
-		return "", http.StatusInternalServerError, fmt.Errorf("respuesta vacía de OpenRouter:\n%s", string(respBody))
+		return "", http.StatusInternalServerError, fmt.Errorf("empty response from OpenRouter:\n%s", string(respBody))
 	}
 
 	return result.Choices[0].Message.Content, http.StatusOK, nil
 }
-

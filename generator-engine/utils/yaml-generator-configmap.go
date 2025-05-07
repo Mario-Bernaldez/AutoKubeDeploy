@@ -10,9 +10,9 @@ func GenerateConfigMapYAML(cm models.ConfigMapObject) (string, error) {
 
 	for _, key := range cm.Keys {
 		if key.IsMultiline {
-			data[key.KeyName] = key.Value // se usará como bloque de texto multilinea
+			data[key.KeyName] = key.Value // will be used as a multiline text block
 		} else {
-			data[key.KeyName] = key.Value // se renderiza inline
+			data[key.KeyName] = key.Value // will be rendered inline
 		}
 	}
 

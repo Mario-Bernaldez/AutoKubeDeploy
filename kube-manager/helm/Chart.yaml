@@ -1,5 +1,5 @@
 apiVersion: v2
 name: kube-manager
-description: Microservicio para desplegar manifiestos YAML en Kubernetes
+description: Microservice to deploy YAML manifests in Kubernetes
 version: 0.1.0
 appVersion: "1.0.0"

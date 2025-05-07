@@ -9,7 +9,7 @@ import (
 
 func ListHandler(w http.ResponseWriter, r *http.Request) {
     if r.Method != http.MethodGet {
-        http.Error(w, "Método no permitido", http.StatusMethodNotAllowed)
+        http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
         return
     }
 
@@ -17,7 +17,7 @@ func ListHandler(w http.ResponseWriter, r *http.Request) {
     namespace := r.URL.Query().Get("namespace")
 
     if resource == "" {
-        http.Error(w, "Falta el parámetro 'resource'", http.StatusBadRequest)
+        http.Error(w, "Missing 'resource' parameter", http.StatusBadRequest)
         return
     }
 

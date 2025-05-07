@@ -1,31 +1,31 @@
-# Etapa 1: Construcción del binario en una imagen intermedia
+# Stage 1: Build the binary in an intermediate image
 FROM golang:1.24.1 AS builder
 
 WORKDIR /app
 
-# Copiar los archivos del módulo
+# Copy module files
 COPY go.mod go.sum ./
 RUN go mod download
 
-# Copiar el resto del código fuente
+# Copy the rest of the source code
 COPY . .
 
-# Compilar el binario
+# Build the binary
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o generator-engine main.go
 
-# Etapa 2: Imagen final con el binario compilado
+# Stage 2: Final image with the compiled binary
 FROM alpine:latest
 
 WORKDIR /root/
 
-# Instalar dependencias necesarias
+# Install necessary dependencies
 RUN apk --no-cache add ca-certificates
 
-# Copiar el binario desde la imagen builder
+# Copy the binary from the builder image
 COPY --from=builder /app/generator-engine .
 
-# Exponer el puerto de la aplicación
+# Expose the application port
 EXPOSE 8080
 
-# Comando de inicio
+# Startup command
 CMD ["./generator-engine"]

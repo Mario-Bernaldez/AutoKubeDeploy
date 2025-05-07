@@ -17,33 +17,33 @@ var decUnstructured = yaml.NewDecodingSerializer(unstructured.UnstructuredJSONSc
 func ApplyYAML(yamlBytes []byte) error {
     config, err := rest.InClusterConfig()
     if err != nil {
-        return fmt.Errorf("no se pudo cargar la configuración del clúster: %w", err)
+        return fmt.Errorf("failed to load cluster configuration: %w", err)
     }
 
     client, err := dynamic.NewForConfig(config)
     if err != nil {
-        return fmt.Errorf("error creando cliente dinámico: %w", err)
+        return fmt.Errorf("error creating dynamic client: %w", err)
     }
 
     obj := &unstructured.Unstructured{}
     _, gvk, err := decUnstructured.Decode(yamlBytes, nil, obj)
     if err != nil {
-        return fmt.Errorf("error decodificando YAML: %w", err)
+        return fmt.Errorf("error decoding YAML: %w", err)
     }
 
     kind := strings.Title(obj.GetKind())
     gvr, ok := resourceGVRMap[kind]
     if !ok {
-        return fmt.Errorf("tipo de recurso no soportado: %s", kind)
+        return fmt.Errorf("unsupported resource type: %s", kind)
     }
 
-    // Validación opcional: asegurar coherencia entre YAML y mapa
+    // Optional validation: ensure consistency between YAML and GVR map
     if gvk.Group != gvr.Group || gvk.Version != gvr.Version {
-        return fmt.Errorf("la versión o grupo del recurso no coincide con el mapa: YAML=%s/%s, Mapa=%s/%s",
+        return fmt.Errorf("resource group or version mismatch: YAML=%s/%s, Map=%s/%s",
             gvk.Group, gvk.Version, gvr.Group, gvr.Version)
     }
 
-    // Asignar namespace por defecto si no está definido y el recurso lo requiere
+    // Assign default namespace if not set and the resource requires one
     ns := obj.GetNamespace()
     if ns == "" && gvr.Resource != "namespaces" && !strings.HasPrefix(gvr.Resource, "cluster") {
         ns = "default"
@@ -59,7 +59,7 @@ func ApplyYAML(yamlBytes []byte) error {
 
     _, err = ri.Create(context.Background(), obj, v1.CreateOptions{})
     if err != nil {
-        return fmt.Errorf("error creando recurso en Kubernetes: %w", err)
+        return fmt.Errorf("error creating resource in Kubernetes: %w", err)
     }
 
     return nil

@@ -6,7 +6,7 @@ import (
 )
 
 func GenerateRBACYAML(roleObj models.RoleObject) (string, error) {
-	// Construir Role o ClusterRole
+	// Build Role or ClusterRole
 	roleYAML := map[string]interface{}{
 		"apiVersion": "rbac.authorization.k8s.io/v1",
 		"kind":       roleObj.Type,
@@ -20,7 +20,7 @@ func GenerateRBACYAML(roleObj models.RoleObject) (string, error) {
 		roleYAML["metadata"].(map[string]interface{})["namespace"] = roleObj.Namespace
 	}
 
-	// Construir RoleBinding o ClusterRoleBinding
+	// Build RoleBinding or ClusterRoleBinding
 	bindingKind := "RoleBinding"
 	if roleObj.Type == "ClusterRole" {
 		bindingKind = "ClusterRoleBinding"
@@ -44,7 +44,7 @@ func GenerateRBACYAML(roleObj models.RoleObject) (string, error) {
 		bindingYAML["metadata"].(map[string]interface{})["namespace"] = roleObj.Binding.Namespace
 	}
 
-	// Serializar ambos recursos en el mismo archivo YAML con separador ---
+	// Serialize both resources in the same YAML file with separator ---
 	outRole, err := yaml.Marshal(roleYAML)
 	if err != nil {
 		return "", err

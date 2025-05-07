@@ -9,7 +9,7 @@ import (
 
 func DeleteHandler(w http.ResponseWriter, r *http.Request) {
     if r.Method != http.MethodDelete {
-        http.Error(w, "Método no permitido", http.StatusMethodNotAllowed)
+        http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
         return
     }
 
@@ -18,13 +18,13 @@ func DeleteHandler(w http.ResponseWriter, r *http.Request) {
     namespace := r.URL.Query().Get("namespace")
 
     if resource == "" || name == "" {
-        http.Error(w, "Faltan parámetros 'type' o 'name'", http.StatusBadRequest)
+        http.Error(w, "Missing 'type' or 'name' parameters", http.StatusBadRequest)
         return
     }
 
     err := k8s.DeleteResource(resource, name, namespace)
     if err != nil {
-        http.Error(w, fmt.Sprintf("Error al eliminar recurso: %v", err), http.StatusInternalServerError)
+        http.Error(w, fmt.Sprintf("Error deleting resource: %v", err), http.StatusInternalServerError)
         return
     }
 

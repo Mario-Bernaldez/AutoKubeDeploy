@@ -65,10 +65,7 @@ def deployment_config_view(request):
         ContainerForm, formset=RequiredContainerFormSet, extra=1
     )
     VolumeFormSet = formset_factory(VolumeForm, extra=1)
-    VolumeMountFormSet = formset_factory(
-        VolumeMountForm,
-        extra=1,
-    )
+    VolumeMountFormSet = formset_factory(VolumeMountForm, extra=1)
 
     if request.method == "POST":
         deployment_form = DeploymentForm(request.POST)
@@ -77,12 +74,14 @@ def deployment_config_view(request):
         volume_formset = VolumeFormSet(request.POST, prefix="volumes")
         volume_mount_formset = VolumeMountFormSet(request.POST, prefix="volume_mounts")
 
-        if (
-            deployment_form.is_valid()
-            and pod_form.is_valid()
-            and container_formset.is_valid()
-            and volume_formset.is_valid()
-            and volume_mount_formset.is_valid()
+        if all(
+            [
+                deployment_form.is_valid(),
+                pod_form.is_valid(),
+                container_formset.is_valid(),
+                volume_formset.is_valid(),
+                volume_mount_formset.is_valid(),
+            ]
         ):
             deployment_data = deployment_form.cleaned_data
             pod_data = pod_form.cleaned_data
@@ -90,14 +89,12 @@ def deployment_config_view(request):
             containers_data = []
             for idx, cform in enumerate(container_formset):
                 c = cform.cleaned_data.copy()
-
                 prefix = volume_mount_formset.prefix
-                nombres = request.POST.getlist(f"{prefix}-{idx}-volume_name")
-                rutas = request.POST.getlist(f"{prefix}-{idx}-mount_path")
-
+                names = request.POST.getlist(f"{prefix}-{idx}-volume_name")
+                paths = request.POST.getlist(f"{prefix}-{idx}-mount_path")
                 mounts = [
                     {"volume_name": name, "mount_path": path}
-                    for name, path in zip(nombres, rutas)
+                    for name, path in zip(names, paths)
                 ]
                 c["volume_mounts"] = mounts
                 containers_data.append(c)
@@ -131,8 +128,7 @@ def deployment_config_view(request):
                 )
             else:
                 return HttpResponse(
-                    f"Error en la API: {response.status_code}",
-                    status=response.status_code,
+                    f"API error: {response.status_code}", status=response.status_code
                 )
 
     else:
@@ -163,11 +159,8 @@ def service_config_view(request):
         if service_form.is_valid() and port_formset.is_valid():
             service_data = service_form.cleaned_data
             ports_data = [
-                form.cleaned_data
-                for form in port_formset.forms
-                if not form.cleaned_data.get("DELETE", False)
+                form.cleaned_data for form in port_formset if form.cleaned_data
             ]
-
             service_data["ports"] = ports_data
             user_input_data = {"service": service_data}
 
@@ -189,8 +182,7 @@ def service_config_view(request):
                 )
             else:
                 return HttpResponse(
-                    f"Error en la API: {response.status_code}",
-                    status=response.status_code,
+                    f"API error: {response.status_code}", status=response.status_code
                 )
     else:
         service_form = ServiceForm()
@@ -211,7 +203,6 @@ def namespace_config_view(request):
         namespace_form = NamespaceForm(request.POST)
         if namespace_form.is_valid():
             user_input_data = {"namespace": namespace_form.cleaned_data}
-
             response = requests.post(
                 "http://generator-engine/generate", json=user_input_data
             )
@@ -230,8 +221,7 @@ def namespace_config_view(request):
                 )
             else:
                 return HttpResponse(
-                    f"Error en la API: {response.status_code}",
-                    status=response.status_code,
+                    f"API error: {response.status_code}", status=response.status_code
                 )
     else:
         namespace_form = NamespaceForm()
@@ -249,9 +239,9 @@ def hpa_config_view(request):
             metrics_data = [
                 form.cleaned_data for form in metric_formset if form.cleaned_data
             ]
-            hpa = hpa_form.cleaned_data
-            hpa["metrics"] = metrics_data
-            user_input_data = {"hpa": hpa}
+            hpa_data = hpa_form.cleaned_data
+            hpa_data["metrics"] = metrics_data
+            user_input_data = {"hpa": hpa_data}
             response = requests.post(
                 "http://generator-engine/generate", json=user_input_data
             )
@@ -270,8 +260,7 @@ def hpa_config_view(request):
                 )
             else:
                 return HttpResponse(
-                    f"Error en la API: {response.status_code}",
-                    status=response.status_code,
+                    f"API error: {response.status_code}", status=response.status_code
                 )
     else:
         hpa_form = HPAForm()
@@ -280,7 +269,10 @@ def hpa_config_view(request):
     return render(
         request,
         "hpa_config.html",
-        {"hpa_form": hpa_form, "metric_formset": metric_formset},
+        {
+            "hpa_form": hpa_form,
+            "metric_formset": metric_formset,
+        },
     )
 
 
@@ -316,7 +308,7 @@ def configmap_config_view(request):
                 )
             else:
                 return HttpResponse(
-                    f"Error en la API: {response.status_code}",
+                    f"API error: {response.status_code}",
                     status=response.status_code,
                 )
     else:
@@ -343,7 +335,6 @@ def secret_config_view(request):
 
         if secret_form.is_valid():
             secret_type = secret_form.cleaned_data["secret_type"]
-
             data = secret_form.cleaned_data
 
             if secret_type == "Opaque":
@@ -395,6 +386,7 @@ def secret_config_view(request):
                             "dockerconfigjson_form": dockerconfigjson_form,
                         },
                     )
+
             user_input_data = {"secret": data}
             response = requests.post(
                 "http://generator-engine/generate",
@@ -416,7 +408,7 @@ def secret_config_view(request):
                 )
             else:
                 return HttpResponse(
-                    f"Error en la API: {response.status_code}",
+                    f"API error: {response.status_code}",
                     status=response.status_code,
                 )
 
@@ -462,7 +454,7 @@ def pvc_config_view(request):
                 )
             else:
                 return HttpResponse(
-                    f"Error en la API: {response.status_code}",
+                    f"API error: {response.status_code}",
                     status=response.status_code,
                 )
     else:
@@ -504,7 +496,7 @@ def ingress_config_view(request):
                 )
             else:
                 return HttpResponse(
-                    f"Error en la API: {response.status_code}",
+                    f"API error: {response.status_code}",
                     status=response.status_code,
                 )
     else:
@@ -556,7 +548,7 @@ def service_account_config_view(request):
                 )
             else:
                 return HttpResponse(
-                    f"Error en la API: {response.status_code}",
+                    f"API error: {response.status_code}",
                     status=response.status_code,
                 )
     else:
@@ -575,6 +567,7 @@ def service_account_config_view(request):
 def rbac_config_view(request):
     RuleFormSet = formset_factory(RuleForm, extra=1)
     SubjectFormSet = formset_factory(SubjectForm, extra=1)
+
     if request.method == "POST":
         role_form = RoleForm(request.POST)
         rule_formset = RuleFormSet(request.POST, prefix="rules")
@@ -588,39 +581,38 @@ def rbac_config_view(request):
             and subject_formset.is_valid()
         ):
             role_data = role_form.cleaned_data
-            rules = []
-            for form in rule_formset:
-                if form.cleaned_data:
-                    rules.append(
-                        {
-                            "apiGroups": [
-                                g.strip()
-                                for g in form.cleaned_data["api_groups"].split(",")
-                                if g.strip()
-                            ],
-                            "resources": [
-                                r.strip()
-                                for r in form.cleaned_data["resources"].split(",")
-                                if r.strip()
-                            ],
-                            "verbs": [
-                                v.strip()
-                                for v in form.cleaned_data["verbs"].split(",")
-                                if v.strip()
-                            ],
-                        }
-                    )
+            rules = [
+                {
+                    "apiGroups": [
+                        g.strip()
+                        for g in f.cleaned_data["api_groups"].split(",")
+                        if g.strip()
+                    ],
+                    "resources": [
+                        r.strip()
+                        for r in f.cleaned_data["resources"].split(",")
+                        if r.strip()
+                    ],
+                    "verbs": [
+                        v.strip()
+                        for v in f.cleaned_data["verbs"].split(",")
+                        if v.strip()
+                    ],
+                }
+                for f in rule_formset
+                if f.cleaned_data
+            ]
 
             binding_data = rolebinding_form.cleaned_data
             subjects = []
-            for form in subject_formset:
-                if form.cleaned_data:
+            for f in subject_formset:
+                if f.cleaned_data:
                     subject = {
-                        "kind": form.cleaned_data["kind"],
-                        "name": form.cleaned_data["name"],
+                        "kind": f.cleaned_data["kind"],
+                        "name": f.cleaned_data["name"],
                     }
-                    if form.cleaned_data["kind"] == "ServiceAccount":
-                        subject["namespace"] = form.cleaned_data.get("namespace", "")
+                    if f.cleaned_data["kind"] == "ServiceAccount":
+                        subject["namespace"] = f.cleaned_data.get("namespace", "")
                     subjects.append(subject)
 
             payload = {
@@ -634,8 +626,9 @@ def rbac_config_view(request):
                         "namespace": binding_data.get("namespace", ""),
                         "subjects": subjects,
                     },
-                },
+                }
             }
+
             response = requests.post("http://generator-engine/generate", json=payload)
             if response.status_code == 200:
                 yaml_output = response.text
@@ -652,10 +645,8 @@ def rbac_config_view(request):
                 )
             else:
                 return HttpResponse(
-                    f"Error en la API: {response.status_code}",
-                    status=response.status_code,
+                    f"API error: {response.status_code}", status=response.status_code
                 )
-
     else:
         role_form = RoleForm()
         rule_formset = RuleFormSet(prefix="rules")
@@ -676,23 +667,23 @@ def rbac_config_view(request):
 
 def networkpolicy_config_view(request):
     NetworkRuleFormSet = formset_factory(NetworkRuleForm, extra=1)
+
     if request.method == "POST":
         networkpolicy_form = NetworkPolicyForm(request.POST)
         rule_formset = NetworkRuleFormSet(request.POST, prefix="rules")
 
         if networkpolicy_form.is_valid() and rule_formset.is_valid():
             rules = []
-            for form in rule_formset:
-                if not form.cleaned_data:
+            for f in rule_formset:
+                if not f.cleaned_data:
                     continue
                 rule = {
-                    "direction": form.cleaned_data["direction"],
+                    "direction": f.cleaned_data["direction"],
                     "ports": [],
                     "selectors": {},
                 }
 
-                # Procesar puertos
-                ports_str = form.cleaned_data.get("ports", "")
+                ports_str = f.cleaned_data.get("ports", "")
                 if ports_str:
                     rule["ports"] = [
                         int(p.strip())
@@ -700,28 +691,27 @@ def networkpolicy_config_view(request):
                         if p.strip().isdigit()
                     ]
 
-                # Selectores
-                if form.cleaned_data.get("pod_selector"):
-                    rule["selectors"]["podSelector"] = form.cleaned_data["pod_selector"]
-                if form.cleaned_data.get("namespace_selector"):
-                    rule["selectors"]["namespaceSelector"] = form.cleaned_data[
+                if f.cleaned_data.get("pod_selector"):
+                    rule["selectors"]["podSelector"] = f.cleaned_data["pod_selector"]
+                if f.cleaned_data.get("namespace_selector"):
+                    rule["selectors"]["namespaceSelector"] = f.cleaned_data[
                         "namespace_selector"
                     ]
-                if form.cleaned_data.get("ip_block"):
+                if f.cleaned_data.get("ip_block"):
                     rule["selectors"]["ipBlock"] = {
-                        "cidr": form.cleaned_data["ip_block"],
+                        "cidr": f.cleaned_data["ip_block"],
                         "except": [
                             e.strip()
-                            for e in form.cleaned_data.get("except_ips", "").split(",")
+                            for e in f.cleaned_data.get("except_ips", "").split(",")
                             if e.strip()
                         ],
                     }
 
                 rules.append(rule)
 
-            networkPolicy = networkpolicy_form.cleaned_data
-            networkPolicy["rules"] = rules
-            payload = {"networkPolicy": networkPolicy}
+            network_policy_data = networkpolicy_form.cleaned_data
+            network_policy_data["rules"] = rules
+            payload = {"networkPolicy": network_policy_data}
             response = requests.post("http://generator-engine/generate", json=payload)
 
             if response.status_code == 200:
@@ -739,10 +729,8 @@ def networkpolicy_config_view(request):
                 )
             else:
                 return HttpResponse(
-                    f"Error en la API: {response.status_code}",
-                    status=response.status_code,
+                    f"API error: {response.status_code}", status=response.status_code
                 )
-
     else:
         networkpolicy_form = NetworkPolicyForm()
         rule_formset = NetworkRuleFormSet(prefix="rules")
@@ -770,19 +758,19 @@ def explain_yaml_view(request):
 
         if explanation_response.status_code == 200:
             explanation = explanation_response.json().get(
-                "explanation", "Sin explicación disponible."
+                "explanation", "No explanation available."
             )
         elif explanation_response.status_code == 429:
-            explanation = "⚠️ Modelo no disponible actualmente. Por favor, inténtelo de nuevo más tarde."
+            explanation = "⚠️ Model is currently unavailable. Please try again later."
         elif explanation_response.status_code == 402:
             explanation = (
-                "💳 Créditos insuficientes. "
-                "Puedes añadir más en <a href='https://openrouter.ai/settings/credits' target='_blank'>OpenRouter</a> "
-                "o utilizar un modelo gratuito."
+                "💳 Insufficient credits. "
+                "You can add more at <a href='https://openrouter.ai/settings/credits' target='_blank'>OpenRouter</a> "
+                "or use a free model."
             )
         else:
             explanation = (
-                f"❌ Error al obtener explicación: {explanation_response.status_code}"
+                f"❌ Error retrieving explanation: {explanation_response.status_code}"
             )
 
         models, default_model = get_model_options()
@@ -813,7 +801,7 @@ def apply_yaml(request):
             )
             if response.status_code == 200:
                 messages.success(
-                    request, "✅ YAML desplegado exitosamente en Kubernetes."
+                    request, "✅ YAML successfully deployed to Kubernetes."
                 )
                 try:
                     parsed_yaml = yaml.safe_load(yaml_text)
@@ -828,11 +816,11 @@ def apply_yaml(request):
                         yaml_content=yaml_text,
                     )
                 except Exception as e:
-                    print(f"⚠️ No se pudo guardar el historial: {e}")
+                    print(f"⚠️ Failed to save deployment history: {e}")
             else:
-                messages.error(request, f"❌ Error al aplicar YAML: {response.text}")
+                messages.error(request, f"❌ Failed to apply YAML: {response.text}")
         except Exception as e:
-            messages.error(request, f"❌ Fallo al conectarse al microservicio: {e}")
+            messages.error(request, f"❌ Failed to connect to backend: {e}")
     models, default_model = get_model_options()
     return render(
         request,
@@ -849,7 +837,7 @@ def apply_yaml(request):
 def explore_resources(request):
     resource = request.GET.get("resource")
     if not resource:
-        return HttpResponseBadRequest("Falta el parámetro 'resource'.")
+        return HttpResponseBadRequest("Missing 'resource' parameter.")
 
     try:
         response = requests.get(
@@ -863,7 +851,7 @@ def explore_resources(request):
             "explore.html",
             {
                 "resource": resource,
-                "error": f"Error consultando recursos: {str(e)}",
+                "error": f"Error querying resources: {str(e)}",
                 "names": [],
             },
         )
@@ -876,7 +864,7 @@ def explore_resources(request):
 @csrf_exempt
 def delete_resource(request):
     if request.method != "POST":
-        return HttpResponseBadRequest("Solo se permite POST")
+        return HttpResponseBadRequest("Only POST is allowed")
 
     resource = request.POST.get("resource")
     name = request.POST.get("name")
@@ -891,7 +879,7 @@ def delete_resource(request):
             },
         )
     except Exception as e:
-        print(f"Error eliminando: {e}")
+        print(f"Error deleting: {e}")
 
     return redirect(f"/explore/?resource={resource}")
 

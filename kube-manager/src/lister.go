@@ -14,17 +14,17 @@ import (
 func ListResourceNames(kind string, namespace string) ([]string, error) {
     config, err := rest.InClusterConfig()
     if err != nil {
-        return nil, fmt.Errorf("error cargando configuración del clúster: %w", err)
+        return nil, fmt.Errorf("error loading cluster configuration: %w", err)
     }
 
     client, err := dynamic.NewForConfig(config)
     if err != nil {
-        return nil, fmt.Errorf("error creando cliente dinámico: %w", err)
+        return nil, fmt.Errorf("error creating dynamic client: %w", err)
     }
 
     gvr, err := resolveGVRStatic(kind)
     if err != nil {
-        return nil, fmt.Errorf("error resolviendo GVR estático: %w", err)
+        return nil, fmt.Errorf("error resolving static GVR: %w", err)
     }
 
     var ri dynamic.ResourceInterface
@@ -36,7 +36,7 @@ func ListResourceNames(kind string, namespace string) ([]string, error) {
 
     list, err := ri.List(context.Background(), metav1.ListOptions{})
     if err != nil {
-        return nil, fmt.Errorf("error listando recursos: %w", err)
+        return nil, fmt.Errorf("error listing resources: %w", err)
     }
 
     names := []string{}
@@ -51,5 +51,5 @@ func resolveGVRStatic(kind string) (schema.GroupVersionResource, error) {
     if gvr, ok := resourceGVRMap[kind]; ok {
         return gvr, nil
     }
-    return schema.GroupVersionResource{}, errors.New("tipo de recurso no reconocido o no soportado")
+    return schema.GroupVersionResource{}, errors.New("unrecognized or unsupported resource type")
 }

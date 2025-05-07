@@ -6,7 +6,7 @@ import (
 )
 
 func GenerateNetworkPolicyYAML(np models.NetworkPolicyObject) (string, error) {
-	// Convertir el podSelector principal
+	// Convert the main podSelector
 	podSelector := parseLabels(np.PodSelector)
 
 	spec := map[string]interface{}{
@@ -20,7 +20,7 @@ func GenerateNetworkPolicyYAML(np models.NetworkPolicyObject) (string, error) {
 	for _, rule := range np.Rules {
 		ruleEntry := map[string]interface{}{}
 
-		// Puertos
+		// Ports
 		if len(rule.Ports) > 0 {
 			ports := make([]map[string]interface{}, 0)
 			for _, p := range rule.Ports {
@@ -31,7 +31,7 @@ func GenerateNetworkPolicyYAML(np models.NetworkPolicyObject) (string, error) {
 			ruleEntry["ports"] = ports
 		}
 
-		// Selectores
+		// Selectors
 		peers := make([]map[string]interface{}, 0)
 
 		if val, ok := rule.Selectors["podSelector"]; ok && val != "" {

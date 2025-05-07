@@ -1,11 +1,11 @@
-# pylint=disable
+# pylint: disable
 # flake8: noqa
 
 from app import utils
 from django import forms
 from django.forms import BaseFormSet, ValidationError, formset_factory
 
-# --- Formularios auxiliares para puertos de servicios ---
+# --- Auxiliary form for service ports ---
 
 
 class ServicePortForm(forms.Form):
@@ -28,7 +28,7 @@ class ServicePortForm(forms.Form):
     )
     protocol = forms.ChoiceField(label="Protocol", choices=PROTOCOL_CHOICES)
     node_port = forms.IntegerField(
-        label="Node Port (solo para NodePort)",
+        label="Node Port (only for NodePort)",
         min_value=30000,
         max_value=32767,
         required=False,
@@ -38,7 +38,7 @@ class ServicePortForm(forms.Form):
 
 ServicePortFormSet = formset_factory(ServicePortForm, extra=1)
 
-# --- Formularios principales ---
+# --- Main forms ---
 
 
 class ObjectTypeForm(forms.Form):
@@ -51,7 +51,7 @@ class ObjectTypeForm(forms.Form):
             ("hpa", "Horizontal Pod Autoscaler"),
             ("configMap", "ConfigMap"),
             ("secret", "Secret"),
-            ("pvc", "Persistent Volumen Claim"),
+            ("pvc", "Persistent Volume Claim"),
             ("ingress", "Ingress"),
             ("sa", "Service Account"),
             ("rbac", "RBAC"),
@@ -68,6 +68,7 @@ class DeploymentForm(forms.Form):
 
     STRATEGY_CHOICES = [("RollingUpdate", "Rolling Update"), ("Recreate", "Recreate")]
     strategy = forms.ChoiceField(label="Deployment Strategy", choices=STRATEGY_CHOICES)
+
     max_unavailable = forms.CharField(
         label="Max Unavailable (RollingUpdate)",
         required=False,
@@ -75,7 +76,7 @@ class DeploymentForm(forms.Form):
             attrs={
                 "id": "id_max_unavailable",
                 "pattern": r"^\d+%?$",
-                "title": "Debe ser un número entero o un porcentaje (por ejemplo, 1 o 25%)",
+                "title": "Must be an integer or percentage (e.g. 1 or 25%)",
             }
         ),
         validators=[utils.validate_int_or_percent],
@@ -89,7 +90,7 @@ class DeploymentForm(forms.Form):
             attrs={
                 "id": "id_max_surge",
                 "pattern": r"^\d+%?$",
-                "title": "Debe ser un número entero o un porcentaje (por ejemplo, 1 o 25%)",
+                "title": "Must be an integer or percentage (e.g. 1 or 25%)",
             }
         ),
         validators=[utils.validate_int_or_percent],
@@ -105,7 +106,7 @@ class PodTemplateForm(forms.Form):
         widget=forms.TextInput(
             attrs={
                 "pattern": r"^([^=\,]+=[^=\,]+)(,\s*[^=\,]+=[^=\,]+)*$",
-                "title": "Debe seguir el formato key=value, separados por comas.",
+                "title": "Must follow the format key=value, comma-separated.",
             }
         ),
     )
@@ -143,13 +144,14 @@ class ContainerForm(forms.Form):
             }
         ),
     )
+
     env_vars = forms.CharField(
         label="Environment Variables (key=value, comma-separated)",
         required=False,
         widget=forms.TextInput(
             attrs={
                 "pattern": r"^([^=\,]+=[^=\,]+)(,\s*[^=\,]+=[^=\,]+)*$",
-                "title": "Debe seguir el formato key=value, separados por comas.",
+                "title": "Must follow the format key=value, comma-separated.",
             }
         ),
     )
@@ -174,18 +176,17 @@ class VolumeForm(forms.Form):
         widget=forms.Select(attrs={"id": "id_volume_type"}),
     )
 
-    # Campos adicionales
-    # EmptyDir
+    # EmptyDir fields
     medium = forms.CharField(
         label="Medium (for emptyDir)",
         required=False,
         validators=[utils.validate_medium],
-        help_text="Deja vacío o escribe 'Memory' para usar memoria.",
+        help_text="Leave empty or enter 'Memory' to use memory.",
         widget=forms.TextInput(
             attrs={
                 "id": "id_medium",
                 "pattern": r"^$|^Memory$",
-                "title": "Deja vacío o escribe 'Memory' (respetando mayúsculas).",
+                "title": "Leave empty or enter 'Memory' (case-sensitive).",
             }
         ),
     )
@@ -193,17 +194,17 @@ class VolumeForm(forms.Form):
         label="Size Limit (for emptyDir)",
         required=False,
         validators=[utils.validate_size_limit],
-        help_text="Por ejemplo: 1Gi, 500Mi",
+        help_text="Example: 1Gi, 500Mi",
         widget=forms.TextInput(
             attrs={
                 "id": "id_size_limit",
                 "pattern": r"^\d+(Ki|Mi|Gi|Ti|Pi|Ei)$",
-                "title": "Ingrese un tamaño válido como 1Gi, 500Mi, 100Ki, etc.",
+                "title": "Enter a valid size such as 1Gi, 500Mi, 100Ki, etc.",
             }
         ),
     )
 
-    # HostPath
+    # HostPath fields
     path = forms.CharField(
         label="Path (for hostPath)",
         required=False,
@@ -212,12 +213,12 @@ class VolumeForm(forms.Form):
             attrs={
                 "id": "id_path",
                 "pattern": r"^/.*",
-                "title": "Debe ser una ruta absoluta, por ejemplo: /data/volumen",
+                "title": "Must be an absolute path, e.g. /data/volume",
             }
         ),
     )
     HOSTPATH_TYPE_CHOICES = [
-        ("", "— (vacío) —"),
+        ("", "— (empty) —"),
         ("Directory", "Directory"),
         ("DirectoryOrCreate", "DirectoryOrCreate"),
         ("File", "File"),
@@ -248,7 +249,7 @@ class VolumeForm(forms.Form):
         widget=forms.TextInput(attrs={"id": "id_secret_name"}),
     )
 
-    # PersistentVolumeClaim
+    # PVC
     pvc_claim_name = forms.CharField(
         label="PVC Claim Name (for PersistentVolumeClaim)",
         required=False,
@@ -260,20 +261,17 @@ class VolumeForm(forms.Form):
         vtype = cleaned_data.get("volume_type")
 
         if vtype == "hostPath" and not cleaned_data.get("path"):
-            self.add_error("path", "Este campo es obligatorio para hostPath.")
+            self.add_error("path", "This field is required for hostPath.")
 
         if vtype == "configMap" and not cleaned_data.get("config_map_name"):
-            self.add_error(
-                "config_map_name", "Este campo es obligatorio para configMap."
-            )
+            self.add_error("config_map_name", "This field is required for configMap.")
 
         if vtype == "secret" and not cleaned_data.get("secret_name"):
-            self.add_error("secret_name", "Este campo es obligatorio para Secret.")
+            self.add_error("secret_name", "This field is required for Secret.")
 
         if vtype == "persistentVolumeClaim" and not cleaned_data.get("pvc_claim_name"):
             self.add_error(
-                "pvc_claim_name",
-                "Este campo es obligatorio para PersistentVolumeClaim.",
+                "pvc_claim_name", "This field is required for PersistentVolumeClaim."
             )
 
 
@@ -285,7 +283,7 @@ class NamespaceForm(forms.Form):
         widget=forms.TextInput(
             attrs={
                 "pattern": r"^([^=\,]+=[^=\,]+)(,\s*[^=\,]+=[^=\,]+)*$",
-                "title": "Debe seguir el formato key=value, separados por comas.",
+                "title": "Must follow the format key=value, comma-separated.",
             }
         ),
     )
@@ -307,7 +305,7 @@ class ServiceForm(forms.Form):
         widget=forms.TextInput(
             attrs={
                 "pattern": r"^([^=\,]+=[^=\,]+)(,\s*[^=\,]+=[^=\,]+)*$",
-                "title": "Debe seguir el formato key=value, separados por comas.",
+                "title": "Must follow the format key=value, comma-separated.",
             }
         ),
     )
@@ -378,7 +376,7 @@ class HPAMetricForm(forms.Form):
         label="Target Value",
         min_value=1,
         widget=forms.NumberInput(attrs={"required": True}),
-        help_text="Use percentage for Utilization or absolute value for Value.",
+        help_text="Use a percentage for Utilization or an absolute number for Value.",
     )
 
 
@@ -403,7 +401,7 @@ class ConfigMapKeyForm(forms.Form):
         widget=forms.TextInput(attrs={"required": True}),
     )
     is_multiline = forms.BooleanField(
-        label="Multiline Content (like a file)?",
+        label="Multiline content (like file data)?",
         required=False,
         initial=False,
         widget=forms.CheckboxInput(),
@@ -467,7 +465,7 @@ class DockerConfigJSONForm(forms.Form):
     dockerconfigjson = forms.CharField(
         label="Docker Config JSON (.dockerconfigjson)",
         widget=forms.Textarea(attrs={"rows": 8, "required": True}),
-        help_text="Paste the complete Docker config JSON here.",
+        help_text="Paste the complete Docker config JSON content here.",
     )
 
 
@@ -492,7 +490,7 @@ class PersistentVolumeClaimForm(forms.Form):
             attrs={
                 "required": True,
                 "pattern": r"^\d+(Ki|Mi|Gi|Ti|Pi|Ei)$",
-                "title": "Debe ser un tamaño válido como 1Gi, 500Mi, 100Ki, etc.",
+                "title": "Must be a valid size like 1Gi, 500Mi, 100Ki, etc.",
             }
         ),
         help_text="Use units like Mi, Gi, Ti, etc.",
@@ -539,7 +537,7 @@ class IngressForm(forms.Form):
                 "required": True,
                 "placeholder": "example.com",
                 "pattern": r"^([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$",
-                "title": "Debe ser un dominio válido, ej: example.com",
+                "title": "Must be a valid domain, e.g., example.com",
             }
         ),
     )
@@ -668,7 +666,7 @@ class SubjectForm(forms.Form):
         max_length=100,
         required=False,
         widget=forms.TextInput(
-            attrs={"placeholder": "Leave empty unless ServiceAccount"}
+            attrs={"placeholder": "Only required for ServiceAccount"}
         ),
     )
 
@@ -692,7 +690,7 @@ class NetworkPolicyForm(forms.Form):
             attrs={
                 "placeholder": "app=frontend,role=api",
                 "pattern": r"^([^=\,]+=[^=\,]+)(,\s*[^=\,]+=[^=\,]+)*$",
-                "title": "Formato: key=value, separados por comas",
+                "title": "Format: key=value, separated by commas",
             }
         ),
         required=False,
@@ -716,7 +714,7 @@ class NetworkRuleForm(forms.Form):
     ports = forms.CharField(
         label="Ports (comma-separated)",
         required=False,
-        help_text="Ej: 80,443,8080",
+        help_text="e.g., 80,443,8080",
         widget=forms.TextInput(attrs={"pattern": r"^(\d{1,5})(,\d{1,5})*$"}),
     )
 
@@ -748,12 +746,12 @@ class NetworkRuleForm(forms.Form):
 class RequiredContainerFormSet(BaseFormSet):
     def clean(self):
         """
-        Asegura que al menos un formulario de container esté rellenado y válido.
+        Ensures that at least one container form is filled out and valid.
         """
         super().clean()
 
         if any(self.errors):
-            # Si ya hay errores en los forms individuales, no hacemos más validaciones aquí
+            # If there are already errors in individual forms, skip further validation
             return
 
         has_data = False
@@ -763,4 +761,4 @@ class RequiredContainerFormSet(BaseFormSet):
                 break
 
         if not has_data:
-            raise ValidationError("Debe agregar al menos un contenedor.")
+            raise ValidationError("You must add at least one container.")

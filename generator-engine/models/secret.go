@@ -18,5 +18,5 @@ type SecretObject struct {
 	SecretName string      `json:"secret_name"`
 	Namespace  string      `json:"namespace"`
 	SecretType string      `json:"secret_type"`
-	Data       interface{} `json:"data"` // puede ser []SecretKey, TLSSecretData, o DockerConfigJSON
+	Data       interface{} `json:"data"` // can be []SecretKey, TLSSecretData, or DockerConfigJSON
 }

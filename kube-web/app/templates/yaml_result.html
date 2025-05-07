@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 
 <head>
   <meta charset="UTF-8">
-  <title>Resultado YAML</title>
+  <title>YAML Result</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -73,55 +73,44 @@
 <body>
   {% with default_model=None %}
 
-  <a href="/configure/" class="back-btn">⬅ Volver</a>
+  <a href="/configure/" class="back-btn">⬅ Back</a>
 
   <div class="section">
-    <h2>📝 YAML Generado</h2>
+    <h2>📝 Generated YAML</h2>
     <pre id="yamlContent">{{ yaml_output }}</pre>
-    <a href="#" class="btn" onclick="downloadYAML()">📥 Descargar YAML</a>
+    <a href="#" class="btn" onclick="downloadYAML()">📥 Download YAML</a>
   </div>
 
-  <form id="yamlForm" method="post" action="{% url 'explain_yaml' %}" onsubmit="mostrarLoader()">
+  <form id="yamlForm" method="post" action="{% url 'explain_yaml' %}" onsubmit="showLoader()">
     {% csrf_token %}
     <input type="hidden" name="yaml_generated" value="{{ yaml_output|escape }}">
 
     <div style="margin: 10px 0;">
       <label>
-        <input type="checkbox" id="filterFreeModels" onchange="filtrarModelosGratuitos()"> Mostrar solo modelos
-        gratuitos
+        <input type="checkbox" id="filterFreeModels" onchange="filterFreeModels()"> Show only free models
       </label>
     </div>
 
-    <label for="selected_model"><strong>Selecciona un modelo:</strong></label>
+    <label for="selected_model"><strong>Select a model:</strong></label>
     <select name="selected_model" id="selected_model" class="btn">
       {% for model in models %}
-      <option value="{{ model.id }}" data-free="{{ model.free }}"
-      {% if selected_model %}
-        {% if model.id == selected_model %}selected{% endif %}
-      {% elif default_model %}
-        {% if model.id == default_model %}selected{% endif %}
-      {% endif %}>
-      {{ model.name }}
-    </option>
+      <option value="{{ model.id }}" data-free="{{ model.free }}" {% if selected_model %} {% if model.id==selected_model
+        %}selected{% endif %} {% elif default_model %} {% if model.id==default_model %}selected{% endif %} {% endif %}>
+        {{ model.name }}
+      </option>
       {% endfor %}
-    </select>
-
-
-    {% endwith %}
-    <button type="submit" id="explainBtn" class="btn">💡 Obtener explicación</button>
-    <button type="submit" formaction="{% url 'apply_yaml' %}" class="btn">🚀 Aplicar en Kubernetes</button>
-    <div id="loader"><span class="spinner"></span>Cargando explicación...</div>
+    </select> {% endwith %}
+    <button type="submit" id="explainBtn" class="btn">💡 Get Explanation</button>
+    <button type="submit" formaction="{% url 'apply_yaml' %}" class="btn">🚀 Apply to Kubernetes</button>
+    <div id="loader"><span class="spinner"></span>Loading explanation...</div>
   </form>
-
 
   {% if explanation %}
   <div class="section">
-    <h2>💬 Explicación</h2>
+    <h2>💬 Explanation</h2>
     <div id="explanation">{{ explanation|safe }}</div>
   </div>
-  {% endif %}
-
-  {% if messages %}
+  {% endif %} {% if messages %}
   <div class="section">
     {% for message in messages %}
     <div
@@ -138,11 +127,13 @@
 
       try {
         const parsedYAML = jsyaml.load(yamlText);
-        const kind = parsedYAML.kind || 'archivo';
-        const name = parsedYAML.metadata?.name || 'sin_nombre';
+        const kind = parsedYAML.kind || 'file';
+        const name = parsedYAML.metadata?.name || 'unnamed';
         const fileName = `${kind.toLowerCase()}-${name.toLowerCase()}.yaml`;
 
-        const blob = new Blob([yamlText], { type: "text/yaml;charset=utf-8;" });
+        const blob = new Blob([yamlText], {
+          type: "text/yaml;charset=utf-8;"
+        });
         const url = URL.createObjectURL(blob);
 
         const link = document.createElement("a");
@@ -152,25 +143,24 @@
         link.click();
         document.body.removeChild(link);
       } catch (e) {
-        alert("Error al procesar el YAML: " + e.message);
+        alert("Failed to parse YAML: " + e.message);
       }
     }
 
-    function mostrarLoader() {
+    function showLoader() {
       document.getElementById("explainBtn").style.display = "none";
       document.getElementById("loader").style.display = "inline-block";
     }
 
-    function filtrarModelosGratuitos() {
+    function filterFreeModels() {
       const select = document.getElementById("selected_model");
-      const mostrarSoloGratis = document.getElementById("filterFreeModels").checked;
+      const showOnlyFree = document.getElementById("filterFreeModels").checked;
 
       for (const option of select.options) {
-        const esGratis = option.getAttribute("data-free") === "True" || option.getAttribute("data-free") === "true";
-        option.style.display = (!mostrarSoloGratis || esGratis) ? "block" : "none";
+        const isFree = option.getAttribute("data-free") === "True" || option.getAttribute("data-free") === "true";
+        option.style.display = (!showOnlyFree || isFree) ? "block" : "none";
       }
 
-      // Asegura que la opción visible esté seleccionada si la actual se oculta
       const selected = select.options[select.selectedIndex];
       if (selected.style.display === "none") {
         const firstVisible = [...select.options].find(o => o.style.display === "block");
@@ -179,7 +169,6 @@
         }
       }
     }
-
   </script>
 
 </body>

@@ -1,5 +1,5 @@
 apiVersion: v2
 name: yaml-explainer
-description: Microservicio que explica manifiestos YAML usando OpenAI
+description: Microservice that explains YAML manifests using OpenAI
 version: 0.1.0
 appVersion: "1.0.0"

@@ -23,7 +23,7 @@ func GeneratePVCYAML(pvc models.PVCObject) (string, error) {
 		},
 	}
 
-	// Solo agregar storageClassName si fue provisto
+	// Only add storageClassName if provided
 	if pvc.StorageClassName != "" {
 		pvcYAML["spec"].(map[string]interface{})["storageClassName"] = pvc.StorageClassName
 	}

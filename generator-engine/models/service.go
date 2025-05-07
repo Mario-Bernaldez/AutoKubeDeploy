@@ -1,6 +1,6 @@
 package models
 
-// ServicePort define la estructura de cada puerto del Service.
+// ServicePort defines the structure of each port in the Service.
 type ServicePort struct {
 	Port       int    `json:"port"`
 	TargetPort int    `json:"target_port"`
@@ -8,7 +8,7 @@ type ServicePort struct {
 	NodePort   int    `json:"node_port,omitempty"`
 }
 
-// ServiceObject define la estructura para crear un Service en Kubernetes.
+// ServiceObject defines the structure to create a Service in Kubernetes.
 type ServiceObject struct {
 	ServiceName string        `json:"service_name"`
 	ServiceType string        `json:"service_type"`

@@ -14,7 +14,7 @@ func GenerateSecretYAML(secret models.SecretObject) (string, error) {
 	case "Opaque":
 		keys, ok := secret.Data.([]interface{})
 		if !ok {
-			return "", errors.New("datos inválidos para Secret Opaque")
+			return "", errors.New("invalid data for Opaque Secret")
 		}
 		for _, item := range keys {
 			entry, ok := item.(map[string]interface{})
@@ -28,7 +28,7 @@ func GenerateSecretYAML(secret models.SecretObject) (string, error) {
 	case "kubernetes.io/tls":
 		d, ok := secret.Data.(map[string]interface{})
 		if !ok {
-			return "", errors.New("datos inválidos para Secret TLS")
+			return "", errors.New("invalid data for TLS Secret")
 		}
 		tlsCrt := d["tls_crt"].(string)
 		tlsKey := d["tls_key"].(string)
@@ -38,13 +38,13 @@ func GenerateSecretYAML(secret models.SecretObject) (string, error) {
 	case "kubernetes.io/dockerconfigjson":
 		d, ok := secret.Data.(map[string]interface{})
 		if !ok {
-			return "", errors.New("datos inválidos para Secret Docker Config JSON")
+			return "", errors.New("invalid data for Docker Config JSON Secret")
 		}
 		config := d["dockerconfigjson"].(string)
 		encodedData[".dockerconfigjson"] = base64.StdEncoding.EncodeToString([]byte(config))
 
 	default:
-		return "", errors.New("tipo de Secret no soportado")
+		return "", errors.New("unsupported Secret type")
 	}
 
 	secretYAML := map[string]interface{}{

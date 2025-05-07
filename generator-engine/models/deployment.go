@@ -1,6 +1,6 @@
 package models
 
-// DeploymentObject define la estructura para crear un Deployment en Kubernetes.
+// DeploymentObject defines the structure to create a Deployment in Kubernetes.
 type DeploymentObject struct {
 	Deployment  DeploymentSpec  `json:"deployment"`
 	PodTemplate PodTemplateSpec `json:"pod_template"`
@@ -8,23 +8,23 @@ type DeploymentObject struct {
 	Volumes     []Volume        `json:"volumes"`
 }
 
-// DeploymentSpec contiene los datos del deployment.
+// DeploymentSpec contains the deployment details.
 type DeploymentSpec struct {
 	Name           string `json:"name"`
 	Namespace      string `json:"namespace"`
 	Replicas       int    `json:"replicas"`
 	Strategy       string `json:"strategy"`
-	MaxUnavailable string    `json:"max_unavailable"`
-	MaxSurge       string    `json:"max_surge"`
+	MaxUnavailable string `json:"max_unavailable"`
+	MaxSurge       string `json:"max_surge"`
 }
 
-// PodTemplateSpec contiene los datos de la plantilla de pod.
+// PodTemplateSpec contains the pod template details.
 type PodTemplateSpec struct {
 	PodName string `json:"pod_name"`
 	Labels  string `json:"labels"`
 }
 
-// Container define la estructura de un contenedor.
+// Container defines the structure of a container.
 type Container struct {
 	ContainerName   string        `json:"container_name"`
 	Image           string        `json:"image"`
@@ -34,7 +34,7 @@ type Container struct {
 	VolumeMounts    []VolumeMount `json:"volume_mounts"`
 }
 
-// Volume define la estructura de un volumen.
+// Volume defines the structure of a volume.
 type Volume struct {
 	VolumeName     string `json:"volume_name"`
 	VolumeType     string `json:"volume_type"`
@@ -47,7 +47,7 @@ type Volume struct {
 	PvcClaimName   string `json:"pvc_claim_name"`
 }
 
-// VolumeMount define la estructura para montar un volumen.
+// VolumeMount defines the structure to mount a volume.
 type VolumeMount struct {
 	VolumeName string `json:"volume_name"`
 	MountPath  string `json:"mount_path"`
