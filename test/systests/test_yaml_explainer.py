@@ -15,7 +15,7 @@ kind: Namespace
 metadata:
   name: test-ns
 """,
-            "model": "openchat/openchat-7b:free",
+            "model": "deepseek/deepseek-r1-distill-qwen-14b:free",
         }
         response = requests.post(f"{BASE_URL}/explain", json=payload)
         self.assertEqual(response.status_code, 200)
