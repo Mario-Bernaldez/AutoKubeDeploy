@@ -1,0 +1,387 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-05-25 21:11+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? "
+"1 : 2;\n"
+
+#: app/templates/configmap_config.html:8 app/templates/configmap_config.html:19
+msgid "Configure ConfigMap"
+msgstr "Configurar ConfigMap"
+
+#: app/templates/configmap_config.html:16 app/templates/explore.html:142
+#: app/templates/hpa_config.html:15 app/templates/ingress_config.html:15
+#: app/templates/namespace_config.html:15
+#: app/templates/networkpolicy_config.html:16 app/templates/pvc_config.html:16
+#: app/templates/rbac_config.html:15 app/templates/secret_config.html:16
+#: app/templates/service_account_config.html:16
+#: app/templates/service_config.html:16 app/templates/yaml_result.html:78
+msgid "Back"
+msgstr "Volver"
+
+#: app/templates/configmap_config.html:26
+msgid "ConfigMap Configuration"
+msgstr "Configuración de ConfigMap"
+
+#: app/templates/configmap_config.html:33
+msgid "Properties"
+msgstr "Propiedades"
+
+#: app/templates/configmap_config.html:38
+#: app/templates/configmap_config.html:54
+#: app/templates/deployment_config.html:47
+#: app/templates/deployment_config.html:54
+#: app/templates/deployment_config.html:65
+#: app/templates/deployment_config.html:85
+#: app/templates/deployment_config.html:91
+#: app/templates/deployment_config.html:97
+#: app/templates/deployment_config.html:103 app/templates/hpa_config.html:36
+#: app/templates/hpa_config.html:52 app/templates/ingress_config.html:37
+#: app/templates/ingress_config.html:53
+#: app/templates/networkpolicy_config.html:38
+#: app/templates/networkpolicy_config.html:54 app/templates/rbac_config.html:38
+#: app/templates/rbac_config.html:58 app/templates/rbac_config.html:74
+#: app/templates/rbac_config.html:81 app/templates/secret_config.html:38
+#: app/templates/secret_config.html:68
+#: app/templates/service_account_config.html:38
+#: app/templates/service_account_config.html:54
+#: app/templates/service_config.html:36 app/templates/service_config.html:52
+msgid "Remove"
+msgstr "Eliminar"
+
+#: app/templates/configmap_config.html:41 app/templates/secret_config.html:41
+msgid "Add Property"
+msgstr "Agregar propiedad"
+
+#: app/templates/configmap_config.html:47
+#: app/templates/deployment_config.html:74 app/templates/hpa_config.html:45
+#: app/templates/ingress_config.html:46 app/templates/namespace_config.html:23
+#: app/templates/networkpolicy_config.html:47 app/templates/pvc_config.html:34
+#: app/templates/rbac_config.html:67 app/templates/secret_config.html:61
+#: app/templates/service_account_config.html:47
+#: app/templates/service_config.html:45
+msgid "Generate YAML"
+msgstr "Generar YAML"
+
+#: app/templates/deployment_config.html:7
+#: app/templates/deployment_config.html:17
+msgid "Configure Deployment"
+msgstr "Configurar Deployment"
+
+#: app/templates/deployment_config.html:28
+msgid "Pod Template"
+msgstr "Plantilla de Pod"
+
+#: app/templates/deployment_config.html:32
+msgid "Containers"
+msgstr "Contenedores"
+
+#: app/templates/deployment_config.html:50
+#: app/templates/deployment_config.html:88
+msgid "Add Volume Mount"
+msgstr "Agregar Volume Mount"
+
+#: app/templates/deployment_config.html:56
+msgid "Add Container"
+msgstr "Agregar contenedor"
+
+#: app/templates/deployment_config.html:68
+msgid "Add Volume"
+msgstr "Agregar volumen"
+
+#: app/templates/explore.html:6
+msgid "Resources"
+msgstr "Recursos"
+
+#: app/templates/explore.html:152 app/templates/explore.html:173
+msgid "Delete"
+msgstr "Eliminar"
+
+#: app/templates/explore.html:162
+msgid "No resources found."
+msgstr "No se encontraron recursos."
+
+#: app/templates/explore.html:166
+msgid "Are you sure you want to delete"
+msgstr "¿Estás seguro de que deseas eliminar"
+
+#: app/templates/explore.html:172
+msgid "Cancel"
+msgstr "Cancelar"
+
+#: app/templates/history.html:6 app/templates/history.html:58
+#: app/templates/object_selector.html:172
+msgid "Deployment History"
+msgstr "Historial de Deployments"
+
+#: app/templates/history.html:62
+msgid "Date"
+msgstr "Fecha"
+
+#: app/templates/history.html:63
+msgid "Type"
+msgstr "Tipo"
+
+#: app/templates/history.html:64
+msgid "Name"
+msgstr "Nombre"
+
+#: app/templates/history.html:74
+msgid "View"
+msgstr "Ver"
+
+#: app/templates/history.html:78
+msgid "No deployments have been recorded yet."
+msgstr "Aún no se ha registrado ningún Deployment."
+
+#: app/templates/history.html:84
+msgid "⬅ Back to Home"
+msgstr "⬅ Volver al inicio"
+
+#: app/templates/hpa_config.html:7
+msgid "Configure HPA"
+msgstr "Configurar HPA"
+
+#: app/templates/hpa_config.html:17
+msgid "Configure Horizontal Pod Autoscaler"
+msgstr "Configurar Horizontal Pod Autoscaler"
+
+#: app/templates/hpa_config.html:24
+msgid "HPA Configuration"
+msgstr "Configuración de HPA"
+
+#: app/templates/hpa_config.html:31
+msgid "Metrics"
+msgstr "Métricas"
+
+#: app/templates/hpa_config.html:39
+msgid "Add Metric"
+msgstr "Agregar métrica"
+
+#: app/templates/ingress_config.html:7 app/templates/ingress_config.html:18
+msgid "Configure Ingress"
+msgstr "Configurar Ingress"
+
+#: app/templates/ingress_config.html:25
+msgid "Ingress Configuration"
+msgstr "Configuración de Ingress"
+
+#: app/templates/ingress_config.html:32
+msgid "Paths"
+msgstr "Rutas"
+
+#: app/templates/ingress_config.html:40
+msgid "Add Path"
+msgstr "Agregar ruta"
+
+#: app/templates/namespace_config.html:8
+msgid "Namespace Configuration"
+msgstr "Configuración de Namespace"
+
+#: app/templates/namespace_config.html:17
+msgid "Configure Namespace"
+msgstr "Configurar Namespace"
+
+#: app/templates/networkpolicy_config.html:8
+#: app/templates/networkpolicy_config.html:19
+msgid "Configure NetworkPolicy"
+msgstr "Configurar NetworkPolicy"
+
+#: app/templates/networkpolicy_config.html:26
+msgid "NetworkPolicy Configuration"
+msgstr "Configuración de NetworkPolicy"
+
+#: app/templates/networkpolicy_config.html:33
+msgid "Traffic Rules"
+msgstr "Reglas de tráfico"
+
+#: app/templates/networkpolicy_config.html:41 app/templates/rbac_config.html:41
+msgid "Add Rule"
+msgstr "Agregar regla"
+
+#: app/templates/object_selector.html:6
+msgid "Select Object Type"
+msgstr "Seleccionar tipo de objeto"
+
+#: app/templates/object_selector.html:120
+msgid "Which object do you want to configure?"
+msgstr "¿Qué objeto deseas configurar?"
+
+#: app/templates/object_selector.html:134
+msgid "Continue"
+msgstr "Continuar"
+
+#: app/templates/object_selector.html:141
+msgid "Monitoring"
+msgstr "Monitorización"
+
+#: app/templates/object_selector.html:142
+msgid "Access cluster metrics with Grafana."
+msgstr "Accede a las métricas del clúster con Grafana."
+
+#: app/templates/object_selector.html:143
+msgid "Go to Grafana"
+msgstr "Ir a Grafana"
+
+#: app/templates/object_selector.html:147
+msgid "Explore Resources"
+msgstr "Explorar recursos"
+
+#: app/templates/object_selector.html:148
+msgid "Browse existing resources in the cluster."
+msgstr "Explora los recursos existentes en el clúster."
+
+#: app/templates/object_selector.html:167
+msgid "View Resources"
+msgstr "Ver recursos"
+
+#: app/templates/object_selector.html:173
+msgid "Review recently deployed YAMLs and re-apply them."
+msgstr "Revisa los YAMLs desplegados recientemente y vuelve a aplicarlos."
+
+#: app/templates/object_selector.html:174
+msgid "View History"
+msgstr "Ver historial"
+
+#: app/templates/pvc_config.html:8 app/templates/pvc_config.html:19
+msgid "Configure PersistentVolumeClaim"
+msgstr "Configurar PersistentVolumeClaim"
+
+#: app/templates/pvc_config.html:26
+msgid "PVC Configuration"
+msgstr "Configuración de PVC"
+
+#: app/templates/rbac_config.html:8
+msgid "Configure RBAC"
+msgstr "Configurar RBAC"
+
+#: app/templates/rbac_config.html:18
+msgid "Configure Role / ClusterRole and Binding"
+msgstr "Configurar Role / ClusterRole y su Binding"
+
+#: app/templates/rbac_config.html:26
+msgid "Role / ClusterRole"
+msgstr "Role / ClusterRole"
+
+#: app/templates/rbac_config.html:33
+msgid "Rules"
+msgstr "Reglas"
+
+#: app/templates/rbac_config.html:46
+msgid "Binding"
+msgstr "Binding"
+
+#: app/templates/rbac_config.html:53
+msgid "Subjects"
+msgstr "Subjects"
+
+#: app/templates/rbac_config.html:61
+msgid "Add Subject"
+msgstr "Agregar Subject"
+
+#: app/templates/secret_config.html:8 app/templates/secret_config.html:19
+msgid "Configure Secret"
+msgstr "Configurar Secret"
+
+#: app/templates/secret_config.html:26
+msgid "Secret Configuration"
+msgstr "Configuración de Secret"
+
+#: app/templates/secret_config.html:33
+msgid "Opaque Secret Properties"
+msgstr "Propiedades del Secret tipo Opaque"
+
+#: app/templates/secret_config.html:46
+msgid "TLS Secret"
+msgstr "Secret TLS"
+
+#: app/templates/secret_config.html:53
+msgid "Docker Config JSON Secret"
+msgstr "Secret Docker Config JSON"
+
+#: app/templates/service_account_config.html:8
+#: app/templates/service_account_config.html:19
+msgid "Configure ServiceAccount"
+msgstr "Configurar ServiceAccount"
+
+#: app/templates/service_account_config.html:26
+msgid "ServiceAccount Configuration"
+msgstr "Configuración de ServiceAccount"
+
+#: app/templates/service_account_config.html:33
+msgid "Image Pull Secrets"
+msgstr "Image Pull Secrets"
+
+#: app/templates/service_account_config.html:41
+msgid "Add Secret"
+msgstr "Agregar Secret"
+
+#: app/templates/service_config.html:8 app/templates/service_config.html:19
+msgid "Configure Service"
+msgstr "Configurar Service"
+
+#: app/templates/service_config.html:31
+msgid "Ports"
+msgstr "Puertos"
+
+#: app/templates/service_config.html:39
+msgid "Add Port"
+msgstr "Agregar puerto"
+
+#: app/templates/yaml_result.html:8
+msgid "YAML Result"
+msgstr "Resultado YAML"
+
+#: app/templates/yaml_result.html:81
+msgid "Generated YAML"
+msgstr "YAML generado"
+
+#: app/templates/yaml_result.html:83
+msgid "Download YAML"
+msgstr "Descargar YAML"
+
+#: app/templates/yaml_result.html:92
+msgid "Show only free models"
+msgstr "Mostrar solo modelos gratuitos"
+
+#: app/templates/yaml_result.html:96
+msgid "Select a model:"
+msgstr "Seleccionar un modelo:"
+
+#: app/templates/yaml_result.html:110
+msgid "Get Explanation"
+msgstr "Obtener explicación"
+
+#: app/templates/yaml_result.html:111
+msgid "Apply to Kubernetes"
+msgstr "Aplicar a Kubernetes"
+
+#: app/templates/yaml_result.html:112
+msgid "Loading explanation..."
+msgstr "Cargando explicación..."
+
+#: app/templates/yaml_result.html:117
+msgid "Explanation"
+msgstr "Explicación"
+
+#: kube-web/settings.py:122
+msgid "Spanish"
+msgstr "Español"
+
+#: kube-web/settings.py:123
+msgid "English"
+msgstr "Inglés"

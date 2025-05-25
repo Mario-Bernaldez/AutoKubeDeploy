@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
-
+{% load i18n %}
 <head>
     <meta charset="UTF-8">
-    <title>Deployment History</title>
+    <title>{% trans "Deployment History" %}</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -55,13 +55,13 @@
 </head>
 
 <body>
-    <h1>📜 Deployment History</h1>
+    <h1>📜 {% trans "Deployment History" %}</h1>
     <table>
         <thead>
             <tr>
-                <th>Date</th>
-                <th>Type</th>
-                <th>Name</th>
+                <th>{% trans "Date" %}</th>
+                <th>{% trans "Type" %}</th>
+                <th>{% trans "Name" %}</th>
                 <th>YAML</th>
             </tr>
         </thead>
@@ -71,17 +71,17 @@
                 <td>{{ item.created_at|date:"Y-m-d H:i" }}</td>
                 <td>{{ item.resource_type }}</td>
                 <td>{{ item.resource_name }}</td>
-                <td><a href="{% url 'view_deployment_yaml' 1 %}">📄 View</a></td>
+                <td><a href="{% url 'view_deployment_yaml' 1 %}">📄 {% trans "View" %}</a></td>
             </tr>
             {% empty %}
             <tr>
-                <td colspan="4">No deployments have been recorded yet.</td>
+                <td colspan="4">{% trans "No deployments have been recorded yet." %}</td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
     <br>
-    <a href="/">⬅ Back to Home</a>
+    <a href="/">{% trans "⬅ Back to Home" %}</a>
 </body>
 
 </html>

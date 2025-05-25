@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 {% load static %}
+{% load i18n %}
 
 <head>
     <meta charset="UTF-8">
-    <title>Configure ConfigMap</title>
+    <title>{% trans "Configure ConfigMap" %}</title>
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 </head>
 
@@ -12,45 +13,45 @@
 
     <a href="{% url 'object_selector' %}"
         style="display: inline-block; margin-bottom: 20px; text-decoration: none; color: #007bff;">
-        ⬅ Back
+        ⬅ {% trans "Back" %}
     </a>
 
-    <h2>Configure ConfigMap</h2>
+    <h2>{% trans "Configure ConfigMap" %}</h2>
 
     <form method="post">
         {% csrf_token %}
         <div class="tree">
             <ul>
                 <li>
-                    <strong>ConfigMap Configuration</strong>
+                    <strong>{% trans "ConfigMap Configuration" %}</strong>
                     <div class="tree-item">
                         {{ configmap_form.as_p }}
                     </div>
                 </li>
 
                 <li>
-                    <strong>Properties</strong> {{ configmap_key_formset.management_form }}
+                    <strong>{% trans "Properties" %}</strong> {{ configmap_key_formset.management_form }}
                     <ul id="properties-form-container">
                         {% for form in configmap_key_formset %}
                         <li class="form-item">
                             <div class="tree-item">{{ form.as_p }}</div>
-                            <button type="button" class="remove-form" data-prefix="properties">Remove</button>
+                            <button type="button" class="remove-form" data-prefix="properties">{% trans "Remove" %}</button>
                         </li>
                         {% endfor %}
-                        <li><button type="button" id="add-property">Add Property</button></li>
+                        <li><button type="button" id="add-property">{% trans "Add Property" %}</button></li>
                     </ul>
                 </li>
             </ul>
         </div>
 
-        <button type="submit">Generate YAML</button>
+        <button type="submit">{% trans "Generate YAML" %}</button>
     </form>
 
     <!-- Empty form to clone -->
     <div id="properties-empty-form" style="display: none;">
         <li class="form-item">
             <div class="tree-item">{{ configmap_key_formset.empty_form.as_p }}</div>
-            <button type="button" class="remove-form" data-prefix="properties">Remove</button>
+            <button type="button" class="remove-form" data-prefix="properties">{% trans "Remove" %}</button>
         </li>
     </div>
 

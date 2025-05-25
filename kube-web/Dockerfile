@@ -9,6 +9,8 @@ ENV PYTHONUNBUFFERED=1 \
 # Create and set the working directory
 WORKDIR /app
 
+RUN apt-get update && apt-get install -y gettext && rm -rf /var/lib/apt/lists/*
+
 # Copy dependency files
 COPY kube-web/requirements.txt /app/requirements.txt
 
@@ -18,6 +20,8 @@ RUN pip install --no-cache-dir --upgrade pip && \
 
 # Copy the rest of the application
 COPY . /app/
+
+RUN python manage.py compilemessages
 
 # Create folder for static files and apply migrations
 RUN mkdir -p /app/static && \

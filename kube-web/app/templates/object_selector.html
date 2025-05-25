@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="es">
-
+{% load i18n %}
 <head>
   <meta charset="UTF-8">
-  <title>Select Object Type</title>
+  <title>{% trans "Select Object Type" %}</title>
   <style>
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -117,7 +117,7 @@
     <div class="column">
       <form method="post" class="card">
         {% csrf_token %}
-        <h2>⚙️ Which object do you want to configure?</h2>
+        <h2>⚙️ {% trans "Which object do you want to configure?" %}</h2>
         <div class="radio-group">
           <label><input type="radio" name="object_type" value="deployment" required> Deployment</label>
           <label><input type="radio" name="object_type" value="service"> Service</label>
@@ -131,21 +131,21 @@
           <label><input type="radio" name="object_type" value="rbac"> RBAC</label>
           <label><input type="radio" name="object_type" value="networkpolicy"> Network Policy</label>
         </div>
-        <button type="submit" class="btn">Continue</button>
+        <button type="submit" class="btn">{% trans "Continue" %}</button>
       </form>
     </div>
 
     <!-- Right Column (Monitoring, Explore, History) -->
     <div class="column">
       <div class="card">
-        <h2>📈 Monitoring</h2>
-        <p>Access cluster metrics with Grafana.</p>
-        <a href="{{ grafana_url }}" target="_blank" class="btn btn-secondary">🌐 Go to Grafana</a>
+        <h2>📈 {% trans "Monitoring" %}</h2>
+        <p>{% trans "Access cluster metrics with Grafana." %}</p>
+        <a href="{{ grafana_url }}" target="_blank" class="btn btn-secondary">🌐 {% trans "Go to Grafana" %}</a>
       </div>
 
       <div class="card">
-        <h2>🔍 Explore Resources</h2>
-        <p>Browse existing resources in the cluster.</p>
+        <h2>🔍 {% trans "Explore Resources" %}</h2>
+        <p>{% trans "Browse existing resources in the cluster." %}</p>
         <form method="get" action="/explore">
           <select name="resource" id="resource-select">
             <option value="Pod">Pods</option>
@@ -164,17 +164,16 @@
             <option value="ClusterRoleBinding">Cluster Role Binding</option>
             <option value="NetworkPolicy">Network Policies</option>
           </select>
-          <button type="submit" class="btn">🔎 View Resources</button>
+          <button type="submit" class="btn">🔎 {% trans "View Resources" %}</button>
         </form>
       </div>
 
       <div class="card">
-        <h2>📜 Deployment History</h2>
-        <p>Review recently deployed YAMLs and re-apply them.</p>
-        <a href="/history/" class="btn btn-secondary">🕓 View History</a>
+        <h2>📜 {% trans "Deployment History" %}</h2>
+        <p>{% trans "Review recently deployed YAMLs and re-apply them." %}</p>
+        <a href="/history/" class="btn btn-secondary">🕓 {% trans "View History" %}</a>
       </div>
     </div>
-
   </div>
 </body>
 

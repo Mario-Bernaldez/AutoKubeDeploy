@@ -1,21 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
 {% load static %}
+{% load i18n %}
 
 <head>
     <meta charset="UTF-8">
-    <title>Configure RBAC</title>
+    <title>{% trans "Configure RBAC" %}</title>
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 </head>
 
 <body>
 
-    <a href="{% url 'object_selector' %}"
-        style="display: inline-block; margin-bottom: 20px; text-decoration: none; color: #007bff;">
-        ⬅ Back
+    <a href="{% url 'object_selector' %}" style="display: inline-block; margin-bottom: 20px; text-decoration: none; color: #007bff;">
+        ⬅ {% trans "Back" %}
     </a>
 
-    <h2>Configure Role / ClusterRole and Binding</h2>
+    <h2>{% trans "Configure Role / ClusterRole and Binding" %}</h2>
 
     <form method="post">
         {% csrf_token %}
@@ -23,62 +23,62 @@
         <div class="tree">
             <ul>
                 <li>
-                    <strong>Role / ClusterRole</strong>
+                    <strong>{% trans "Role / ClusterRole" %}</strong>
                     <div class="tree-item">
                         {{ role_form.as_p }}
                     </div>
                 </li>
 
                 <li>
-                    <strong>Rules</strong> {{ rule_formset.management_form }}
+                    <strong>{% trans "Rules" %}</strong> {{ rule_formset.management_form }}
                     <ul id="rules-form-container">
                         {% for form in rule_formset %}
                         <li class="form-item">
                             <div class="tree-item">{{ form.as_p }}</div>
-                            <button type="button" class="remove-form" data-prefix="rules">Remove</button>
+                            <button type="button" class="remove-form" data-prefix="rules">{% trans "Remove" %}</button>
                         </li>
                         {% endfor %}
-                        <li><button type="button" id="add-rule">Add Rule</button></li>
+                        <li><button type="button" id="add-rule">{% trans "Add Rule" %}</button></li>
                     </ul>
                 </li>
 
                 <li>
-                    <strong>Binding</strong>
+                    <strong>{% trans "Binding" %}</strong>
                     <div class="tree-item">
                         {{ rolebinding_form.as_p }}
                     </div>
                 </li>
 
                 <li>
-                    <strong>Subjects</strong> {{ subject_formset.management_form }}
+                    <strong>{% trans "Subjects" %}</strong> {{ subject_formset.management_form }}
                     <ul id="subjects-form-container">
                         {% for form in subject_formset %}
                         <li class="form-item">
                             <div class="tree-item">{{ form.as_p }}</div>
-                            <button type="button" class="remove-form" data-prefix="subjects">Remove</button>
+                            <button type="button" class="remove-form" data-prefix="subjects">{% trans "Remove" %}</button>
                         </li>
                         {% endfor %}
-                        <li><button type="button" id="add-subject">Add Subject</button></li>
+                        <li><button type="button" id="add-subject">{% trans "Add Subject" %}</button></li>
                     </ul>
                 </li>
             </ul>
         </div>
 
-        <button type="submit">Generate YAML</button>
+        <button type="submit">{% trans "Generate YAML" %}</button>
     </form>
 
     <!-- Empty forms for cloning -->
     <div id="rules-empty-form" style="display: none;">
         <li class="form-item">
             <div class="tree-item">{{ rule_formset.empty_form.as_p }}</div>
-            <button type="button" class="remove-form" data-prefix="rules">Remove</button>
+            <button type="button" class="remove-form" data-prefix="rules">{% trans "Remove" %}</button>
         </li>
     </div>
 
     <div id="subjects-empty-form" style="display: none;">
         <li class="form-item">
             <div class="tree-item">{{ subject_formset.empty_form.as_p }}</div>
-            <button type="button" class="remove-form" data-prefix="subjects">Remove</button>
+            <button type="button" class="remove-form" data-prefix="subjects">{% trans "Remove" %}</button>
         </li>
     </div>
 

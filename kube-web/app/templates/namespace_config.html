@@ -1,25 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
 {% load static %}
+{% load i18n %}
 
 <head>
     <meta charset="UTF-8">
-    <title>Namespace Configuration</title>
+    <title>{% trans "Namespace Configuration" %}</title>
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 </head>
 
 <body>
     <a href="{% url 'object_selector' %}"
         style="display: inline-block; margin-bottom: 20px; text-decoration: none; color: #007bff;">
-        ⬅
+        ⬅ {% trans "Back" %}
     </a>
-    <h2>Configure Namespace</h2>
+    <h2>{% trans "Configure Namespace" %}</h2>
     <form method="post">
         {% csrf_token %}
         <div class="tree">
             <div class="tree-item">{{ namespace_form.as_p }}</div>
         </div>
-        <button type="submit">Generate YAML</button>
+        <button type="submit">{% trans "Generate YAML" %}</button>
     </form>
 </body>
 
