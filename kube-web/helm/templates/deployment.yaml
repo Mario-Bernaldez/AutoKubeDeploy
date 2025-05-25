@@ -19,6 +19,8 @@ spec:
           env:
             - name: DJANGO_SETTINGS_MODULE
               value: "kube-web.settings"
+            - name: GRAFANA_URL
+              value: "{{ .Values.grafana.url }}"
           ports:
             - containerPort: 8000
           resources:

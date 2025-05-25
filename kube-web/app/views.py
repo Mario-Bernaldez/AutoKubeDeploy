@@ -1,3 +1,4 @@
+import os
 import requests
 from django.forms import formset_factory
 from django.shortcuts import get_object_or_404, render, redirect
@@ -57,7 +58,9 @@ def object_selector(request):
         target = redirect_map.get(selected)
         if target:
             return redirect(target)
-    return render(request, "object_selector.html")
+
+    grafana_url = os.environ.get("GRAFANA_URL", "http://localhost:30090")
+    return render(request, "object_selector.html", {"grafana_url": grafana_url})
 
 
 def deployment_config_view(request):
