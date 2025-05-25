@@ -39,8 +39,7 @@
           <ul id="containers-form-container">
             {% for form in container_formset %}
             <li class="form-item">
-              <div class="tree-item">{{ form.as_p }} <strong>Volume Mounts</strong> {{
-                volume_mount_formset.management_form }}
+              <div class="tree-item">{{ form.as_p }} <strong>Volume Mounts</strong> {{volume_mount_formset.management_form }}
                 <ul class="volume_mounts-form-container">
                   {% for form in volume_mount_formset %}
                   <li>
