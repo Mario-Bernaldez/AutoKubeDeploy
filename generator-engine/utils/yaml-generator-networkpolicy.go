@@ -6,7 +6,6 @@ import (
 )
 
 func GenerateNetworkPolicyYAML(np models.NetworkPolicyObject) (string, error) {
-	// Convert the main podSelector
 	podSelector := parseLabels(np.PodSelector)
 
 	spec := map[string]interface{}{
@@ -60,18 +59,24 @@ func GenerateNetworkPolicyYAML(np models.NetworkPolicyObject) (string, error) {
 			})
 		}
 
-		if len(peers) > 0 {
-			if rule.Direction == "Ingress" {
+		// Ingress
+		if rule.Direction == "Ingress" {
+			if len(peers) > 0 {
 				ruleEntry["from"] = peers
-			} else {
-				ruleEntry["to"] = peers
+			}
+			if len(peers) > 0 || len(rule.Ports) > 0 {
+				ingressRules = append(ingressRules, ruleEntry)
 			}
 		}
 
-		if rule.Direction == "Ingress" {
-			ingressRules = append(ingressRules, ruleEntry)
-		} else {
-			egressRules = append(egressRules, ruleEntry)
+		// Egress
+		if rule.Direction == "Egress" {
+			if len(peers) > 0 {
+				ruleEntry["to"] = peers
+			}
+			if len(peers) > 0 || len(rule.Ports) > 0 {
+				egressRules = append(egressRules, ruleEntry)
+			}
 		}
 	}
 
@@ -82,12 +87,17 @@ func GenerateNetworkPolicyYAML(np models.NetworkPolicyObject) (string, error) {
 		spec["egress"] = egressRules
 	}
 
+	namespace := np.Namespace
+	if namespace == "" {
+		namespace = "default"
+	}
+
 	networkPolicy := map[string]interface{}{
 		"apiVersion": "networking.k8s.io/v1",
 		"kind":       "NetworkPolicy",
 		"metadata": map[string]interface{}{
 			"name":      np.Name,
-			"namespace": np.Namespace,
+			"namespace": namespace,
 		},
 		"spec": spec,
 	}
@@ -97,4 +107,13 @@ func GenerateNetworkPolicyYAML(np models.NetworkPolicyObject) (string, error) {
 		return "", err
 	}
 	return string(out), nil
+}
+
+func contains(slice []string, val string) bool {
+	for _, s := range slice {
+		if s == val {
+			return true
+		}
+	}
+	return false
 }

@@ -87,6 +87,12 @@ func GenerateHandler(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, "Error generating YAML for Role/RoleBinding", http.StatusInternalServerError)
 			return
 		}
+	} else if req.NetworkPolicy != nil {
+		yamlResult, err = utils.GenerateNetworkPolicyYAML(*req.NetworkPolicy)
+		if err != nil {
+			http.Error(w, "Error generating YAML for NetworkPolicy", http.StatusInternalServerError)
+			return
+		}
 	} else {
 		http.Error(w, "No valid Kubernetes object provided", http.StatusBadRequest)
 		return

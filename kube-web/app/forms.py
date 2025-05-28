@@ -681,7 +681,8 @@ class NetworkPolicyForm(forms.Form):
     namespace = forms.CharField(
         label="Namespace",
         max_length=100,
-        widget=forms.TextInput(attrs={"required": True}),
+        required=False,
+        widget=forms.TextInput(attrs={"required": False}),
     )
 
     pod_selector = forms.CharField(
