@@ -23,12 +23,17 @@ func GenerateServiceYAML(svc models.ServiceObject) (string, error) {
 		ports = append(ports, portEntry)
 	}
 
+	metadata := map[string]interface{}{
+		"name": svc.ServiceName,
+	}
+	if svc.Namespace != "" {
+		metadata["namespace"] = svc.Namespace
+	}
+
 	serviceYAML := map[string]interface{}{
 		"apiVersion": "v1",
 		"kind":       "Service",
-		"metadata": map[string]interface{}{
-			"name": svc.ServiceName,
-		},
+		"metadata":   metadata,
 		"spec": map[string]interface{}{
 			"type":     svc.ServiceType,
 			"selector": selector,

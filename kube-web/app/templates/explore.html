@@ -146,17 +146,21 @@
         <p class="error">{{ error }}</p>
         {% elif names %}
         <ul>
-            {% for name in names %}
-            <li>
-                <span>{{ name }}</span>
-                <button class="delete-btn" data-name="{{ name }}" title="{% trans 'Delete' %}">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor"
-                        viewBox="0 0 24 24">
-                        <path d="M9 3v1H4v2h16V4h-5V3H9zm-2 5v13h10V8H7zm2 2h2v9H9v-9zm4 0h2v9h-2v-9z" />
-                    </svg>
-                </button>
-            </li>
-            {% endfor %}
+        {% for item in names %}
+        <li>
+            <span>{{ item.name }} <small style="color: #555;">[{{ item.namespace }}]</small></span>
+            <button class="delete-btn"
+                    data-name="{{ item.name }}"
+                    data-namespace="{{ item.namespace }}"
+                    title="{% trans 'Delete' %}">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor"
+                    viewBox="0 0 24 24">
+                    <path d="M9 3v1H4v2h16V4h-5V3H9zm-2 5v13h10V8H7zm2 2h2v9H9v-9zm4 0h2v9h-2v-9z" />
+                </svg>
+            </button>
+        </li>
+        {% endfor %}
+
         </ul>
         {% else %}
         <p>{% trans "No resources found." %}</p>
@@ -168,6 +172,7 @@
                     {% csrf_token %}
                     <input type="hidden" name="resource" value="{{ resource }}">
                     <input type="hidden" name="name" id="nameInput">
+                    <input type="hidden" name="namespace" id="namespaceInput">
                     <div class="modal-actions">
                         <button type="button" onclick="closeModal()">{% trans "Cancel" %}</button>
                         <button type="submit" class="danger">{% trans "Delete" %}</button>
@@ -182,12 +187,15 @@
     const modal = document.getElementById('confirmModal');
     const itemName = document.getElementById('itemToDelete');
     const nameInput = document.getElementById('nameInput');
+    const namespaceInput = document.getElementById('namespaceInput');
 
     document.querySelectorAll('.delete-btn').forEach(btn => {
         btn.addEventListener('click', () => {
             const name = btn.getAttribute('data-name');
-            itemName.textContent = name;
+            const namespace = btn.getAttribute('data-namespace');
+            itemName.textContent = `${name} (${namespace})`;
             nameInput.value = name;
+            namespaceInput.value = namespace;
             modal.style.display = 'flex';
         });
     });

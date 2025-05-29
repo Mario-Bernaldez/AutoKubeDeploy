@@ -71,6 +71,9 @@ func GenerateDeploymentYAML(dep models.DeploymentObject) (string, error) {
 			c["command"] = container.Command
 		}
 
+		if container.ContainerName == "" && container.Image == "" {
+			continue
+		}
 
 		if container.InitContainer {
 			initContainers = append(initContainers, c)
@@ -129,7 +132,7 @@ func GenerateDeploymentYAML(dep models.DeploymentObject) (string, error) {
 				})
 			}
 
-		case "pvc":
+		case "persistentVolumeClaim":
 			if volume.PvcClaimName != "" {
 				volumes = append(volumes, map[string]interface{}{
 					"name": volume.VolumeName,

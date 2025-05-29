@@ -305,6 +305,7 @@ class NamespaceForm(forms.Form):
 
 class ServiceForm(forms.Form):
     service_name = forms.CharField(label="Service Name", max_length=100)
+    namespace = forms.CharField(label="Namespace", max_length=100, required=False)
     service_type = forms.ChoiceField(
         label="Service Type",
         choices=[

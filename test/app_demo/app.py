@@ -6,9 +6,13 @@ app = Flask(__name__)
 
 @app.route("/")
 def index():
-    bg_color = os.environ.get("BG_COLOR", "#ffffff")
-    config_text = os.environ.get("CONFIG_TEXT", "No config text")
+    bg_color = os.environ.get("BG_COLOR", "#000000")
     pod_name = os.environ.get("HOSTNAME", "Unknown")
+    try:
+        with open("/etc/config/CONFIG_TEXT") as f:
+            config_text = f.read()
+    except:
+        config_text = "No config text"
     try:
         with open("/etc/secret/my_secret.txt") as f:
             secret_text = f.read()

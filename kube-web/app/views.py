@@ -895,6 +895,7 @@ def delete_resource(request):
 
     resource = request.POST.get("resource")
     name = request.POST.get("name")
+    namespace = request.POST.get("namespace", "default")
 
     try:
         requests.delete(
@@ -902,7 +903,7 @@ def delete_resource(request):
             params={
                 "type": resource,
                 "name": name,
-                "namespace": "default",
+                "namespace": namespace,
             },
         )
     except Exception as e:

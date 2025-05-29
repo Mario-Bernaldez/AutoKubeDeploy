@@ -11,6 +11,7 @@ type ServicePort struct {
 // ServiceObject defines the structure to create a Service in Kubernetes.
 type ServiceObject struct {
 	ServiceName string        `json:"service_name"`
+	Namespace   string        `json:"namespace"`
 	ServiceType string        `json:"service_type"`
 	Ports       []ServicePort `json:"ports"`
 	Selector    string        `json:"selector"`

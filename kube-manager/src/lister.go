@@ -11,7 +11,12 @@ import (
     "k8s.io/client-go/rest"
 )
 
-func ListResourceNames(kind string, namespace string) ([]string, error) {
+type NamedResource struct {
+	Name      string `json:"name"`
+	Namespace string `json:"namespace"`
+}
+
+func ListResources(kind string, namespace string) ([]NamedResource, error) {
     config, err := rest.InClusterConfig()
     if err != nil {
         return nil, fmt.Errorf("error loading cluster configuration: %w", err)
@@ -39,12 +44,20 @@ func ListResourceNames(kind string, namespace string) ([]string, error) {
         return nil, fmt.Errorf("error listing resources: %w", err)
     }
 
-    names := []string{}
+
+    var result []NamedResource
     for _, item := range list.Items {
-        names = append(names, item.GetName())
+        ns := item.GetNamespace()
+        if ns == "" {
+            ns = "default"
+        }
+        result = append(result, NamedResource{
+            Name:      item.GetName(),
+            Namespace: ns,
+        })
     }
 
-    return names, nil
+    return result, nil
 }
 
 func resolveGVRStatic(kind string) (schema.GroupVersionResource, error) {

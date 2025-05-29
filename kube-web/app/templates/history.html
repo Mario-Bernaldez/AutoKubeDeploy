@@ -71,7 +71,7 @@
                 <td>{{ item.created_at|date:"Y-m-d H:i" }}</td>
                 <td>{{ item.resource_type }}</td>
                 <td>{{ item.resource_name }}</td>
-                <td><a href="{% url 'view_deployment_yaml' 1 %}">📄 {% trans "View" %}</a></td>
+                <td><a href="{% url 'view_deployment_yaml' item.id %}">📄 {% trans "View" %}</a></td>
             </tr>
             {% empty %}
             <tr>
