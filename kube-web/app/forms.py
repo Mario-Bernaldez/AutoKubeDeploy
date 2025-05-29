@@ -137,7 +137,17 @@ class ContainerForm(forms.Form):
     image_pull_policy = forms.ChoiceField(
         label="Image Pull Policy", choices=IMAGE_PULL_POLICY_CHOICES
     )
-
+    command = forms.CharField(
+        label="Command (space-separated)",
+        required=False,
+        help_text="Example: /bin/sh -c 'echo hello'",
+        widget=forms.TextInput(
+            attrs={
+                "pattern": r"^[^\s]+(\s+[^\s]+)*$",
+                "title": "Should be a space-separated list, e.g. /bin/sh -c 'echo hello'",
+            }
+        ),
+    )
     ports = forms.CharField(
         label="Ports (comma-separated numbers)",
         required=False,

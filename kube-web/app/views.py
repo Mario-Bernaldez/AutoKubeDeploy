@@ -1,3 +1,4 @@
+import shlex
 from django.utils import translation
 import os
 from django.conf import settings
@@ -108,6 +109,15 @@ def deployment_config_view(request):
             containers_data = []
             for idx, cform in enumerate(container_formset):
                 c = cform.cleaned_data.copy()
+                
+                raw_command = c.get("command", "").strip()
+                if raw_command:
+                    try:
+                        c["command"] = shlex.split(raw_command)
+                    except ValueError as e:
+                        c["command"] = []
+                else:
+                    c["command"] = []
                 prefix = volume_mount_formset.prefix
                 names = request.POST.getlist(f"{prefix}-{idx}-volume_name")
                 paths = request.POST.getlist(f"{prefix}-{idx}-mount_path")

@@ -20,10 +20,10 @@ func parseIntOrString(value string) interface{} {
 func GenerateDeploymentYAML(dep models.DeploymentObject) (string, error) {
 	podLabels := parseLabels(dep.PodTemplate.Labels)
 
-	// Process containers individually
 	containers := make([]map[string]interface{}, 0)
+	initContainers := make([]map[string]interface{}, 0)
+
 	for _, container := range dep.Containers {
-		// Process ports (can be comma-separated)
 		portList := make([]map[string]int, 0)
 		portStrs := strings.Split(container.Ports, ",")
 		for _, p := range portStrs {
@@ -66,7 +66,17 @@ func GenerateDeploymentYAML(dep models.DeploymentObject) (string, error) {
 			"env":             envVarsList,
 			"volumeMounts":    volumeMounts,
 		}
-		containers = append(containers, c)
+
+		if len(container.Command) > 0 {
+			c["command"] = container.Command
+		}
+
+
+		if container.InitContainer {
+			initContainers = append(initContainers, c)
+		} else {
+			containers = append(containers, c)
+		}
 	}
 
 	volumes := make([]map[string]interface{}, 0)
@@ -131,6 +141,14 @@ func GenerateDeploymentYAML(dep models.DeploymentObject) (string, error) {
 		}
 	}
 
+	podSpec := map[string]interface{}{
+		"containers": containers,
+		"volumes":    volumes,
+	}
+	if len(initContainers) > 0 {
+		podSpec["initContainers"] = initContainers
+	}
+
 	deploymentYAML := map[string]interface{}{
 		"apiVersion": "apps/v1",
 		"kind":       "Deployment",
@@ -154,10 +172,7 @@ func GenerateDeploymentYAML(dep models.DeploymentObject) (string, error) {
 				"metadata": map[string]interface{}{
 					"labels": podLabels,
 				},
-				"spec": map[string]interface{}{
-					"containers": containers,
-					"volumes":    volumes,
-				},
+				"spec": podSpec,
 			},
 		},
 	}

@@ -26,12 +26,14 @@ type PodTemplateSpec struct {
 
 // Container defines the structure of a container.
 type Container struct {
-	ContainerName   string        `json:"container_name"`
-	Image           string        `json:"image"`
-	ImagePullPolicy string        `json:"image_pull_policy"`
-	Ports           string        `json:"ports"`
-	EnvVars         string        `json:"env_vars"`
-	VolumeMounts    []VolumeMount `json:"volume_mounts"`
+	InitContainer    bool          `json:"init_container"`
+	ContainerName    string        `json:"container_name"`
+	Image            string        `json:"image"`
+	ImagePullPolicy  string        `json:"image_pull_policy"`
+	Ports            string        `json:"ports"`
+	EnvVars          string        `json:"env_vars"`
+	Command          []string      `json:"command"`
+	VolumeMounts     []VolumeMount `json:"volume_mounts"`
 }
 
 // Volume defines the structure of a volume.
