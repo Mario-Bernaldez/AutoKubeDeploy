@@ -113,6 +113,10 @@ class PodTemplateForm(forms.Form):
 
 
 class ContainerForm(forms.Form):
+    init_container = forms.BooleanField(
+        label="Is Init Container?",
+        required=False,
+    )
     container_name = forms.CharField(
         label="Container Name",
         max_length=100,

@@ -4,7 +4,7 @@ from django.conf import settings
 import requests
 from django.forms import formset_factory
 from django.shortcuts import get_object_or_404, render, redirect
-from django.http import HttpResponse, HttpResponseBadRequest
+from django.http import HttpResponse, HttpResponseBadRequest, JsonResponse
 from django.contrib import messages
 from django.views.decorators.csrf import csrf_exempt
 import yaml
@@ -128,7 +128,6 @@ def deployment_config_view(request):
                     "volumes": volumes_data,
                 }
             }
-
             response = requests.post(
                 "http://generator-engine/generate", json=user_input_data
             )
@@ -182,7 +181,6 @@ def service_config_view(request):
             ]
             service_data["ports"] = ports_data
             user_input_data = {"service": service_data}
-
             response = requests.post(
                 "http://generator-engine/generate", json=user_input_data
             )
