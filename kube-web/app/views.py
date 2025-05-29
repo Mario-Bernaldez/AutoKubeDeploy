@@ -1,4 +1,6 @@
+from django.utils import translation
 import os
+from django.conf import settings
 import requests
 from django.forms import formset_factory
 from django.shortcuts import get_object_or_404, render, redirect
@@ -37,6 +39,20 @@ from .forms import (
     ServiceForm,
     RequiredContainerFormSet,
 )
+
+
+def set_language(request, language):
+    """Sets the current language in the cookie"""
+
+    if not language or language not in [
+        name for name, translation in settings.LANGUAGES
+    ]:
+        return redirect("/")
+
+    translation.activate(language)
+    response = redirect(request.META.get("HTTP_REFERER", "/"))
+    response.set_cookie("django_language", language)
+    return response
 
 
 def object_selector(request):

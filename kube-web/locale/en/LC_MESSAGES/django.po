@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-25 21:11+0200\n"
+"POT-Creation-Date: 2025-05-29 14:43+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,369 +18,385 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: app/templates/configmap_config.html:8 app/templates/configmap_config.html:19
+#: .\app\templates\configmap_config.html:8
+#: .\app\templates\configmap_config.html:19
 msgid "Configure ConfigMap"
 msgstr "Configure ConfigMap"
 
-#: app/templates/configmap_config.html:16 app/templates/explore.html:142
-#: app/templates/hpa_config.html:15 app/templates/ingress_config.html:15
-#: app/templates/namespace_config.html:15
-#: app/templates/networkpolicy_config.html:16 app/templates/pvc_config.html:16
-#: app/templates/rbac_config.html:15 app/templates/secret_config.html:16
-#: app/templates/service_account_config.html:16
-#: app/templates/service_config.html:16 app/templates/yaml_result.html:78
+#: .\app\templates\configmap_config.html:16 .\app\templates\explore.html:142
+#: .\app\templates\hpa_config.html:15 .\app\templates\ingress_config.html:15
+#: .\app\templates\namespace_config.html:15
+#: .\app\templates\networkpolicy_config.html:16
+#: .\app\templates\pvc_config.html:16 .\app\templates\rbac_config.html:15
+#: .\app\templates\secret_config.html:16
+#: .\app\templates\service_account_config.html:16
+#: .\app\templates\service_config.html:16 .\app\templates\yaml_result.html:78
 msgid "Back"
 msgstr "Back"
 
-#: app/templates/configmap_config.html:26
+#: .\app\templates\configmap_config.html:26
 msgid "ConfigMap Configuration"
 msgstr "ConfigMap Configuration"
 
-#: app/templates/configmap_config.html:33
+#: .\app\templates\configmap_config.html:33
 msgid "Properties"
 msgstr "Properties"
 
-#: app/templates/configmap_config.html:38
-#: app/templates/configmap_config.html:54
-#: app/templates/deployment_config.html:47
-#: app/templates/deployment_config.html:54
-#: app/templates/deployment_config.html:65
-#: app/templates/deployment_config.html:85
-#: app/templates/deployment_config.html:91
-#: app/templates/deployment_config.html:97
-#: app/templates/deployment_config.html:103 app/templates/hpa_config.html:36
-#: app/templates/hpa_config.html:52 app/templates/ingress_config.html:37
-#: app/templates/ingress_config.html:53
-#: app/templates/networkpolicy_config.html:38
-#: app/templates/networkpolicy_config.html:54 app/templates/rbac_config.html:38
-#: app/templates/rbac_config.html:58 app/templates/rbac_config.html:74
-#: app/templates/rbac_config.html:81 app/templates/secret_config.html:38
-#: app/templates/secret_config.html:68
-#: app/templates/service_account_config.html:38
-#: app/templates/service_account_config.html:54
-#: app/templates/service_config.html:36 app/templates/service_config.html:52
+#: .\app\templates\configmap_config.html:38
+#: .\app\templates\configmap_config.html:54
+#: .\app\templates\deployment_config.html:47
+#: .\app\templates\deployment_config.html:54
+#: .\app\templates\deployment_config.html:65
+#: .\app\templates\deployment_config.html:85
+#: .\app\templates\deployment_config.html:91
+#: .\app\templates\deployment_config.html:97
+#: .\app\templates\deployment_config.html:103
+#: .\app\templates\hpa_config.html:36 .\app\templates\hpa_config.html:52
+#: .\app\templates\ingress_config.html:37
+#: .\app\templates\ingress_config.html:53
+#: .\app\templates\networkpolicy_config.html:38
+#: .\app\templates\networkpolicy_config.html:54
+#: .\app\templates\rbac_config.html:38 .\app\templates\rbac_config.html:58
+#: .\app\templates\rbac_config.html:74 .\app\templates\rbac_config.html:81
+#: .\app\templates\secret_config.html:38 .\app\templates\secret_config.html:68
+#: .\app\templates\service_account_config.html:38
+#: .\app\templates\service_account_config.html:54
+#: .\app\templates\service_config.html:36
+#: .\app\templates\service_config.html:52
 msgid "Remove"
 msgstr "Remove"
 
-#: app/templates/configmap_config.html:41 app/templates/secret_config.html:41
+#: .\app\templates\configmap_config.html:41
+#: .\app\templates\secret_config.html:41
 msgid "Add Property"
 msgstr "Add Property"
 
-#: app/templates/configmap_config.html:47
-#: app/templates/deployment_config.html:74 app/templates/hpa_config.html:45
-#: app/templates/ingress_config.html:46 app/templates/namespace_config.html:23
-#: app/templates/networkpolicy_config.html:47 app/templates/pvc_config.html:34
-#: app/templates/rbac_config.html:67 app/templates/secret_config.html:61
-#: app/templates/service_account_config.html:47
-#: app/templates/service_config.html:45
+#: .\app\templates\configmap_config.html:47
+#: .\app\templates\deployment_config.html:74 .\app\templates\hpa_config.html:45
+#: .\app\templates\ingress_config.html:46
+#: .\app\templates\namespace_config.html:23
+#: .\app\templates\networkpolicy_config.html:47
+#: .\app\templates\pvc_config.html:34 .\app\templates\rbac_config.html:67
+#: .\app\templates\secret_config.html:61
+#: .\app\templates\service_account_config.html:47
+#: .\app\templates\service_config.html:45
 msgid "Generate YAML"
 msgstr "Generate YAML"
 
-#: app/templates/deployment_config.html:7
-#: app/templates/deployment_config.html:17
+#: .\app\templates\deployment_config.html:7
+#: .\app\templates\deployment_config.html:17
 msgid "Configure Deployment"
 msgstr "Configure Deployment"
 
-#: app/templates/deployment_config.html:28
+#: .\app\templates\deployment_config.html:28
 msgid "Pod Template"
 msgstr "Pod Template"
 
-#: app/templates/deployment_config.html:32
+#: .\app\templates\deployment_config.html:32
 msgid "Containers"
 msgstr "Containers"
 
-#: app/templates/deployment_config.html:50
-#: app/templates/deployment_config.html:88
+#: .\app\templates\deployment_config.html:50
+#: .\app\templates\deployment_config.html:88
 msgid "Add Volume Mount"
 msgstr "Add Volume Mount"
 
-#: app/templates/deployment_config.html:56
+#: .\app\templates\deployment_config.html:56
 msgid "Add Container"
 msgstr "Add Container"
 
-#: app/templates/deployment_config.html:68
+#: .\app\templates\deployment_config.html:68
 msgid "Add Volume"
 msgstr "Add Volume"
 
-#: app/templates/explore.html:6
+#: .\app\templates\explore.html:6
 msgid "Resources"
 msgstr "Resources"
 
-#: app/templates/explore.html:152 app/templates/explore.html:173
+#: .\app\templates\explore.html:152 .\app\templates\explore.html:173
 msgid "Delete"
 msgstr "Delete"
 
-#: app/templates/explore.html:162
+#: .\app\templates\explore.html:162
 msgid "No resources found."
 msgstr "No resources found."
 
-#: app/templates/explore.html:166
+#: .\app\templates\explore.html:166
 msgid "Are you sure you want to delete"
 msgstr "Are you sure you want to delete"
 
-#: app/templates/explore.html:172
+#: .\app\templates\explore.html:172
 msgid "Cancel"
 msgstr "Cancel"
 
-#: app/templates/history.html:6 app/templates/history.html:58
-#: app/templates/object_selector.html:172
+#: .\app\templates\history.html:6 .\app\templates\history.html:58
+#: .\app\templates\object_selector.html:196
 msgid "Deployment History"
 msgstr "Deployment History"
 
-#: app/templates/history.html:62
+#: .\app\templates\history.html:62
 msgid "Date"
 msgstr "Date"
 
-#: app/templates/history.html:63
+#: .\app\templates\history.html:63
 msgid "Type"
 msgstr "Type"
 
-#: app/templates/history.html:64
+#: .\app\templates\history.html:64
 msgid "Name"
 msgstr "Name"
 
-#: app/templates/history.html:74
+#: .\app\templates\history.html:74
 msgid "View"
 msgstr "View"
 
-#: app/templates/history.html:78
+#: .\app\templates\history.html:78
 msgid "No deployments have been recorded yet."
 msgstr "No deployments have been recorded yet."
 
-#: app/templates/history.html:84
+#: .\app\templates\history.html:84
 msgid "⬅ Back to Home"
 msgstr "⬅ Back to Home"
 
-#: app/templates/hpa_config.html:7
+#: .\app\templates\hpa_config.html:7
 msgid "Configure HPA"
 msgstr "Configure HPA"
 
-#: app/templates/hpa_config.html:17
+#: .\app\templates\hpa_config.html:17
 msgid "Configure Horizontal Pod Autoscaler"
 msgstr "Configure Horizontal Pod Autoscaler"
 
-#: app/templates/hpa_config.html:24
+#: .\app\templates\hpa_config.html:24
 msgid "HPA Configuration"
 msgstr "HPA Configuration"
 
-#: app/templates/hpa_config.html:31
+#: .\app\templates\hpa_config.html:31
 msgid "Metrics"
 msgstr "Metrics"
 
-#: app/templates/hpa_config.html:39
+#: .\app\templates\hpa_config.html:39
 msgid "Add Metric"
 msgstr "Add Metric"
 
-#: app/templates/ingress_config.html:7 app/templates/ingress_config.html:18
+#: .\app\templates\ingress_config.html:7 .\app\templates\ingress_config.html:18
 msgid "Configure Ingress"
 msgstr "Configure Ingress"
 
-#: app/templates/ingress_config.html:25
+#: .\app\templates\ingress_config.html:25
 msgid "Ingress Configuration"
 msgstr "Ingress Configuration"
 
-#: app/templates/ingress_config.html:32
+#: .\app\templates\ingress_config.html:32
 msgid "Paths"
 msgstr "Paths"
 
-#: app/templates/ingress_config.html:40
+#: .\app\templates\ingress_config.html:40
 msgid "Add Path"
 msgstr "Add Path"
 
-#: app/templates/namespace_config.html:8
+#: .\app\templates\namespace_config.html:8
 msgid "Namespace Configuration"
 msgstr "Namespace Configuration"
 
-#: app/templates/namespace_config.html:17
+#: .\app\templates\namespace_config.html:17
 msgid "Configure Namespace"
 msgstr "Configure Namespace"
 
-#: app/templates/networkpolicy_config.html:8
-#: app/templates/networkpolicy_config.html:19
+#: .\app\templates\networkpolicy_config.html:8
+#: .\app\templates\networkpolicy_config.html:19
 msgid "Configure NetworkPolicy"
 msgstr "Configure NetworkPolicy"
 
-#: app/templates/networkpolicy_config.html:26
+#: .\app\templates\networkpolicy_config.html:26
 msgid "NetworkPolicy Configuration"
 msgstr "NetworkPolicy Configuration"
 
-#: app/templates/networkpolicy_config.html:33
+#: .\app\templates\networkpolicy_config.html:33
 msgid "Traffic Rules"
 msgstr "Traffic Rules"
 
-#: app/templates/networkpolicy_config.html:41 app/templates/rbac_config.html:41
+#: .\app\templates\networkpolicy_config.html:41
+#: .\app\templates\rbac_config.html:41
 msgid "Add Rule"
 msgstr "Add Rule"
 
-#: app/templates/object_selector.html:6
+#: .\app\templates\object_selector.html:7
 msgid "Select Object Type"
 msgstr "Select Object Type"
 
-#: app/templates/object_selector.html:120
+#: .\app\templates\object_selector.html:144
 msgid "Which object do you want to configure?"
 msgstr "Which object do you want to configure?"
 
-#: app/templates/object_selector.html:134
+#: .\app\templates\object_selector.html:158
 msgid "Continue"
 msgstr "Continue"
 
-#: app/templates/object_selector.html:141
+#: .\app\templates\object_selector.html:165
 msgid "Monitoring"
 msgstr "Monitoring"
 
-#: app/templates/object_selector.html:142
+#: .\app\templates\object_selector.html:166
 msgid "Access cluster metrics with Grafana."
 msgstr "Access cluster metrics with Grafana."
 
-#: app/templates/object_selector.html:143
+#: .\app\templates\object_selector.html:167
 msgid "Go to Grafana"
 msgstr "Go to Grafana"
 
-#: app/templates/object_selector.html:147
+#: .\app\templates\object_selector.html:171
 msgid "Explore Resources"
 msgstr "Explore Resources"
 
-#: app/templates/object_selector.html:148
+#: .\app\templates\object_selector.html:172
 msgid "Browse existing resources in the cluster."
 msgstr "Browse existing resources in the cluster."
 
-#: app/templates/object_selector.html:167
+#: .\app\templates\object_selector.html:191
 msgid "View Resources"
 msgstr "View Resources"
 
-#: app/templates/object_selector.html:173
+#: .\app\templates\object_selector.html:197
 msgid "Review recently deployed YAMLs and re-apply them."
 msgstr "Review recently deployed YAMLs and re-apply them."
 
-#: app/templates/object_selector.html:174
+#: .\app\templates\object_selector.html:198
 msgid "View History"
 msgstr "View History"
 
-#: app/templates/pvc_config.html:8 app/templates/pvc_config.html:19
+#: .\app\templates\object_selector.html:201
+msgid "Language"
+msgstr "Language"
+
+#: .\app\templates\object_selector.html:202
+msgid "Select your preferred language."
+msgstr "Select your preferred language."
+
+#: .\app\templates\pvc_config.html:8 .\app\templates\pvc_config.html:19
 msgid "Configure PersistentVolumeClaim"
 msgstr "Configure PersistentVolumeClaim"
 
-#: app/templates/pvc_config.html:26
+#: .\app\templates\pvc_config.html:26
 msgid "PVC Configuration"
 msgstr "PVC Configuration"
 
-#: app/templates/rbac_config.html:8
+#: .\app\templates\rbac_config.html:8
 msgid "Configure RBAC"
 msgstr "Configure RBAC"
 
-#: app/templates/rbac_config.html:18
+#: .\app\templates\rbac_config.html:18
 msgid "Configure Role / ClusterRole and Binding"
 msgstr "Configure Role / ClusterRole and Binding"
 
-#: app/templates/rbac_config.html:26
+#: .\app\templates\rbac_config.html:26
 msgid "Role / ClusterRole"
 msgstr "Role / ClusterRole"
 
-#: app/templates/rbac_config.html:33
+#: .\app\templates\rbac_config.html:33
 msgid "Rules"
 msgstr "Rules"
 
-#: app/templates/rbac_config.html:46
+#: .\app\templates\rbac_config.html:46
 msgid "Binding"
 msgstr "Binding"
 
-#: app/templates/rbac_config.html:53
+#: .\app\templates\rbac_config.html:53
 msgid "Subjects"
 msgstr "Subjects"
 
-#: app/templates/rbac_config.html:61
+#: .\app\templates\rbac_config.html:61
 msgid "Add Subject"
 msgstr "Add Subject"
 
-#: app/templates/secret_config.html:8 app/templates/secret_config.html:19
+#: .\app\templates\secret_config.html:8 .\app\templates\secret_config.html:19
 msgid "Configure Secret"
 msgstr "Configure Secret"
 
-#: app/templates/secret_config.html:26
+#: .\app\templates\secret_config.html:26
 msgid "Secret Configuration"
 msgstr "Secret Configuration"
 
-#: app/templates/secret_config.html:33
+#: .\app\templates\secret_config.html:33
 msgid "Opaque Secret Properties"
 msgstr "Opaque Secret Properties"
 
-#: app/templates/secret_config.html:46
+#: .\app\templates\secret_config.html:46
 msgid "TLS Secret"
 msgstr "TLS Secret"
 
-#: app/templates/secret_config.html:53
+#: .\app\templates\secret_config.html:53
 msgid "Docker Config JSON Secret"
 msgstr "Docker Config JSON Secret"
 
-#: app/templates/service_account_config.html:8
-#: app/templates/service_account_config.html:19
+#: .\app\templates\service_account_config.html:8
+#: .\app\templates\service_account_config.html:19
 msgid "Configure ServiceAccount"
 msgstr "Configure ServiceAccount"
 
-#: app/templates/service_account_config.html:26
+#: .\app\templates\service_account_config.html:26
 msgid "ServiceAccount Configuration"
 msgstr "ServiceAccount Configuration"
 
-#: app/templates/service_account_config.html:33
+#: .\app\templates\service_account_config.html:33
 msgid "Image Pull Secrets"
 msgstr "Image Pull Secrets"
 
-#: app/templates/service_account_config.html:41
+#: .\app\templates\service_account_config.html:41
 msgid "Add Secret"
 msgstr "Add Secret"
 
-#: app/templates/service_config.html:8 app/templates/service_config.html:19
+#: .\app\templates\service_config.html:8 .\app\templates\service_config.html:19
 msgid "Configure Service"
 msgstr "Configure Service"
 
-#: app/templates/service_config.html:31
+#: .\app\templates\service_config.html:31
 msgid "Ports"
 msgstr "Ports"
 
-#: app/templates/service_config.html:39
+#: .\app\templates\service_config.html:39
 msgid "Add Port"
 msgstr "Add Port"
 
-#: app/templates/yaml_result.html:8
+#: .\app\templates\yaml_result.html:8
 msgid "YAML Result"
 msgstr "YAML Result"
 
-#: app/templates/yaml_result.html:81
+#: .\app\templates\yaml_result.html:81
 msgid "Generated YAML"
 msgstr "Generated YAML"
 
-#: app/templates/yaml_result.html:83
+#: .\app\templates\yaml_result.html:83
 msgid "Download YAML"
 msgstr "Download YAML"
 
-#: app/templates/yaml_result.html:92
+#: .\app\templates\yaml_result.html:92
 msgid "Show only free models"
 msgstr "Show only free models"
 
-#: app/templates/yaml_result.html:96
+#: .\app\templates\yaml_result.html:96
 msgid "Select a model:"
 msgstr "Select a model:"
 
-#: app/templates/yaml_result.html:110
+#: .\app\templates\yaml_result.html:110
 msgid "Get Explanation"
 msgstr "Get Explanation"
 
-#: app/templates/yaml_result.html:111
+#: .\app\templates\yaml_result.html:111
 msgid "Apply to Kubernetes"
 msgstr "Apply to Kubernetes"
 
-#: app/templates/yaml_result.html:112
+#: .\app\templates\yaml_result.html:112
 msgid "Loading explanation..."
 msgstr "Loading explanation..."
 
-#: app/templates/yaml_result.html:117
+#: .\app\templates\yaml_result.html:117
 msgid "Explanation"
 msgstr "Explanation"
 
-#: kube-web/settings.py:122
+#: .\kube-web\settings.py:122
 msgid "Spanish"
 msgstr "Spanish"
 
-#: kube-web/settings.py:123
+#: .\kube-web\settings.py:123
 msgid "English"
 msgstr "English"

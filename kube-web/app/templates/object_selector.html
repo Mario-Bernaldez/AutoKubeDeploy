@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 {% load i18n %}
+
 <head>
   <meta charset="UTF-8">
   <title>{% trans "Select Object Type" %}</title>
@@ -9,11 +10,12 @@
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       background: #f4f6f8;
       margin: 0;
-      padding: 0;
+      padding: 40px 0;
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       justify-content: center;
-      height: 100vh;
+      min-height: 100vh;
+      overflow-y: auto;
     }
 
     .row {
@@ -90,6 +92,28 @@
     }
 
     .btn-secondary:hover {
+      background: #1e7e34;
+    }
+
+    .language-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-top: 10px;
+    }
+
+    .btn-language {
+      background: #28a745;
+      color: white;
+      padding: 8px 16px;
+      font-size: 15px;
+      border: none;
+      border-radius: 6px;
+      text-decoration: none;
+      transition: background 0.3s;
+    }
+
+    .btn-language:hover {
       background: #1e7e34;
     }
 
@@ -173,8 +197,34 @@
         <p>{% trans "Review recently deployed YAMLs and re-apply them." %}</p>
         <a href="/history/" class="btn btn-secondary">🕓 {% trans "View History" %}</a>
       </div>
+      <div class="card">
+        <h2>🌐 {% trans "Language" %}</h2>
+        <p>{% trans "Select your preferred language." %}</p>
+        <div class="language-buttons">
+          <a href="{% url 'set_language' 'es' %}" class="btn btn-language">Español</a>
+          <a href="{% url 'set_language' 'en' %}" class="btn btn-language">English</a>
+        </div>
+      </div>
     </div>
   </div>
 </body>
+
+<script>
+  function toggleDropdown() {
+    document.getElementById("myDropdown").classList.toggle("show");
+  }
+
+  window.onclick = function (event) {
+    if (!event.target.matches('.dropbtn')) {
+      var dropdowns = document.getElementsByClassName("dropdown-content");
+      for (var i = 0; i < dropdowns.length; i++) {
+        var openDropdown = dropdowns[i];
+        if (openDropdown.classList.contains('show')) {
+          openDropdown.classList.remove('show');
+        }
+      }
+    }
+  }
+</script>
 
 </html>

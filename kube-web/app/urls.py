@@ -3,6 +3,7 @@ from . import views
 
 
 urlpatterns = [
+    path("set_language/<str:language>", views.set_language, name="set_language"),
     path("", views.redirect_to_configure, name="home"),
     path("configure/", views.object_selector, name="object_selector"),
     path(
