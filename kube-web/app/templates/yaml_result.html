@@ -246,13 +246,6 @@ input[type="checkbox"] {
       <input type="hidden" name="yaml_generated" value="{{ yaml_output|escape }}">
 
       <div class="form-control">
-        <div class="checkbox-wrapper">
-          <input type="checkbox" id="filterFreeModels" onchange="filterFreeModels()">
-          <label for="filterFreeModels">{% trans "Show only free models" %}</label>
-        </div>
-      </div>
-
-      <div class="form-control">
         <label for="selected_model"><strong>{% trans "Select a model:" %}</strong></label>
         <select name="selected_model" id="selected_model" class="btn" aria-label="{% trans 'Model selection' %}">
           {% for model in models %}
@@ -310,24 +303,6 @@ input[type="checkbox"] {
     function showLoader() {
       document.getElementById("explainBtn").style.display = "none";
       document.getElementById("loader").style.display = "inline-block";
-    }
-
-    function filterFreeModels() {
-      const select = document.getElementById("selected_model");
-      const showOnlyFree = document.getElementById("filterFreeModels").checked;
-
-      for (const option of select.options) {
-        const isFree = option.getAttribute("data-free") === "True" || option.getAttribute("data-free") === "true";
-        option.style.display = (!showOnlyFree || isFree) ? "block" : "none";
-      }
-
-      const selected = select.options[select.selectedIndex];
-      if (selected.style.display === "none") {
-        const firstVisible = [...select.options].find(o => o.style.display === "block");
-        if (firstVisible) {
-          firstVisible.selected = true;
-        }
-      }
     }
   </script>
 
