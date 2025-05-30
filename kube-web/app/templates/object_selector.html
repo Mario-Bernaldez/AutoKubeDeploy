@@ -11,11 +11,15 @@
       background: #f4f6f8;
       margin: 0;
       padding: 40px 0;
-      display: flex;
-      align-items: flex-start;
-      justify-content: center;
       min-height: 100vh;
       overflow-y: auto;
+      display: block;
+    }
+
+    .main-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
 
     .row {
@@ -131,78 +135,191 @@
       border: 1px solid #ccc;
       margin-bottom: 10px;
     }
+
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
+      padding: 0 20px;
+      max-width: 800px;
+    }
+
+    .tree-group {
+      padding: 10px 0 20px 0;
+    }
+
+    .tree-group ul {
+      list-style: none;
+      padding-left: 25px;
+      margin: 0;
+    }
+
+    .tree-group li {
+      margin-bottom: 8px;
+    }
+
+    .tree-group strong {
+      display: block;
+      margin: 16px 0 10px;
+      font-weight: 600;
+      color: #222;
+      font-size: 15px;
+      padding-left: 4px;
+    }
+
+    .tree-group label {
+      display: flex;
+      align-items: center;
+      font-size: 14.5px;
+      cursor: pointer;
+      color: #444;
+      font-weight: normal;
+      padding: 4px 6px;
+      border-radius: 5px;
+      transition: background 0.2s ease-in-out;
+    }
+
+    .tree-group label:hover {
+      background: #eef1f4;
+    }
+
+    .tree-group input[type="radio"] {
+      margin-right: 8px;
+    }
+
+    .api-category {
+      background: #f9fafb;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 12px 16px;
+      margin-bottom: 16px;
+    }
+
+    .api-category h3 {
+      font-size: 16px;
+      color: #222;
+      margin-bottom: 10px;
+    }
+
+    .api-category label {
+      display: flex;
+      align-items: center;
+      font-size: 15px;
+      padding: 6px 4px;
+      border-radius: 6px;
+      transition: background 0.2s ease;
+    }
+
+    .api-category label:hover {
+      background: #eef3f7;
+    }
+
+    .api-category input[type="radio"] {
+      margin-right: 10px;
+    }
   </style>
 </head>
 
 <body>
-  <div class="row">
+  <div class="main-container">
+    <header class="header">
+      <h1>🔧 {% trans "Kubernetes Resource Configurator" %}</h1>
+      <p>{% trans "Configure, monitor and manage your Kubernetes resources easily from a single interface." %}</p>
+    </header>
 
-    <!-- Left Column (Configuration Form) -->
-    <div class="column">
-      <form method="post" class="card">
-        {% csrf_token %}
-        <h2>⚙️ {% trans "Which object do you want to configure?" %}</h2>
-        <div class="radio-group">
-          <label><input type="radio" name="object_type" value="deployment" required> Deployment</label>
-          <label><input type="radio" name="object_type" value="service"> Service</label>
-          <label><input type="radio" name="object_type" value="namespace"> Namespace</label>
-          <label><input type="radio" name="object_type" value="hpa"> Horizontal Pod Autoscaler</label>
-          <label><input type="radio" name="object_type" value="configMap"> ConfigMap</label>
-          <label><input type="radio" name="object_type" value="secret"> Secrets</label>
-          <label><input type="radio" name="object_type" value="pvc"> Persistent Volume Claim</label>
-          <label><input type="radio" name="object_type" value="ingress"> Ingress</label>
-          <label><input type="radio" name="object_type" value="sa"> Service Account</label>
-          <label><input type="radio" name="object_type" value="rbac"> RBAC</label>
-          <label><input type="radio" name="object_type" value="networkpolicy"> Network Policy</label>
-        </div>
-        <button type="submit" class="btn">{% trans "Continue" %}</button>
-      </form>
-    </div>
+    <div class="row">
 
-    <!-- Right Column (Monitoring, Explore, History) -->
-    <div class="column">
-      <div class="card">
-        <h2>📈 {% trans "Monitoring" %}</h2>
-        <p>{% trans "Access cluster metrics with Grafana." %}</p>
-        <a href="{{ grafana_url }}" target="_blank" class="btn btn-secondary">🌐 {% trans "Go to Grafana" %}</a>
-      </div>
+      <!-- Left Column (Configuration Form) -->
+      <div class="column">
+        <form method="post" class="card">
+          {% csrf_token %}
+          <h2>⚙️ {% trans "Which object do you want to configure?" %}</h2>
+          <div class="tree-group">
+            <div class="api-category">
+              <h3>🔐 Authentication API</h3>
+              <label><input type="radio" name="object_type" value="rbac" required> RBAC</label>
+            </div>
 
-      <div class="card">
-        <h2>🔍 {% trans "Explore Resources" %}</h2>
-        <p>{% trans "Browse existing resources in the cluster." %}</p>
-        <form method="get" action="/explore">
-          <select name="resource" id="resource-select">
-            <option value="Pod">Pods</option>
-            <option value="Deployment">Deployments</option>
-            <option value="Service">Services</option>
-            <option value="Namespace">Namespaces</option>
-            <option value="HorizontalPodAutoscaler">Horizontal Pod Autoscalers</option>
-            <option value="ConfigMap">ConfigMaps</option>
-            <option value="Secret">Secrets</option>
-            <option value="PersistentVolumeClaim">Persistent Volume Claims</option>
-            <option value="Ingress">Ingress</option>
-            <option value="ServiceAccount">Service Accounts</option>
-            <option value="Role">Role</option>
-            <option value="RoleBinding">Role Binding</option>
-            <option value="ClusterRole">Cluster Role</option>
-            <option value="ClusterRoleBinding">Cluster Role Binding</option>
-            <option value="NetworkPolicy">Network Policies</option>
-          </select>
-          <button type="submit" class="btn">🔎 {% trans "View Resources" %}</button>
+            <div class="api-category">
+              <h3>🧭 Cluster API</h3>
+              <label><input type="radio" name="object_type" value="sa"> Service Account</label>
+              <label><input type="radio" name="object_type" value="namespace"> Namespace</label>
+              <label><input type="radio" name="object_type" value="networkpolicy"> Network Policy</label>
+            </div>
+
+            <div class="api-category">
+              <h3>📦 Workload API</h3>
+              <label><input type="radio" name="object_type" value="deployment"> Deployment</label>
+            </div>
+
+            <div class="api-category">
+              <h3>🌐 Service API</h3>
+              <label><input type="radio" name="object_type" value="service"> Service</label>
+              <label><input type="radio" name="object_type" value="ingress"> Ingress</label>
+            </div>
+
+            <div class="api-category">
+              <h3>📊 Metadata API</h3>
+              <label><input type="radio" name="object_type" value="hpa"> Horizontal Pod Autoscaler</label>
+            </div>
+
+            <div class="api-category">
+              <h3>💾 Config & Storage API</h3>
+              <label><input type="radio" name="object_type" value="configMap"> ConfigMap</label>
+              <label><input type="radio" name="object_type" value="secret"> Secret</label>
+              <label><input type="radio" name="object_type" value="pvc"> Persistent Volume Claim</label>
+            </div>
+          </div>
+
+
+          <button type="submit" class="btn">{% trans "Continue" %}</button>
         </form>
       </div>
 
-      <div class="card">
-        <h2>📜 {% trans "Deployment History" %}</h2>
-        <p>{% trans "Review recently deployed YAMLs and re-apply them." %}</p>
-        <a href="/history/" class="btn btn-secondary">🕓 {% trans "View History" %}</a>
-      </div>
-      <div class="card">
-        <h2>🌐 {% trans "Language" %}</h2>
-        <p>{% trans "Select your preferred language." %}</p>
-        <div class="language-buttons">
-          <a href="{% url 'set_language' 'es' %}" class="btn btn-language">Español</a>
-          <a href="{% url 'set_language' 'en' %}" class="btn btn-language">English</a>
+      <!-- Right Column (Monitoring, Explore, History) -->
+      <div class="column">
+        <div class="card">
+          <h2>📈 {% trans "Monitoring" %}</h2>
+          <p>{% trans "Access cluster metrics with Grafana." %}</p>
+          <a href="{{ grafana_url }}" target="_blank" class="btn btn-secondary">🌐 {% trans "Go to Grafana" %}</a>
+        </div>
+
+        <div class="card">
+          <h2>🔍 {% trans "Explore Resources" %}</h2>
+          <p>{% trans "Browse existing resources in the cluster." %}</p>
+          <form method="get" action="/explore">
+            <select name="resource" id="resource-select">
+              <option value="Pod">Pods</option>
+              <option value="Deployment">Deployments</option>
+              <option value="Service">Services</option>
+              <option value="Namespace">Namespaces</option>
+              <option value="HorizontalPodAutoscaler">Horizontal Pod Autoscalers</option>
+              <option value="ConfigMap">ConfigMaps</option>
+              <option value="Secret">Secrets</option>
+              <option value="PersistentVolumeClaim">Persistent Volume Claims</option>
+              <option value="Ingress">Ingress</option>
+              <option value="ServiceAccount">Service Accounts</option>
+              <option value="Role">Role</option>
+              <option value="RoleBinding">Role Binding</option>
+              <option value="ClusterRole">Cluster Role</option>
+              <option value="ClusterRoleBinding">Cluster Role Binding</option>
+              <option value="NetworkPolicy">Network Policies</option>
+            </select>
+            <button type="submit" class="btn">🔎 {% trans "View Resources" %}</button>
+          </form>
+        </div>
+
+        <div class="card">
+          <h2>📜 {% trans "Deployment History" %}</h2>
+          <p>{% trans "Review recently deployed YAMLs and re-apply them." %}</p>
+          <a href="/history/" class="btn btn-secondary">🕓 {% trans "View History" %}</a>
+        </div>
+        <div class="card">
+          <h2>🌐 {% trans "Language" %}</h2>
+          <p>{% trans "Select your preferred language." %}</p>
+          <div class="language-buttons">
+            <a href="{% url 'set_language' 'es' %}" class="btn btn-language">Español</a>
+            <a href="{% url 'set_language' 'en' %}" class="btn btn-language">English</a>
+          </div>
         </div>
       </div>
     </div>
