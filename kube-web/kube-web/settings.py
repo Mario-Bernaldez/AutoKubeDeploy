@@ -119,8 +119,8 @@ LOCALE_PATHS = [
     os.path.join(BASE_DIR, "locale"),
 ]
 LANGUAGES = [
-    ('es', _('Spanish')),
-    ('en', _('English')),
+    ("es", _("Spanish")),
+    ("en", _("English")),
 ]
 
 USE_TZ = True
@@ -146,3 +146,5 @@ STATICFILES_DIRS = [
 INSTALLED_APPS += ["whitenoise.runserver_nostatic"]
 
 MIDDLEWARE.insert(1, "whitenoise.middleware.WhiteNoiseMiddleware")
+
+LOGIN_URL = "/login/"

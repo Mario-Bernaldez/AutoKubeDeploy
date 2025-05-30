@@ -260,10 +260,32 @@
     .content {
       padding: 0 20px 20px 20px;
     }
+
+    .btn-logout {
+      background-color: #e0e0e0;
+      color: #333;
+      padding: 8px 16px;
+      font-size: 14px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.3s;
+      font-weight: 500;
+    }
+
+    .btn-logout:hover {
+      background-color: #d4d4d4;
+    }
   </style>
 </head>
 
 <body>
+  <div style="position: absolute; top: 20px; right: 30px;">
+    <form method="post" action="{% url 'logout' %}" style="display: inline;">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-logout">{% trans "Log out" %}</button>
+    </form>
+  </div>
   <div class="main-container">
     <header class="header">
       <h1>🔧 {% trans "Kubernetes Resource Configurator" %}</h1>
@@ -406,6 +428,13 @@
             <a href="{% url 'set_language' 'en' %}" class="btn btn-language">English</a>
           </div>
         </div>
+        {% if request.user.is_superuser %}
+        <div class="card">
+          <h2>👤 {% trans "Create User" %}</h2>
+          <p>{% trans "Register a new user with access to the platform." %}</p>
+          <a href="{% url 'register_user' %}" class="btn btn-secondary">➕ {% trans "Register User" %}</a>
+        </div>
+        {% endif %}
       </div>
     </div>
   </div>

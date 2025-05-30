@@ -3,7 +3,10 @@ from django.utils import translation
 import os
 from django.conf import settings
 import requests
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.forms import formset_factory
+from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404, render, redirect
 from django.http import HttpResponse, HttpResponseBadRequest, JsonResponse
 from django.contrib import messages
@@ -42,6 +45,45 @@ from .forms import (
 )
 
 
+def login_view(request):
+    if request.method == "POST":
+        username = request.POST["username"]
+        password = request.POST["password"]
+        user = authenticate(request, username=username, password=password)
+
+        if user:
+            login(request, user)
+            return redirect("object_selector")
+        else:
+            return render(request, "login.html", {"error": "Incorrect credentials."})
+
+    return render(request, "login.html")
+
+
+@login_required
+def logout_view(request):
+    logout(request)
+    return redirect("login")
+
+
+def is_admin(user):
+    return user.is_superuser
+
+
+@user_passes_test(is_admin)
+def register_user_view(request):
+    if request.method == "POST":
+        username = request.POST["username"]
+        password = request.POST["password"]
+        is_staff = "is_staff" in request.POST
+        user = User.objects.create_user(username=username, password=password)
+        user.is_staff = is_staff
+        user.save()
+        return redirect("object_selector")
+
+    return render(request, "register_user.html")
+
+
 def set_language(request, language):
     """Sets the current language in the cookie"""
 
@@ -56,6 +98,7 @@ def set_language(request, language):
     return response
 
 
+@login_required
 def object_selector(request):
     if request.method == "POST":
         redirect_map = {
@@ -80,6 +123,7 @@ def object_selector(request):
     return render(request, "object_selector.html", {"grafana_url": grafana_url})
 
 
+@login_required
 def deployment_config_view(request):
     ContainerFormSet = formset_factory(
         ContainerForm, formset=RequiredContainerFormSet, extra=1
@@ -109,7 +153,7 @@ def deployment_config_view(request):
             containers_data = []
             for idx, cform in enumerate(container_formset):
                 c = cform.cleaned_data.copy()
-                
+
                 raw_command = c.get("command", "").strip()
                 if raw_command:
                     try:
@@ -179,6 +223,7 @@ def deployment_config_view(request):
     )
 
 
+@login_required
 def service_config_view(request):
     if request.method == "POST":
         service_form = ServiceForm(request.POST)
@@ -225,6 +270,7 @@ def service_config_view(request):
     )
 
 
+@login_required
 def namespace_config_view(request):
     if request.method == "POST":
         namespace_form = NamespaceForm(request.POST)
@@ -256,6 +302,7 @@ def namespace_config_view(request):
     return render(request, "namespace_config.html", {"namespace_form": namespace_form})
 
 
+@login_required
 def hpa_config_view(request):
     HPAMetricFormSet = formset_factory(HPAMetricForm, extra=1)
     if request.method == "POST":
@@ -303,6 +350,7 @@ def hpa_config_view(request):
     )
 
 
+@login_required
 def configmap_config_view(request):
     ConfigMapKeyFormSet = formset_factory(ConfigMapKeyForm, extra=1)
     if request.method == "POST":
@@ -352,6 +400,7 @@ def configmap_config_view(request):
     )
 
 
+@login_required
 def secret_config_view(request):
     OpaqueKeyFormSet = formset_factory(OpaqueKeyForm, extra=1)
     if request.method == "POST":
@@ -457,6 +506,7 @@ def secret_config_view(request):
     )
 
 
+@login_required
 def pvc_config_view(request):
     if request.method == "POST":
         pvc_form = PersistentVolumeClaimForm(request.POST)
@@ -490,6 +540,7 @@ def pvc_config_view(request):
     return render(request, "pvc_config.html", {"pvc_form": pvc_form})
 
 
+@login_required
 def ingress_config_view(request):
     IngressPathFormSet = formset_factory(IngressPathForm, extra=1)
     if request.method == "POST":
@@ -537,6 +588,7 @@ def ingress_config_view(request):
     )
 
 
+@login_required
 def service_account_config_view(request):
     ImagePullSecretFormSet = formset_factory(ImagePullSecretForm, extra=1)
 
@@ -591,6 +643,7 @@ def service_account_config_view(request):
     )
 
 
+@login_required
 def rbac_config_view(request):
     RuleFormSet = formset_factory(RuleForm, extra=1)
     SubjectFormSet = formset_factory(SubjectForm, extra=1)
@@ -692,6 +745,7 @@ def rbac_config_view(request):
     )
 
 
+@login_required
 def networkpolicy_config_view(request):
     NetworkRuleFormSet = formset_factory(NetworkRuleForm, extra=1)
 
@@ -772,6 +826,7 @@ def networkpolicy_config_view(request):
     )
 
 
+@login_required
 def explain_yaml_view(request):
     if request.method == "POST":
         yaml_output = request.POST.get("yaml_generated", "")
@@ -816,6 +871,7 @@ def explain_yaml_view(request):
         return redirect("configure_deployment")
 
 
+@login_required
 def apply_yaml(request):
     if request.method == "POST":
         yaml_text = request.POST.get("yaml_generated", "")
@@ -841,6 +897,7 @@ def apply_yaml(request):
                         resource_type=resource_type,
                         resource_name=resource_name,
                         yaml_content=yaml_text,
+                        user=request.user,
                     )
                 except Exception as e:
                     print(f"⚠️ Failed to save deployment history: {e}")
@@ -861,6 +918,7 @@ def apply_yaml(request):
     )
 
 
+@login_required
 def explore_resources(request):
     resource = request.GET.get("resource")
     if not resource:
@@ -889,6 +947,7 @@ def explore_resources(request):
 
 
 @csrf_exempt
+@login_required
 def delete_resource(request):
     if request.method != "POST":
         return HttpResponseBadRequest("Only POST is allowed")
@@ -912,11 +971,13 @@ def delete_resource(request):
     return redirect(f"/explore/?resource={resource}")
 
 
+@login_required
 def deployment_history_view(request):
     history = DeploymentHistory.objects.order_by("-created_at")
     return render(request, "history.html", {"history": history})
 
 
+@login_required
 def view_deployment_yaml(request, pk):
     history_item = get_object_or_404(DeploymentHistory, pk=pk)
     models, default_model = get_model_options()
@@ -932,10 +993,12 @@ def view_deployment_yaml(request, pk):
     )
 
 
+@login_required
 def redirect_to_configure(request):
     return redirect("object_selector")
 
 
+@login_required
 def get_model_options():
     try:
         response = requests.get("http://yaml-explainer:8080/models", timeout=5)

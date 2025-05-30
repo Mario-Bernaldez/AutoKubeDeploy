@@ -5,6 +5,9 @@ from . import views
 urlpatterns = [
     path("set_language/<str:language>", views.set_language, name="set_language"),
     path("", views.redirect_to_configure, name="home"),
+    path("login/", views.login_view, name="login"),
+    path("logout/", views.logout_view, name="logout"),
+    path("register/", views.register_user_view, name="register_user"),
     path("configure/", views.object_selector, name="object_selector"),
     path(
         "configure/deployment/",

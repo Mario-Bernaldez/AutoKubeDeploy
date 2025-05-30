@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}">
+{% load i18n %}
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% trans "Login" %}</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            background: #f4f6f8;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .login-container {
+            background: #fff;
+            padding: 40px 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 24px;
+            color: #333;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-weight: 500;
+            color: #444;
+            margin-bottom: 6px;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            padding: 10px 12px;
+            margin-bottom: 20px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            font-size: 15px;
+        }
+
+        button[type="submit"] {
+            background-color: #007bff;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+
+        .error {
+            color: #b20000;
+            background: #ffe0e0;
+            padding: 10px 12px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .footer-text {
+            text-align: center;
+            font-size: 14px;
+            color: #777;
+            margin-top: 16px;
+        }
+
+        .language-switcher {
+            margin-top: 16px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .language-switcher a {
+            font-size: 14px;
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        .language-switcher a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 480px) {
+            .login-container {
+                margin: 0 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="login-container">
+        <h2>🔐 {% trans "Login" %}</h2>
+
+        {% if error %}
+        <div class="error">{{ error }}</div>
+        {% endif %}
+
+        <form method="post">
+            {% csrf_token %}
+            <label for="username">{% trans "Username" %}</label>
+            <input type="text" id="username" name="username" required>
+
+            <label for="password">{% trans "Password" %}</label>
+            <input type="password" id="password" name="password" required>
+
+            <button type="submit">{% trans "Sign in" %}</button>
+        </form>
+
+        <p class="footer-text">{% trans "Only registered users can access the platform." %}</p>
+
+        <div class="language-switcher">
+            <a href="{% url 'set_language' 'es' %}">Español</a>
+            <a href="{% url 'set_language' 'en' %}">English</a>
+        </div>
+    </div>
+</body>
+
+</html>
