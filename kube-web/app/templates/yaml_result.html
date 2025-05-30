@@ -86,14 +86,20 @@ select.btn {
   border: none;
   border-radius: 6px;
   padding: 10px 14px;
+  padding-right: 40px;
   position: relative;
   width: 100%;
+  max-width: 300px;
   background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg fill='white' height='18' viewBox='0 0 24 24' width='18' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 10px center;
   background-size: 16px;
   cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
+
 
 .form-control {
   margin: 15px 0;
@@ -197,23 +203,40 @@ input[type="checkbox"] {
 <div class="container">
 
   <!-- Columna izquierda -->
-  <div class="left-column card">
-    <h2 class="column-title">📝 YAML generado y acciones</h2>
-    <a href="/configure/" class="back-btn">⬅ {% trans "Back" %}</a>
+<div class="left-column card">
+  <h2 class="column-title">📝 YAML generado y acciones</h2>
+  <a href="/configure/" class="back-btn">⬅ {% trans "Back" %}</a>
 
-    <div class="section">
-      <pre id="yamlContent">{{ yaml_output }}</pre>
+  <div class="section">
+    <pre id="yamlContent">{{ yaml_output }}</pre>
 
-      <div style="margin-top: 15px;">
-        <a href="#" class="btn" onclick="downloadYAML()">📥 {% trans "Download YAML" %}</a>
-        <button type="submit"
-                form="yamlForm"
-                formaction="{% url 'apply_yaml' %}"
-                class="btn">🚀 {% trans "Apply to Kubernetes" %}
-        </button>
-      </div>
+    <div style="margin-top: 15px; margin-bottom: 20px;">
+      <a href="#" class="btn" onclick="downloadYAML()">📥 {% trans "Download YAML" %}</a>
+      <button type="submit"
+              form="yamlForm"
+              formaction="{% url 'apply_yaml' %}"
+              class="btn">🚀 {% trans "Apply to Kubernetes" %}
+      </button>
     </div>
+
+    {% if messages %}
+    <section style="margin-top: 10px;">
+      {% for message in messages %}
+      <div style="
+        padding: 10px;
+        background: {% if message.tags == 'success' %}#d4edda{% else %}#f8d7da{% endif %};
+        border-left: 4px solid {% if message.tags == 'success' %}#28a745{% else %}#dc3545{% endif %};
+        border-radius: 6px;
+        margin-bottom: 10px;
+        color: #222;
+      ">
+        {{ message }}
+      </div>
+      {% endfor %}
+    </section>
+    {% endif %}
   </div>
+</div>
 
   <!-- Columna derecha -->
   <div class="right-column card">
@@ -253,16 +276,6 @@ input[type="checkbox"] {
     <div class="section">
       <h3 style="margin-top: 20px;">💬 {% trans "Explanation" %}</h3>
       <div id="explanation">{{ explanation|safe }}</div>
-    </div>
-    {% endif %}
-
-    {% if messages %}
-    <div class="section">
-      {% for message in messages %}
-      <div style="padding: 10px; background: {% if message.tags == 'success' %}#d4edda{% else %}#f8d7da{% endif %}; border-left: 4px solid {% if message.tags == 'success' %}#28a745{% else %}#dc3545{% endif %}; border-radius: 6px; margin-bottom: 15px;">
-        {{ message }}
-      </div>
-      {% endfor %}
     </div>
     {% endif %}
   </div>

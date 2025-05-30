@@ -28,6 +28,9 @@ RUN mkdir -p /app/static && \
     python manage.py collectstatic --noinput && \
     python manage.py migrate
 
+
+RUN python create_superuser.py
+
 # Expose the port Django runs on
 EXPOSE 8000
 

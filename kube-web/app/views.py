@@ -187,7 +187,7 @@ def deployment_config_view(request):
             )
             if response.status_code == 200:
                 yaml_output = response.text
-                models, default_model = get_model_options()
+                models, default_model = get_model_options(request.user)
                 return render(
                     request,
                     "yaml_result.html",
@@ -241,7 +241,7 @@ def service_config_view(request):
             )
             if response.status_code == 200:
                 yaml_output = response.text
-                models, default_model = get_model_options()
+                models, default_model = get_model_options(request.user)
                 return render(
                     request,
                     "yaml_result.html",
@@ -281,7 +281,7 @@ def namespace_config_view(request):
             )
             if response.status_code == 200:
                 yaml_output = response.text
-                models, default_model = get_model_options()
+                models, default_model = get_model_options(request.user)
                 return render(
                     request,
                     "yaml_result.html",
@@ -321,7 +321,7 @@ def hpa_config_view(request):
             )
             if response.status_code == 200:
                 yaml_output = response.text
-                models, default_model = get_model_options()
+                models, default_model = get_model_options(request.user)
                 return render(
                     request,
                     "yaml_result.html",
@@ -370,7 +370,7 @@ def configmap_config_view(request):
             )
             if response.status_code == 200:
                 yaml_output = response.text
-                models, default_model = get_model_options()
+                models, default_model = get_model_options(request.user)
                 return render(
                     request,
                     "yaml_result.html",
@@ -471,7 +471,7 @@ def secret_config_view(request):
 
             if response.status_code == 200:
                 yaml_output = response.text
-                models, default_model = get_model_options()
+                models, default_model = get_model_options(request.user)
                 return render(
                     request,
                     "yaml_result.html",
@@ -518,7 +518,7 @@ def pvc_config_view(request):
             )
             if response.status_code == 200:
                 yaml_output = response.text
-                models, default_model = get_model_options()
+                models, default_model = get_model_options(request.user)
                 return render(
                     request,
                     "yaml_result.html",
@@ -561,7 +561,7 @@ def ingress_config_view(request):
 
             if response.status_code == 200:
                 yaml_output = response.text
-                models, default_model = get_model_options()
+                models, default_model = get_model_options(request.user)
                 return render(
                     request,
                     "yaml_result.html",
@@ -614,7 +614,7 @@ def service_account_config_view(request):
 
             if response.status_code == 200:
                 yaml_output = response.text
-                models, default_model = get_model_options()
+                models, default_model = get_model_options(request.user)
                 return render(
                     request,
                     "yaml_result.html",
@@ -712,7 +712,7 @@ def rbac_config_view(request):
             response = requests.post("http://generator-engine/generate", json=payload)
             if response.status_code == 200:
                 yaml_output = response.text
-                models, default_model = get_model_options()
+                models, default_model = get_model_options(request.user)
                 return render(
                     request,
                     "yaml_result.html",
@@ -797,7 +797,7 @@ def networkpolicy_config_view(request):
 
             if response.status_code == 200:
                 yaml_output = response.text
-                models, default_model = get_model_options()
+                models, default_model = get_model_options(request.user)
                 return render(
                     request,
                     "yaml_result.html",
@@ -837,11 +837,19 @@ def explain_yaml_view(request):
         explanation_response = requests.post(
             "http://yaml-explainer:8080/explain", json=payload
         )
+        
+        models, _ = get_model_options(request.user)
+        model_ids = {str(m["id"]) for m in models}
+
 
         if explanation_response.status_code == 200:
             explanation = explanation_response.json().get(
                 "explanation", "No explanation available."
             )
+            if selected_model in model_ids:
+                profile = request.user.profile
+                profile.default_model = selected_model
+                profile.save()
         elif explanation_response.status_code == 429:
             explanation = "⚠️ Model is currently unavailable. Please try again later."
         elif explanation_response.status_code == 402:
@@ -855,7 +863,7 @@ def explain_yaml_view(request):
                 f"❌ Error retrieving explanation: {explanation_response.status_code}"
             )
 
-        models, default_model = get_model_options()
+        models, default_model = get_model_options(request.user)
         return render(
             request,
             "yaml_result.html",
@@ -905,7 +913,7 @@ def apply_yaml(request):
                 messages.error(request, f"❌ Failed to apply YAML: {response.text}")
         except Exception as e:
             messages.error(request, f"❌ Failed to connect to backend: {e}")
-    models, default_model = get_model_options()
+    models, default_model = get_model_options(request.user)
     return render(
         request,
         "yaml_result.html",
@@ -980,7 +988,7 @@ def deployment_history_view(request):
 @login_required
 def view_deployment_yaml(request, pk):
     history_item = get_object_or_404(DeploymentHistory, pk=pk)
-    models, default_model = get_model_options()
+    models, default_model = get_model_options(request.user)
     return render(
         request,
         "yaml_result.html",
@@ -998,13 +1006,22 @@ def redirect_to_configure(request):
     return redirect("object_selector")
 
 
-@login_required
-def get_model_options():
+def get_model_options(user=None):
     try:
         response = requests.get("http://yaml-explainer:8080/models", timeout=5)
         if response.status_code == 200:
             models = response.json()
-            default_model = next((m["id"] for m in models if m.get("free")), None)
+            default_model = None
+
+            if user and user.is_authenticated:
+                profile = getattr(user, "profile", None)
+                if profile and profile.default_model:
+                    if any(str(m["id"]) == str(profile.default_model) for m in models):
+                        default_model = profile.default_model
+
+            if not default_model:
+                default_model = next((m["id"] for m in models if m.get("free")), None)
+
             return models, default_model
     except Exception:
         pass
