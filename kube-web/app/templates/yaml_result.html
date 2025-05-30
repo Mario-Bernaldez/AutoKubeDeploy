@@ -6,129 +6,267 @@
 <head>
   <meta charset="UTF-8">
   <title>{% trans "YAML Result" %}</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      padding: 30px;
-      background: #f4f4f4;
-    }
+<style>
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #f4f6f8;
+  margin: 0;
+  padding: 40px 0;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  color: #222;
+}
 
-    pre {
-      background: #fff;
-      padding: 15px;
-      border: 1px solid #ccc;
-      overflow-x: auto;
-    }
+.container {
+  display: grid;
+  grid-template-columns: 3fr 2fr;
+  gap: 40px;
+  width: 100%;
+  max-width: 1280px;
+  padding: 0 20px;
+  box-sizing: border-box;
+  align-items: start;
+}
 
-    .section {
-      margin-bottom: 30px;
-    }
+.card {
+  background: #fff;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
+  box-sizing: border-box;
+}
 
-    #explanation {
-      background: #e9ecef;
-      border-left: 4px solid #007bff;
-      padding: 15px;
-      white-space: pre-wrap;
-    }
+h2.column-title {
+  font-size: 25px;
+  margin-bottom: 20px;
+  color: #111;
+}
 
-    .btn {
-      display: inline-block;
-      padding: 10px 16px;
-      background-color: #007bff;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      text-decoration: none;
-      font-size: 14px;
-      margin-right: 10px;
-    }
+h3 {
+  color: #111;
+}
 
-    #loader {
-      display: none;
-      margin-top: 10px;
-      font-style: italic;
-      color: #007bff;
-    }
+.section {
+  margin-bottom: 30px;
+}
 
-    .spinner {
-      display: inline-block;
-      width: 16px;
-      height: 16px;
-      border: 2px solid rgba(0, 123, 255, 0.3);
-      border-top-color: #007bff;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-      vertical-align: middle;
-      margin-right: 5px;
-    }
+pre {
+  background: #f8f9fa;
+  padding: 15px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  overflow-x: auto;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
 
-    @keyframes spin {
-      to {
-        transform: rotate(360deg);
-      }
-    }
-  </style>
+.btn {
+  display: inline-block;
+  padding: 10px 18px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  text-decoration: none;
+  font-size: 14px;
+  margin-right: 10px;
+  transition: background-color 0.2s ease;
+}
+
+.btn:hover {
+  background-color: #0056b3;
+}
+
+select.btn {
+  appearance: none;
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 14px;
+  position: relative;
+  width: 100%;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg fill='white' height='18' viewBox='0 0 24 24' width='18' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 16px;
+  cursor: pointer;
+}
+
+.form-control {
+  margin: 15px 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.form-control label {
+  font-weight: 500;
+  margin-bottom: 8px;
+  color: #222;
+}
+
+input[type="checkbox"] {
+  margin-right: 6px;
+}
+
+#explanation {
+  background: #f1f5fb;
+  border-left: 4px solid #007bff;
+  padding: 15px;
+  border-radius: 6px;
+  white-space: pre-wrap;
+  font-size: 0.95rem;
+  color: #222;
+}
+
+#loader {
+  display: none;
+  margin-top: 10px;
+  font-style: italic;
+  color: #007bff;
+}
+
+.spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(0, 123, 255, 0.3);
+  border-top-color: #007bff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  vertical-align: middle;
+  margin-right: 5px;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.back-btn {
+  display: inline-block;
+  margin-bottom: 20px;
+  color: #007bff;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.back-btn:hover {
+  color: #0056b3;
+}
+
+.form-control .btn {
+  width: 60%;
+  text-align: left;
+  padding-left: 14px;
+  padding-right: 14px;
+}
+
+.checkbox-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14.5px;
+  color: #222;
+  user-select: none;
+  cursor: pointer;
+  margin: 5px 0 15px 0;
+}
+
+.checkbox-wrapper input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: #007bff;
+  cursor: pointer;
+  margin: 0;
+}
+
+.checkbox-wrapper label {
+  cursor: pointer;
+  margin: 0;
+}
+</style>
   <script src="https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.js"></script>
 </head>
 
 <body>
-  {% with default_model=None %}
+<div class="container">
 
-  <a href="/configure/" class="back-btn">⬅ {% trans "Back" %}</a>
+  <!-- Columna izquierda -->
+  <div class="left-column card">
+    <h2 class="column-title">📝 YAML generado y acciones</h2>
+    <a href="/configure/" class="back-btn">⬅ {% trans "Back" %}</a>
 
-  <div class="section">
-    <h2>📝 {% trans "Generated YAML" %}</h2>
-    <pre id="yamlContent">{{ yaml_output }}</pre>
-    <a href="#" class="btn" onclick="downloadYAML()">📥 {% trans "Download YAML" %}</a>
+    <div class="section">
+      <pre id="yamlContent">{{ yaml_output }}</pre>
+
+      <div style="margin-top: 15px;">
+        <a href="#" class="btn" onclick="downloadYAML()">📥 {% trans "Download YAML" %}</a>
+        <button type="submit"
+                form="yamlForm"
+                formaction="{% url 'apply_yaml' %}"
+                class="btn">🚀 {% trans "Apply to Kubernetes" %}
+        </button>
+      </div>
+    </div>
   </div>
 
-  <form id="yamlForm" method="post" action="{% url 'explain_yaml' %}" onsubmit="showLoader()">
-    {% csrf_token %}
-    <input type="hidden" name="yaml_generated" value="{{ yaml_output|escape }}">
+  <!-- Columna derecha -->
+  <div class="right-column card">
+    <h2 class="column-title">🧠 Selecciona modelo y obtén explicación</h2>
+    <form id="yamlForm" method="post" action="{% url 'explain_yaml' %}" onsubmit="showLoader()">
+      {% csrf_token %}
+      <input type="hidden" name="yaml_generated" value="{{ yaml_output|escape }}">
 
-    <div style="margin: 10px 0;">
-      <label>
-        <input type="checkbox" id="filterFreeModels" onchange="filterFreeModels()"> {% trans "Show only free models" %}
-      </label>
-    </div>
+      <div class="form-control">
+        <div class="checkbox-wrapper">
+          <input type="checkbox" id="filterFreeModels" onchange="filterFreeModels()">
+          <label for="filterFreeModels">{% trans "Show only free models" %}</label>
+        </div>
+      </div>
 
-    <label for="selected_model"><strong>{% trans "Select a model:" %}</strong></label>
-    <select name="selected_model" id="selected_model" class="btn">
-      {% for model in models %}
-      <option value="{{ model.id }}" data-free="{{ model.free }}"
-      {% if selected_model and model.id|stringformat:"s" == selected_model|stringformat:"s" %}
-        selected
-      {% elif default_model and model.id|stringformat:"s" == default_model|stringformat:"s" %}
-        selected
-      {% endif %}>
+      <div class="form-control">
+        <label for="selected_model"><strong>{% trans "Select a model:" %}</strong></label>
+        <select name="selected_model" id="selected_model" class="btn" aria-label="{% trans 'Model selection' %}">
+          {% for model in models %}
+          <option value="{{ model.id }}" data-free="{{ model.free }}"
+            {% if selected_model and model.id|stringformat:"s" == selected_model|stringformat:"s" %}selected{% endif %}
+            {% if default_model and model.id|stringformat:"s" == default_model|stringformat:"s" %}selected{% endif %}>
             {{ model.name }}
-      </option>
-      {% endfor %}
-    </select> {% endwith %}
+          </option>
+          {% endfor %}
+        </select>
+      </div>
 
-    <button type="submit" id="explainBtn" class="btn">💡 {% trans "Get Explanation" %}</button>
-    <button type="submit" formaction="{% url 'apply_yaml' %}" class="btn">🚀 {% trans "Apply to Kubernetes" %}</button>
-    <div id="loader"><span class="spinner"></span>{% trans "Loading explanation..." %}</div>
-  </form>
+      <div class="form-control">
+        <button type="submit" id="explainBtn" class="btn">💡 {% trans "Get Explanation" %}</button>
+      </div>
 
-  {% if explanation %}
-  <div class="section">
-    <h2>💬 {% trans "Explanation" %}</h2>
-    <div id="explanation">{{ explanation|safe }}</div>
-  </div>
-  {% endif %}
+      <div id="loader"><span class="spinner"></span>{% trans "Loading explanation..." %}</div>
+    </form>
 
-  {% if messages %}
-  <div class="section">
-    {% for message in messages %}
-    <div
-      style="padding: 10px; background: {% if message.tags == 'success' %}#d4edda{% else %}#f8d7da{% endif %}; border-left: 4px solid {% if message.tags == 'success' %}#28a745{% else %}#dc3545{% endif %}; margin-bottom: 15px;">
-      {{ message }}
+    {% if explanation %}
+    <div class="section">
+      <h3 style="margin-top: 20px;">💬 {% trans "Explanation" %}</h3>
+      <div id="explanation">{{ explanation|safe }}</div>
     </div>
-    {% endfor %}
+    {% endif %}
+
+    {% if messages %}
+    <div class="section">
+      {% for message in messages %}
+      <div style="padding: 10px; background: {% if message.tags == 'success' %}#d4edda{% else %}#f8d7da{% endif %}; border-left: 4px solid {% if message.tags == 'success' %}#28a745{% else %}#dc3545{% endif %}; border-radius: 6px; margin-bottom: 15px;">
+        {{ message }}
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
   </div>
-  {% endif %}
+</div>
 
   <script>
     function downloadYAML() {
