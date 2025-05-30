@@ -24,7 +24,7 @@
 
     .row {
       display: flex;
-      align-items: stretch;
+      align-items: flex-start;
       gap: 40px;
       justify-content: center;
     }
@@ -74,7 +74,8 @@
     }
 
     .btn {
-      margin-top: 10px;
+      margin-top: 15px;
+      margin-bottom: 15px;
       padding: 10px 20px;
       background: #007bff;
       color: white;
@@ -216,6 +217,49 @@
     .api-category input[type="radio"] {
       margin-right: 10px;
     }
+
+    .recommendation-box {
+      margin-bottom: 24px;
+      background-color: #fff3cd;
+      border: 1px solid #ffeeba;
+      border-radius: 8px;
+      color: #664d03;
+      font-size: 15px;
+      line-height: 1.6;
+      text-align: left;
+      padding: 0;
+    }
+
+    .toggle-button {
+      width: 100%;
+      background: none;
+      border: none;
+      font-size: 16px;
+      font-weight: 600;
+      padding: 16px 20px;
+      text-align: left;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: #664d03;
+    }
+
+    .toggle-button:hover {
+      background-color: #ffe8a1;
+    }
+
+    .toggle-button .icon {
+      transition: transform 0.2s ease;
+    }
+
+    .toggle-button[aria-expanded="true"] .icon {
+      transform: rotate(180deg);
+    }
+
+    .content {
+      padding: 0 20px 20px 20px;
+    }
   </style>
 </head>
 
@@ -233,17 +277,71 @@
         <form method="post" class="card">
           {% csrf_token %}
           <h2>⚙️ {% trans "Which object do you want to configure?" %}</h2>
+          <section class="recommendation-box" role="note" aria-label="Recomendación de configuración">
+            <button class="toggle-button" type="button" aria-expanded="false" aria-controls="recommendation-content"
+              onclick="toggleRecommendation(this)">
+              🧭 Recomendación de configuración
+              <span class="icon" aria-hidden="true">▼</span>
+            </button>
+
+            <div id="recommendation-content" class="content" hidden>
+              <p>Puedes configurar únicamente los objetos que necesites. Algunos recursos podrían ya existir o no ser
+                necesarios, según la configuración actual de tu clúster.</p>
+
+              <p>Para un flujo ordenado y funcional, se recomienda este orden:</p>
+
+              <ol>
+                <li>
+                  <strong>Namespace</strong>: define un entorno lógico que agrupa y aísla recursos. Útil para separar
+                  ambientes (dev, QA, prod).
+                </li>
+                <li>
+                  <strong>RBAC</strong>: establece qué usuarios, servicios o grupos pueden acceder a qué recursos. Es
+                  clave para la seguridad.
+                </li>
+                <li>
+                  <strong>Service Account</strong> → <strong>Network Policy</strong>: controlan la identidad del pod y
+                  sus comunicaciones.
+                </li>
+                <li>
+                  <strong>ConfigMap</strong>, <strong>Secret</strong>, <strong>PVC</strong>: almacenan configuraciones,
+                  credenciales y datos persistentes.
+                </li>
+                <li>
+                  <strong>Horizontal Pod Autoscaler</strong>: ajusta réplicas automáticamente con base en la carga.
+                </li>
+                <li>
+                  <strong>Deployment</strong>: gestiona el ciclo de vida de los pods.
+                </li>
+                <li>
+                  <strong>Service</strong> → <strong>Ingress</strong>: expone tus apps dentro o fuera del clúster.
+                </li>
+              </ol>
+            </div>
+          </section>
           <div class="tree-group">
+            <div class="api-category">
+              <h3>🧭 Cluster API</h3>
+              <label><input type="radio" name="object_type" value="namespace"> Namespace</label>
+              <label><input type="radio" name="object_type" value="sa"> Service Account</label>
+              <label><input type="radio" name="object_type" value="networkpolicy"> Network Policy</label>
+            </div>
+
             <div class="api-category">
               <h3>🔐 Authentication API</h3>
               <label><input type="radio" name="object_type" value="rbac" required> RBAC</label>
             </div>
 
             <div class="api-category">
-              <h3>🧭 Cluster API</h3>
-              <label><input type="radio" name="object_type" value="sa"> Service Account</label>
-              <label><input type="radio" name="object_type" value="namespace"> Namespace</label>
-              <label><input type="radio" name="object_type" value="networkpolicy"> Network Policy</label>
+              <h3>💾 Config & Storage API</h3>
+              <label><input type="radio" name="object_type" value="configMap"> ConfigMap</label>
+              <label><input type="radio" name="object_type" value="secret"> Secret</label>
+              <label><input type="radio" name="object_type" value="pvc"> Persistent Volume Claim</label>
+            </div>
+
+            <div class="api-category">
+              <h3>📊 Metadata API</h3>
+              <label><input type="radio" name="object_type" value="hpa"> Horizontal Pod Autoscaler</label>
             </div>
 
             <div class="api-category">
@@ -257,20 +355,7 @@
               <label><input type="radio" name="object_type" value="ingress"> Ingress</label>
             </div>
 
-            <div class="api-category">
-              <h3>📊 Metadata API</h3>
-              <label><input type="radio" name="object_type" value="hpa"> Horizontal Pod Autoscaler</label>
-            </div>
-
-            <div class="api-category">
-              <h3>💾 Config & Storage API</h3>
-              <label><input type="radio" name="object_type" value="configMap"> ConfigMap</label>
-              <label><input type="radio" name="object_type" value="secret"> Secret</label>
-              <label><input type="radio" name="object_type" value="pvc"> Persistent Volume Claim</label>
-            </div>
           </div>
-
-
           <button type="submit" class="btn">{% trans "Continue" %}</button>
         </form>
       </div>
@@ -341,6 +426,16 @@
         }
       }
     }
+  }
+</script>
+
+<script>
+  function toggleRecommendation(button) {
+    const content = document.getElementById("recommendation-content");
+    const isExpanded = button.getAttribute("aria-expanded") === "true";
+
+    button.setAttribute("aria-expanded", String(!isExpanded));
+    content.hidden = isExpanded;
   }
 </script>
 
