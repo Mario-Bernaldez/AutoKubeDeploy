@@ -16,7 +16,19 @@
     </a>
 
     <h2>{% trans "Configure Role / ClusterRole and Binding" %}</h2>
-
+    <p style="
+        max-width: 1000px;
+        margin-bottom: 1.5rem;
+        background-color: #eef2f7;
+        border-left: 4px solid #007bff;
+        padding: 1rem 1.25rem;
+        border-radius: 6px;
+        font-size: 0.95rem;
+        color: #333;
+        line-height: 1.6;
+    ">
+        {% trans "RBAC configuration in Kubernetes involves defining Roles or ClusterRoles that specify a set of permissions, and then binding those roles to users, groups, or service accounts using RoleBindings or ClusterRoleBindings. This setup allows for fine-grained access control to cluster resources." %}
+    </p>
     <form method="post">
         {% csrf_token %}
 

@@ -15,6 +15,20 @@
         ⬅ {% trans "Back" %}
     </a>
     <h2>{% trans "Configure Namespace" %}</h2>
+<p style="
+    max-width: 1000px;
+    margin-bottom: 1.5rem;
+    background-color: #eef2f7;
+    border-left: 4px solid #007bff;
+    padding: 1rem 1.25rem;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    color: #333;
+    line-height: 1.6;
+">
+    {% trans "A namespace defines a logical grouping of related configuration objects within the system. It helps organize resources under a common context, enabling better isolation, structure, and control. Each namespace typically includes metadata and settings that influence how components interact, and may represent a distinct environment, customer space, or feature domain." %}
+</p>
+
     <form method="post">
         {% csrf_token %}
         <div class="tree">

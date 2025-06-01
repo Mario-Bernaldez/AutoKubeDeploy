@@ -17,7 +17,19 @@
     </a>
 
     <h2>{% trans "Configure PersistentVolumeClaim" %}</h2>
-
+    <p style="
+        max-width: 1000px;
+        margin-bottom: 1.5rem;
+        background-color: #eef2f7;
+        border-left: 4px solid #007bff;
+        padding: 1rem 1.25rem;
+        border-radius: 6px;
+        font-size: 0.95rem;
+        color: #333;
+        line-height: 1.6;
+    ">
+        {% trans "A PersistentVolumeClaim (PVC) is a request for storage by a user in Kubernetes. It abstracts the details of how storage is provided, allowing workloads to claim persistent storage resources dynamically. PVCs specify size, access modes, and optionally a storage class to match suitable PersistentVolumes." %}
+    </p>
     <form method="post">
         {% csrf_token %}
         <div class="tree">

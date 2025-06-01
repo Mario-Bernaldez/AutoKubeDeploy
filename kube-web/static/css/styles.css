@@ -35,4 +35,60 @@ body {
     border-radius: 4px;
     margin-bottom: 10px;
   }
+
+.help-icon-button {
+    background-color: #007bff;
+    border: none;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    position: relative;
+    top: -6px;
+}
+.help-wrapper {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    position: relative;
+}
+
+.help-icon-button:hover,
+.help-icon-button:focus {
+    background-color: #0056b3;
+    outline: none;
+}
+
+.help-tooltip {
+    margin-top: 0.5rem;
+    background-color: #fefefe;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    display: flex;
+    padding: 0.75rem;
+    max-width: 400px;
+    font-size: 0.9rem;
+    color: #333;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    border: 0;
+    padding: 0;
+    white-space: nowrap;
+    clip-path: inset(100%);
+    clip: rect(0 0 0 0);
+    overflow: hidden;
+}
+
+
   

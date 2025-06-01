@@ -17,7 +17,19 @@
     </a>
 
     <h2>{% trans "Configure NetworkPolicy" %}</h2>
-
+    <p style="
+        max-width: 1000px;
+        margin-bottom: 1.5rem;
+        background-color: #eef2f7;
+        border-left: 4px solid #007bff;
+        padding: 1rem 1.25rem;
+        border-radius: 6px;
+        font-size: 0.95rem;
+        color: #333;
+        line-height: 1.6;
+    ">
+        {% trans "A NetworkPolicy is a Kubernetes resource used to control the traffic flow between pods and/or network endpoints. It defines rules for ingress and egress traffic, enabling fine-grained network segmentation within the cluster. Proper configuration of NetworkPolicies enhances the security posture by limiting communication to only what is necessary." %}
+    </p>
     <form method="post">
         {% csrf_token %}
         <div class="tree">

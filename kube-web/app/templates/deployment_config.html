@@ -15,6 +15,19 @@
     ⬅
   </a>
   <h2>{% trans "Configure Deployment" %}</h2>
+  <p style="
+    max-width: 1000px;
+    margin-bottom: 1.5rem;
+    background-color: #eef2f7;
+    border-left: 4px solid #007bff;
+    padding: 1rem 1.25rem;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    color: #333;
+    line-height: 1.6;
+  ">
+    {% trans "A Deployment is a Kubernetes resource used to manage and update a set of replicated Pods. It provides declarative updates, rollback functionality, and ensures the desired number of replicas are running and available. Deployments simplify the management of stateless applications and support rolling updates with minimal downtime." %}
+  </p>
   <form method="post">
     {% csrf_token %}
 

@@ -17,7 +17,19 @@
     </a>
 
     <h2>{% trans "Configure Service" %}</h2>
-
+    <p style="
+        max-width: 1000px;
+        margin-bottom: 1.5rem;
+        background-color: #eef2f7;
+        border-left: 4px solid #007bff;
+        padding: 1rem 1.25rem;
+        border-radius: 6px;
+        font-size: 0.95rem;
+        color: #333;
+        line-height: 1.6;
+    ">
+        {% trans "A Service in Kubernetes is an abstraction that defines a logical set of Pods and a policy by which to access them. It enables stable networking and load balancing, allowing other components to reach the backend application regardless of Pod restarts or IP changes. Services can be ClusterIP, NodePort, LoadBalancer, or ExternalName." %}
+    </p>
     <form method="post">
         {% csrf_token %}
 

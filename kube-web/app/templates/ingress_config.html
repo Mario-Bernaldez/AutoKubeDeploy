@@ -16,7 +16,19 @@
     </a>
 
     <h2>{% trans "Configure Ingress" %}</h2>
-
+    <p style="
+        max-width: 1000px;
+        margin-bottom: 1.5rem;
+        background-color: #eef2f7;
+        border-left: 4px solid #007bff;
+        padding: 1rem 1.25rem;
+        border-radius: 6px;
+        font-size: 0.95rem;
+        color: #333;
+        line-height: 1.6;
+    ">
+        {% trans "An Ingress is a Kubernetes resource that manages external access to services within a cluster, typically HTTP and HTTPS. It provides routing rules to map incoming traffic to internal services based on hostnames or paths. Ingress can also handle TLS termination and virtual host configuration for better traffic control." %}
+    </p>
     <form method="post">
         {% csrf_token %}
         <div class="tree">

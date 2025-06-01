@@ -16,6 +16,20 @@
     </a>
     <h2>{% trans "Configure Horizontal Pod Autoscaler" %}</h2>
 
+    <p style="
+        max-width: 1000px;
+        margin-bottom: 1.5rem;
+        background-color: #eef2f7;
+        border-left: 4px solid #007bff;
+        padding: 1rem 1.25rem;
+        border-radius: 6px;
+        font-size: 0.95rem;
+        color: #333;
+        line-height: 1.6;
+    ">
+        {% trans "A Horizontal Pod Autoscaler (HPA) automatically scales the number of pod replicas for a deployment or other scalable resource based on observed CPU utilization or custom metrics. It helps maintain performance and optimize resource usage by adjusting the number of running pods in response to demand." %}
+    </p>
+
     <form method="post">
         {% csrf_token %}
         <div class="tree">
