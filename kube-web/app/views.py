@@ -881,7 +881,6 @@ def explain_yaml_view(request):
 @login_required
 def apply_yaml(request):
     models, default_model = get_model_options(request.user)
-    print(default_model)
     if request.method == "POST":
         yaml_text = request.POST.get("yaml_generated", "")
         try:
