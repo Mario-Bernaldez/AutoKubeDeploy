@@ -24,3 +24,8 @@ type OpenAIResponse struct {
 		Message OpenAIMessage `json:"message"`
 	} `json:"choices"`
 }
+
+type ErrorRequestPayload struct {
+	ErrorMessage string `json:"error"`
+	Model        string `json:"model"`
+}
