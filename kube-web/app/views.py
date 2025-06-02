@@ -837,10 +837,9 @@ def explain_yaml_view(request):
         explanation_response = requests.post(
             "http://yaml-explainer:8080/explain", json=payload
         )
-        
+
         models, _ = get_model_options(request.user)
         model_ids = {str(m["id"]) for m in models}
-
 
         if explanation_response.status_code == 200:
             explanation = explanation_response.json().get(
@@ -910,7 +909,26 @@ def apply_yaml(request):
                 except Exception as e:
                     print(f"⚠️ Failed to save deployment history: {e}")
             else:
-                messages.error(request, f"❌ Failed to apply YAML: {response.text}")
+                explanation = None
+                try:
+                    explain_response = requests.post(
+                        "http://kube-manager:8080/explain-error",
+                        json={
+                            "error": response.text,
+                            "model": "openchat/openchat-7b:free",
+                        },
+                        timeout=10,
+                    )
+                    if explain_response.status_code == 200:
+                        explanation_data = explain_response.json()
+                        explanation = explanation_data.get("explanation", None)
+                except Exception as e:
+                    print(f"⚠️ Failed to fetch error explanation: {e}")
+
+                error_msg = f"❌ Failed to apply YAML: {response.text}"
+                if explanation:
+                    error_msg += f"\n🧠 {explanation}"
+                messages.error(request, error_msg)
         except Exception as e:
             messages.error(request, f"❌ Failed to connect to backend: {e}")
     models, default_model = get_model_options(request.user)
