@@ -880,6 +880,8 @@ def explain_yaml_view(request):
 
 @login_required
 def apply_yaml(request):
+    models, default_model = get_model_options(request.user)
+    print(default_model)
     if request.method == "POST":
         yaml_text = request.POST.get("yaml_generated", "")
         try:
@@ -912,10 +914,10 @@ def apply_yaml(request):
                 explanation = None
                 try:
                     explain_response = requests.post(
-                        "http://kube-manager:8080/explain-error",
+                        "http://yaml-explainer:8080/explain-error",
                         json={
                             "error": response.text,
-                            "model": "openchat/openchat-7b:free",
+                            "model": default_model,
                         },
                         timeout=10,
                     )
@@ -931,7 +933,6 @@ def apply_yaml(request):
                 messages.error(request, error_msg)
         except Exception as e:
             messages.error(request, f"❌ Failed to connect to backend: {e}")
-    models, default_model = get_model_options(request.user)
     return render(
         request,
         "yaml_result.html",
