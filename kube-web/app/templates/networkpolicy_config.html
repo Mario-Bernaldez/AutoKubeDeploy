@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-{% load static %}
-{% load i18n %}
+{% load static %} {% load i18n %}
 
 <head>
     <meta charset="UTF-8">
@@ -28,7 +27,10 @@
         color: #333;
         line-height: 1.6;
     ">
-        {% trans "A NetworkPolicy is a Kubernetes resource used to control the traffic flow between pods and/or network endpoints. It defines rules for ingress and egress traffic, enabling fine-grained network segmentation within the cluster. Proper configuration of NetworkPolicies enhances the security posture by limiting communication to only what is necessary." %}
+        {% trans "A NetworkPolicy is a Kubernetes resource used to control the traffic flow between pods and/or network
+        endpoints. It defines rules for ingress and egress traffic, enabling fine-grained network segmentation within
+        the cluster. Proper configuration
+        of NetworkPolicies enhances the security posture by limiting communication to only what is necessary." %}
     </p>
     <form method="post">
         {% csrf_token %}

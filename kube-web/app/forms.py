@@ -4,8 +4,16 @@
 from app import utils
 from django import forms
 from django.forms import BaseFormSet, ValidationError, formset_factory
-from .widgets import HelpButtonTextInput
+from .widgets import (
+    HelpButtonCheckboxInput,
+    HelpButtonCheckboxSelectMultiple,
+    HelpButtonNumberInput,
+    HelpButtonSelect,
+    HelpButtonTextInput,
+    HelpButtonTextarea,
+)
 from django.utils.safestring import mark_safe
+
 # --- Auxiliary form for service ports ---
 
 
@@ -20,23 +28,28 @@ class ServicePortForm(forms.Form):
         label="Port",
         min_value=1,
         max_value=65535,
-        widget=forms.NumberInput(attrs={"required": True, "id": "id_port"}),
-        help_text="Port exposed by the Service (e.g. 80)."
+        widget=HelpButtonNumberInput(
+            attrs={"required": True, "id": "id_port"},
+            help_text="Port exposed by the Service (e.g. 80).",
+        ),
     )
 
     target_port = forms.IntegerField(
         label="Target Port",
         min_value=1,
         max_value=65535,
-        widget=forms.NumberInput(attrs={"required": True, "id": "id_target_port"}),
-        help_text="Port on the target container (e.g. 8080)."
+        widget=HelpButtonNumberInput(
+            attrs={"required": True, "id": "id_target_port"},
+            help_text="Port on the target container (e.g. 8080).",
+        ),
     )
 
     protocol = forms.ChoiceField(
         label="Protocol",
         choices=PROTOCOL_CHOICES,
-        widget=forms.Select(attrs={"id": "id_protocol"}),
-        help_text="Network protocol used by this port."
+        widget=HelpButtonSelect(
+            attrs={"id": "id_protocol"}, help_text="Network protocol used by this port."
+        ),
     )
 
     node_port = forms.IntegerField(
@@ -44,8 +57,10 @@ class ServicePortForm(forms.Form):
         min_value=30000,
         max_value=32767,
         required=False,
-        widget=forms.NumberInput(attrs={"class": "node-port-field", "id": "id_node_port"}),
-        help_text="Optional: External port to expose if Service type is NodePort."
+        widget=HelpButtonNumberInput(
+            attrs={"class": "node-port-field", "id": "id_node_port"},
+            help_text="Optional: External port to expose if Service type is NodePort.",
+        ),
     )
 
 
@@ -80,7 +95,7 @@ class DeploymentForm(forms.Form):
         max_length=100,
         widget=HelpButtonTextInput(
             attrs={"required": True, "id": "id_deployment_name"},
-            help_text="Name of the Deployment to be created."
+            help_text="Name of the Deployment to be created.",
         ),
     )
 
@@ -90,7 +105,7 @@ class DeploymentForm(forms.Form):
         required=False,
         widget=HelpButtonTextInput(
             attrs={"id": "id_deployment_namespace"},
-            help_text="Namespace for the deployment. Defaults to 'default'."
+            help_text="Namespace for the deployment. Defaults to 'default'.",
         ),
     )
 
@@ -98,16 +113,18 @@ class DeploymentForm(forms.Form):
         label="Replicas",
         min_value=1,
         initial=1,
-        widget=forms.NumberInput(attrs={"id": "id_replicas"}),
-        help_text="Number of pod replicas to maintain."
+        widget=HelpButtonNumberInput(
+            attrs={"id": "id_replicas"}, help_text="Number of pod replicas to maintain."
+        ),
     )
 
     STRATEGY_CHOICES = [("RollingUpdate", "Rolling Update"), ("Recreate", "Recreate")]
     strategy = forms.ChoiceField(
         label="Deployment Strategy",
         choices=STRATEGY_CHOICES,
-        widget=forms.Select(attrs={"id": "id_strategy"}),
-        help_text="Choose how updates are rolled out."
+        widget=HelpButtonSelect(
+            attrs={"id": "id_strategy"}, help_text="Choose how updates are rolled out."
+        ),
     )
 
     max_unavailable = forms.CharField(
@@ -119,7 +136,7 @@ class DeploymentForm(forms.Form):
                 "pattern": r"^\d+%?$",
                 "title": "Must be an integer or percentage (e.g. 1 or 25%)",
             },
-            help_text="Max number of pods that can be unavailable during the update."
+            help_text="Max number of pods that can be unavailable during the update.",
         ),
         validators=[utils.validate_int_or_percent],
         initial="1",
@@ -134,16 +151,20 @@ class DeploymentForm(forms.Form):
                 "pattern": r"^\d+%?$",
                 "title": "Must be an integer or percentage (e.g. 1 or 25%)",
             },
-            help_text="Max number of extra pods to create during the update."
+            help_text="Max number of extra pods to create during the update.",
         ),
         validators=[utils.validate_int_or_percent],
         initial="1",
     )
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field_name, field in self.fields.items():
             if field.required:
-                field.label = mark_safe(f"{field.label} <span style='color: black;'>* </span>")
+                field.label = mark_safe(
+                    f"{field.label} <span style='color: black;'>* </span>"
+                )
+
 
 class PodTemplateForm(forms.Form):
     pod_name = forms.CharField(
@@ -151,8 +172,7 @@ class PodTemplateForm(forms.Form):
         max_length=100,
         required=False,
         widget=HelpButtonTextInput(
-            attrs={"id": "id_pod_name"},
-            help_text="Optional name for the pod template."
+            attrs={"id": "id_pod_name"}, help_text="Optional name for the pod template."
         ),
     )
 
@@ -165,21 +185,27 @@ class PodTemplateForm(forms.Form):
                 "pattern": r"^([^=\,]+=[^=\,]+)(,\s*[^=\,]+=[^=\,]+)*$",
                 "title": "Must follow the format key=value, comma-separated.",
             },
-            help_text="Define labels to assign to the pod. Format: key=value,key2=value2"
+            help_text="Define labels to assign to the pod. Format: key=value,key2=value2",
         ),
     )
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field_name, field in self.fields.items():
             if field.required:
-                field.label = mark_safe(f"{field.label} <span style='color: black;'>* </span>")
+                field.label = mark_safe(
+                    f"{field.label} <span style='color: black;'>* </span>"
+                )
+
 
 class ContainerForm(forms.Form):
     init_container = forms.BooleanField(
         label="Is Init Container?",
         required=False,
-        widget=forms.CheckboxInput(attrs={"id": "id_init_container"}),
-        help_text="Check this if the container should run before regular containers."
+        widget=HelpButtonCheckboxInput(
+            attrs={"id": "id_init_container"},
+            help_text="Check this if the container should run before regular containers.",
+        ),
     )
 
     container_name = forms.CharField(
@@ -187,7 +213,7 @@ class ContainerForm(forms.Form):
         max_length=100,
         widget=HelpButtonTextInput(
             attrs={"required": True, "id": "id_container_name"},
-            help_text="Name of the container."
+            help_text="Name of the container.",
         ),
     )
 
@@ -196,7 +222,7 @@ class ContainerForm(forms.Form):
         max_length=200,
         widget=HelpButtonTextInput(
             attrs={"required": True, "id": "id_image"},
-            help_text="Container image name, e.g. nginx:latest."
+            help_text="Container image name, e.g. nginx:latest.",
         ),
     )
 
@@ -208,8 +234,10 @@ class ContainerForm(forms.Form):
     image_pull_policy = forms.ChoiceField(
         label="Image Pull Policy",
         choices=IMAGE_PULL_POLICY_CHOICES,
-        widget=forms.Select(attrs={"id": "id_image_pull_policy"}),
-        help_text="Specify when to pull the image from the registry."
+        widget=HelpButtonSelect(
+            attrs={"id": "id_image_pull_policy"},
+            help_text="Specify when to pull the image from the registry.",
+        ),
     )
 
     command = forms.CharField(
@@ -222,7 +250,7 @@ class ContainerForm(forms.Form):
                 "pattern": r"^[^\s]+(\s+[^\s]+)*$",
                 "title": "Should be a space-separated list, e.g. /bin/sh -c 'echo hello'",
             },
-            help_text="Command to execute in the container. Format: space-separated tokens."
+            help_text="Command to execute in the container. Format: space-separated tokens.",
         ),
     )
 
@@ -235,7 +263,7 @@ class ContainerForm(forms.Form):
                 "id": "id_ports",
                 "pattern": r"^(\d{1,5})(,\d{1,5})*$",
             },
-            help_text="Container ports exposed, e.g. 80,443"
+            help_text="Container ports exposed, e.g. 80,443",
         ),
     )
 
@@ -248,14 +276,18 @@ class ContainerForm(forms.Form):
                 "pattern": r"^([^=\,]+=[^=\,]+)(,\s*[^=\,]+=[^=\,]+)*$",
                 "title": "Must follow the format key=value, comma-separated.",
             },
-            help_text="Define environment variables for the container. Format: key=value,key2=value2"
+            help_text="Define environment variables for the container. Format: key=value,key2=value2",
         ),
     )
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field_name, field in self.fields.items():
             if field.required:
-                field.label = mark_safe(f"{field.label} <span style='color: black;'>* </span>")
+                field.label = mark_safe(
+                    f"{field.label} <span style='color: black;'>* </span>"
+                )
+
 
 class VolumeMountForm(forms.Form):
     volume_name = forms.CharField(
@@ -263,7 +295,7 @@ class VolumeMountForm(forms.Form):
         max_length=100,
         widget=HelpButtonTextInput(
             attrs={"id": "id_volume_mount_name"},
-            help_text="Name of the volume to mount."
+            help_text="Name of the volume to mount.",
         ),
     )
     mount_path = forms.CharField(
@@ -271,14 +303,18 @@ class VolumeMountForm(forms.Form):
         max_length=200,
         widget=HelpButtonTextInput(
             attrs={"id": "id_mount_path"},
-            help_text="Filesystem path inside the container where the volume will be mounted."
+            help_text="Filesystem path inside the container where the volume will be mounted.",
         ),
     )
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field_name, field in self.fields.items():
             if field.required:
-                field.label = mark_safe(f"{field.label} <span style='color: black;'>* </span>")
+                field.label = mark_safe(
+                    f"{field.label} <span style='color: black;'>* </span>"
+                )
+
 
 class VolumeForm(forms.Form):
     volume_name = forms.CharField(
@@ -286,7 +322,7 @@ class VolumeForm(forms.Form):
         max_length=100,
         widget=HelpButtonTextInput(
             attrs={"id": "id_volume_name"},
-            help_text="Unique name for the volume within the pod specification."
+            help_text="Unique name for the volume within the pod specification.",
         ),
     )
 
@@ -299,8 +335,10 @@ class VolumeForm(forms.Form):
             ("secret", "Secret"),
             ("persistentVolumeClaim", "PersistentVolumeClaim"),
         ],
-        widget=forms.Select(attrs={"id": "id_volume_type"}),
-        help_text="Select the type of volume to mount into the pod."
+        widget=HelpButtonSelect(
+            attrs={"id": "id_volume_type"},
+            help_text="Select the type of volume to mount into the pod.",
+        ),
     )
 
     # EmptyDir fields
@@ -314,7 +352,7 @@ class VolumeForm(forms.Form):
                 "pattern": r"^$|^Memory$",
                 "title": "Leave empty or enter 'Memory' (case-sensitive).",
             },
-            help_text="Enter 'Memory' to use memory-backed storage or leave blank for disk-backed."
+            help_text="Enter 'Memory' to use memory-backed storage or leave blank for disk-backed.",
         ),
     )
 
@@ -328,7 +366,7 @@ class VolumeForm(forms.Form):
                 "pattern": r"^\d+(Ki|Mi|Gi|Ti|Pi|Ei)$",
                 "title": "Example: 1Gi, 500Mi, 100Ki, etc.",
             },
-            help_text="Optional limit for volume size (e.g., 1Gi, 500Mi)."
+            help_text="Optional limit for volume size (e.g., 1Gi, 500Mi).",
         ),
     )
 
@@ -343,7 +381,7 @@ class VolumeForm(forms.Form):
                 "pattern": r"^/.*",
                 "title": "Must be an absolute path, e.g. /data/volume",
             },
-            help_text="Absolute path on the host machine to mount inside the container."
+            help_text="Absolute path on the host machine to mount inside the container.",
         ),
     )
 
@@ -362,8 +400,10 @@ class VolumeForm(forms.Form):
         label="HostPath Type (for hostPath)",
         required=False,
         choices=HOSTPATH_TYPE_CHOICES,
-        widget=forms.Select(attrs={"id": "id_hostpath_type"}),
-        help_text="Specify the type of the host path if required (e.g., File, Directory)."
+        widget=HelpButtonSelect(
+            attrs={"id": "id_hostpath_type"},
+            help_text="Specify the type of the host path if required (e.g., File, Directory).",
+        ),
     )
 
     # ConfigMap
@@ -372,7 +412,7 @@ class VolumeForm(forms.Form):
         required=False,
         widget=HelpButtonTextInput(
             attrs={"id": "id_config_map_name"},
-            help_text="Name of the ConfigMap resource to mount as a volume."
+            help_text="Name of the ConfigMap resource to mount as a volume.",
         ),
     )
 
@@ -382,7 +422,7 @@ class VolumeForm(forms.Form):
         required=False,
         widget=HelpButtonTextInput(
             attrs={"id": "id_secret_name"},
-            help_text="Name of the Secret to mount as a volume."
+            help_text="Name of the Secret to mount as a volume.",
         ),
     )
 
@@ -392,7 +432,7 @@ class VolumeForm(forms.Form):
         required=False,
         widget=HelpButtonTextInput(
             attrs={"id": "id_pvc_claim_name"},
-            help_text="Name of the PersistentVolumeClaim to bind to this volume."
+            help_text="Name of the PersistentVolumeClaim to bind to this volume.",
         ),
     )
 
@@ -410,25 +450,27 @@ class VolumeForm(forms.Form):
             self.add_error("secret_name", "This field is required for Secret.")
 
         if vtype == "persistentVolumeClaim" and not cleaned_data.get("pvc_claim_name"):
-            self.add_error("pvc_claim_name", "This field is required for PersistentVolumeClaim.")
+            self.add_error(
+                "pvc_claim_name", "This field is required for PersistentVolumeClaim."
+            )
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field_name, field in self.fields.items():
             if field.required:
-                field.label = mark_safe(f"{field.label} <span style='color: black;'>* </span>")
+                field.label = mark_safe(
+                    f"{field.label} <span style='color: black;'>* </span>"
+                )
+
 
 class NamespaceForm(forms.Form):
     namespace_name = forms.CharField(
         label="Namespace Name",
         max_length=100,
         widget=HelpButtonTextInput(
-            attrs={
-                "placeholder": "e.g. production",
-                "id": "id_namespace_name"
-            },
-            help_text="The name of the namespace. This will be used to logically separate resources in your cluster."
-        )
+            attrs={"placeholder": "e.g. production", "id": "id_namespace_name"},
+            help_text="The name of the namespace. This will be used to logically separate resources in your cluster.",
+        ),
     )
 
     labels = forms.CharField(
@@ -439,16 +481,19 @@ class NamespaceForm(forms.Form):
                 "placeholder": "env=prod, team=devops",
                 "pattern": r"^([^=\,]+=[^=\,]+)(,\s*[^=\,]+=[^=\,]+)*$",
                 "title": "Must follow the format key=value, comma-separated.",
-                "id": "id_labels"
+                "id": "id_labels",
             },
-            help_text="Optional key=value pairs used to organize and select resources. Default: empty."
-        )
+            help_text="Optional key=value pairs used to organize and select resources. Default: empty.",
+        ),
     )
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field_name, field in self.fields.items():
             if field.required:
-                field.label = mark_safe(f"{field.label} <span style='color: black;'>* </span>")
+                field.label = mark_safe(
+                    f"{field.label} <span style='color: black;'>* </span>"
+                )
 
 
 class ServiceForm(forms.Form):
@@ -456,8 +501,7 @@ class ServiceForm(forms.Form):
         label="Service Name",
         max_length=100,
         widget=HelpButtonTextInput(
-            attrs={"id": "id_service_name"},
-            help_text="Name of the Service resource."
+            attrs={"id": "id_service_name"}, help_text="Name of the Service resource."
         ),
     )
 
@@ -467,7 +511,7 @@ class ServiceForm(forms.Form):
         required=False,
         widget=HelpButtonTextInput(
             attrs={"id": "id_service_namespace"},
-            help_text="Namespace for the Service. Defaults to 'default'."
+            help_text="Namespace for the Service. Defaults to 'default'.",
         ),
     )
 
@@ -478,8 +522,10 @@ class ServiceForm(forms.Form):
             ("NodePort", "NodePort"),
             ("LoadBalancer", "LoadBalancer"),
         ],
-        widget=forms.Select(attrs={"id": "id_service_type"}),
-        help_text="Select how the Service is exposed: internal, via node ports, or load balancer."
+        widget=HelpButtonSelect(
+            attrs={"id": "id_service_type"},
+            help_text="Select how the Service is exposed: internal, via node ports, or load balancer.",
+        ),
     )
 
     selector = forms.CharField(
@@ -491,7 +537,7 @@ class ServiceForm(forms.Form):
                 "pattern": r"^([^=\,]+=[^=\,]+)(,\s*[^=\,]+=[^=\,]+)*$",
                 "title": "Must follow the format key=value, comma-separated.",
             },
-            help_text="Label selector to match the target pods. Format: app=frontend,role=api"
+            help_text="Label selector to match the target pods. Format: app=frontend,role=api",
         ),
     )
 
@@ -503,8 +549,9 @@ class ServiceForm(forms.Form):
         super().__init__(*args, **kwargs)
         for field_name, field in self.fields.items():
             if field.required:
-                field.label = mark_safe(f"{field.label} <span style='color: black;'>* </span>")
-
+                field.label = mark_safe(
+                    f"{field.label} <span style='color: black;'>* </span>"
+                )
 
 
 class HPAForm(forms.Form):
@@ -513,7 +560,7 @@ class HPAForm(forms.Form):
         max_length=100,
         widget=HelpButtonTextInput(
             attrs={"required": True, "id": "id_hpa_name"},
-            help_text="Name of the HorizontalPodAutoscaler resource."
+            help_text="Name of the HorizontalPodAutoscaler resource.",
         ),
     )
 
@@ -523,7 +570,7 @@ class HPAForm(forms.Form):
         required=False,
         widget=HelpButtonTextInput(
             attrs={"placeholder": "default", "id": "id_hpa_namespace"},
-            help_text="Namespace where the HPA will be created. Defaults to 'default'."
+            help_text="Namespace where the HPA will be created. Defaults to 'default'.",
         ),
     )
 
@@ -532,7 +579,7 @@ class HPAForm(forms.Form):
         max_length=100,
         widget=HelpButtonTextInput(
             attrs={"required": True, "id": "id_target_deployment"},
-            help_text="The name of the Deployment the HPA will scale."
+            help_text="The name of the Deployment the HPA will scale.",
         ),
     )
 
@@ -540,15 +587,20 @@ class HPAForm(forms.Form):
         label="Minimum Replicas",
         min_value=1,
         initial=1,
-        widget=forms.NumberInput(attrs={"required": True, "id": "id_min_replicas"}),
-        help_text="Minimum number of pod replicas allowed."
+        widget=HelpButtonNumberInput(
+            attrs={"required": True, "id": "id_min_replicas"},
+            help_text="Minimum number of pod replicas allowed.",
+        ),
     )
 
     max_replicas = forms.IntegerField(
         label="Maximum Replicas",
         min_value=1,
-        widget=forms.NumberInput(attrs={"required": True, "id": "id_max_replicas"}),
-        help_text="Maximum number of pod replicas allowed."
+        initial=1,
+        widget=HelpButtonNumberInput(
+            attrs={"required": True, "id": "id_max_replicas"},
+            help_text="Maximum number of pod replicas allowed.",
+        ),
     )
 
     def clean(self):
@@ -561,40 +613,51 @@ class HPAForm(forms.Form):
                 raise forms.ValidationError(
                     "Minimum Replicas cannot be greater than Maximum Replicas."
                 )
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field_name, field in self.fields.items():
             if field.required:
-                field.label = mark_safe(f"{field.label} <span style='color: black;'>* </span>")
-
+                field.label = mark_safe(
+                    f"{field.label} <span style='color: black;'>* </span>"
+                )
 
 
 class HPAMetricForm(forms.Form):
     resource_name = forms.ChoiceField(
         label="Resource Name",
         choices=[("cpu", "CPU"), ("memory", "Memory")],
-        widget=forms.Select(attrs={"id": "id_resource_name"}),
-        help_text="The resource type to scale by: CPU or Memory."
+        widget=HelpButtonSelect(
+            attrs={"id": "id_resource_name"},
+            help_text="The resource type to scale by: CPU or Memory.",
+        ),
     )
 
     target_type = forms.ChoiceField(
         label="Target Type",
         choices=[("Utilization", "Utilization (%)"), ("Value", "Value (absolute)")],
-        widget=forms.Select(attrs={"id": "id_target_type"}),
-        help_text="Choose whether to scale based on percentage utilization or an absolute value."
+        widget=HelpButtonSelect(
+            attrs={"id": "id_target_type"},
+            help_text="Choose whether to scale based on percentage utilization or an absolute value.",
+        ),
     )
 
     target_value = forms.IntegerField(
         label="Target Value",
         min_value=1,
-        widget=forms.NumberInput(attrs={"required": True, "id": "id_target_value"}),
-        help_text="Use a percentage (e.g. 80) for utilization or an absolute unit (e.g. 500Mi) for value."
+        widget=HelpButtonNumberInput(
+            attrs={"required": True, "id": "id_target_value"},
+            help_text="Use a percentage (e.g. 80) for utilization or an absolute unit (e.g. 500Mi) for value.",
+        ),
     )
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        for field_name, field in self.fields.items():
+        for _, field in self.fields.items():
             if field.required:
-                field.label = mark_safe(f"{field.label} <span style='color: black;'>* </span>")
+                field.label = mark_safe(
+                    f"{field.label} <span style='color: black;'>* </span>"
+                )
 
 
 class ConfigMapForm(forms.Form):
@@ -603,7 +666,7 @@ class ConfigMapForm(forms.Form):
         max_length=100,
         widget=HelpButtonTextInput(
             attrs={"required": True, "id": "id_configmap_name"},
-            help_text="The name of the ConfigMap object that will store key-value configuration data."
+            help_text="The name of the ConfigMap object that will store key-value configuration data.",
         ),
     )
 
@@ -613,14 +676,18 @@ class ConfigMapForm(forms.Form):
         required=False,
         widget=HelpButtonTextInput(
             attrs={"placeholder": "default", "id": "id_namespace"},
-            help_text="The namespace where the ConfigMap will be created. Defaults to 'default' if left blank."
+            help_text="The namespace where the ConfigMap will be created. Defaults to 'default' if left blank.",
         ),
     )
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field_name, field in self.fields.items():
             if field.required:
-                field.label = mark_safe(f"{field.label} <span style='color: black;'>* </span>")
+                field.label = mark_safe(
+                    f"{field.label} <span style='color: black;'>* </span>"
+                )
+
 
 class ConfigMapKeyForm(forms.Form):
     key_name = forms.CharField(
@@ -628,7 +695,7 @@ class ConfigMapKeyForm(forms.Form):
         max_length=200,
         widget=HelpButtonTextInput(
             attrs={"required": True, "id": "id_key_name"},
-            help_text="The key under which the value will be stored in the ConfigMap. Must be unique within the ConfigMap."
+            help_text="The key under which the value will be stored in the ConfigMap. Must be unique within the ConfigMap.",
         ),
     )
 
@@ -636,26 +703,28 @@ class ConfigMapKeyForm(forms.Form):
         label="Multiline content (like file data)?",
         required=False,
         initial=False,
-        widget=forms.CheckboxInput(attrs={"id": "id_is_multiline"}),
-        help_text="Check this box if the value is multiline, such as file content or scripts."
+        widget=HelpButtonCheckboxInput(
+            attrs={"id": "id_is_multiline"},
+            help_text="Check this box if the value is multiline, such as file content or scripts.",
+        ),
     )
 
     value = forms.CharField(
         label="Value",
-        widget=forms.Textarea(
-            attrs={
-                "rows": 3,
-                "required": True,
-                "id": "id_value"
-            }
+        widget=HelpButtonTextarea(
+            attrs={"rows": 3, "required": True, "id": "id_value"},
+            help_text="The content to store for this key. If multiline, use \\n or enable the checkbox above.",
         ),
-        help_text="The content to store for this key. If multiline, use \\n or enable the checkbox above."
     )
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field_name, field in self.fields.items():
             if field.required:
-                field.label = mark_safe(f"{field.label} <span style='color: black;'>* </span>")
+                field.label = mark_safe(
+                    f"{field.label} <span style='color: black;'>* </span>"
+                )
+
 
 class SecretForm(forms.Form):
     secret_name = forms.CharField(
@@ -663,7 +732,7 @@ class SecretForm(forms.Form):
         max_length=100,
         widget=HelpButtonTextInput(
             attrs={"required": True, "id": "id_secret_name"},
-            help_text="Name of the Secret resource. Must be unique within the namespace."
+            help_text="Name of the Secret resource. Must be unique within the namespace.",
         ),
     )
 
@@ -673,7 +742,7 @@ class SecretForm(forms.Form):
         required=False,
         widget=HelpButtonTextInput(
             attrs={"placeholder": "default", "id": "id_secret_namespace"},
-            help_text="Namespace to store the secret. Defaults to 'default' if left blank."
+            help_text="Namespace to store the secret. Defaults to 'default' if left blank.",
         ),
     )
 
@@ -682,16 +751,25 @@ class SecretForm(forms.Form):
         choices=[
             ("Opaque", "Opaque (key-value)"),
             ("kubernetes.io/tls", "TLS (Certificate and Private Key)"),
-            ("kubernetes.io/dockerconfigjson", "Docker Config JSON (.dockerconfigjson)"),
+            (
+                "kubernetes.io/dockerconfigjson",
+                "Docker Config JSON (.dockerconfigjson)",
+            ),
         ],
-        widget=forms.Select(attrs={"id": "id_secret_type"}),
-        help_text="Select the type of secret depending on its purpose: generic data, TLS certs, or Docker credentials."
+        widget=HelpButtonSelect(
+            attrs={"id": "id_secret_type"},
+            help_text="Select the type of secret depending on its purpose: generic data, TLS certs, or Docker credentials.",
+        ),
     )
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field_name, field in self.fields.items():
             if field.required:
-                field.label = mark_safe(f"{field.label} <span style='color: black;'>* </span>")
+                field.label = mark_safe(
+                    f"{field.label} <span style='color: black;'>* </span>"
+                )
+
 
 class OpaqueKeyForm(forms.Form):
     key_name = forms.CharField(
@@ -699,7 +777,7 @@ class OpaqueKeyForm(forms.Form):
         max_length=200,
         widget=HelpButtonTextInput(
             attrs={"required": True, "id": "id_opaque_key_name"},
-            help_text="The key under which the value will be stored in the secret."
+            help_text="The key under which the value will be stored in the secret.",
         ),
     )
 
@@ -707,50 +785,62 @@ class OpaqueKeyForm(forms.Form):
         label="Value",
         widget=HelpButtonTextInput(
             attrs={"required": True, "id": "id_opaque_value"},
-            help_text="The value corresponding to the specified key."
+            help_text="The value corresponding to the specified key.",
         ),
     )
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field_name, field in self.fields.items():
             if field.required:
-                field.label = mark_safe(f"{field.label} <span style='color: black;'>* </span>")
+                field.label = mark_safe(
+                    f"{field.label} <span style='color: black;'>* </span>"
+                )
+
 
 class TLSSecretForm(forms.Form):
     tls_crt = forms.CharField(
         label="TLS Certificate (tls.crt)",
-        widget=forms.Textarea(
-            attrs={"rows": 4, "required": True, "id": "id_tls_crt"}
+        widget=HelpButtonTextarea(
+            attrs={"rows": 4, "required": True, "id": "id_tls_crt"},
+            help_text="Paste the full TLS certificate content (usually starts with -----BEGIN CERTIFICATE-----).",
         ),
-        help_text="Paste the full TLS certificate content (usually starts with -----BEGIN CERTIFICATE-----)."
     )
 
     tls_key = forms.CharField(
         label="TLS Private Key (tls.key)",
-        widget=forms.Textarea(
-            attrs={"rows": 4, "required": True, "id": "id_tls_key"}
+        widget=HelpButtonTextarea(
+            attrs={"rows": 4, "required": True, "id": "id_tls_key"},
+            help_text="Paste the associated private key for the TLS certificate.",
         ),
-        help_text="Paste the associated private key for the TLS certificate."
     )
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field_name, field in self.fields.items():
             if field.required:
-                field.label = mark_safe(f"{field.label} <span style='color: black;'>* </span>")
+                field.label = mark_safe(
+                    f"{field.label} <span style='color: black;'>* </span>"
+                )
+
 
 class DockerConfigJSONForm(forms.Form):
     dockerconfigjson = forms.CharField(
         label="Docker Config JSON (.dockerconfigjson)",
-        widget=forms.Textarea(
-            attrs={"rows": 8, "required": True, "id": "id_dockerconfigjson"}
+        widget=HelpButtonTextarea(
+            attrs={"rows": 8, "required": True, "id": "id_dockerconfigjson"},
+            help_text="Paste the entire content of the Docker config JSON used to authenticate with private registries.",
         ),
-        help_text="Paste the entire content of the Docker config JSON used to authenticate with private registries."
     )
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field_name, field in self.fields.items():
             if field.required:
-                field.label = mark_safe(f"{field.label} <span style='color: black;'>* </span>")
+                field.label = mark_safe(
+                    f"{field.label} <span style='color: black;'>* </span>"
+                )
+
 
 class PersistentVolumeClaimForm(forms.Form):
     pvc_name = forms.CharField(
@@ -758,7 +848,7 @@ class PersistentVolumeClaimForm(forms.Form):
         max_length=100,
         widget=HelpButtonTextInput(
             attrs={"required": True, "id": "id_pvc_name"},
-            help_text="Name of the PersistentVolumeClaim. Must be unique within the namespace."
+            help_text="Name of the PersistentVolumeClaim. Must be unique within the namespace.",
         ),
     )
 
@@ -768,7 +858,7 @@ class PersistentVolumeClaimForm(forms.Form):
         required=False,
         widget=HelpButtonTextInput(
             attrs={"placeholder": "default", "id": "id_pvc_namespace"},
-            help_text="Namespace where the PVC will be created. Defaults to 'default' if left blank."
+            help_text="Namespace where the PVC will be created. Defaults to 'default' if left blank.",
         ),
     )
 
@@ -780,9 +870,9 @@ class PersistentVolumeClaimForm(forms.Form):
                 "required": True,
                 "pattern": r"^\d+(Ki|Mi|Gi|Ti|Pi|Ei)$",
                 "title": "Must be a valid size like 1Gi, 500Mi, 100Ki, etc.",
-                "id": "id_storage_request"
+                "id": "id_storage_request",
             },
-            help_text="Amount of storage to request. Use units like Mi, Gi, Ti, etc."
+            help_text="Amount of storage to request. Use units like Mi, Gi, Ti, etc.",
         ),
     )
 
@@ -793,8 +883,10 @@ class PersistentVolumeClaimForm(forms.Form):
             ("ReadOnlyMany", "ReadOnlyMany"),
             ("ReadWriteMany", "ReadWriteMany"),
         ],
-        widget=forms.CheckboxSelectMultiple(attrs={"id": "id_access_modes"}),
-        help_text="Select one or more access modes. 'ReadWriteOnce' is the most common."
+        widget=HelpButtonCheckboxSelectMultiple(
+            attrs={"id": "id_access_modes"},
+            help_text="Select one or more access modes. 'ReadWriteOnce' is the most common.",
+        ),
     )
 
     storage_class_name = forms.CharField(
@@ -802,15 +894,22 @@ class PersistentVolumeClaimForm(forms.Form):
         max_length=100,
         required=False,
         widget=HelpButtonTextInput(
-            attrs={"placeholder": "Leave empty for default", "id": "id_storage_class_name"},
-            help_text="Name of the storage class to use. Leave empty to use the cluster's default class."
+            attrs={
+                "placeholder": "Leave empty for default",
+                "id": "id_storage_class_name",
+            },
+            help_text="Name of the storage class to use. Leave empty to use the cluster's default class.",
         ),
     )
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field_name, field in self.fields.items():
             if field.required:
-                field.label = mark_safe(f"{field.label} <span style='color: black;'>* </span>")
+                field.label = mark_safe(
+                    f"{field.label} <span style='color: black;'>* </span>"
+                )
+
 
 class IngressForm(forms.Form):
     ingress_name = forms.CharField(
@@ -818,7 +917,7 @@ class IngressForm(forms.Form):
         max_length=100,
         widget=HelpButtonTextInput(
             attrs={"required": True, "id": "id_ingress_name"},
-            help_text="Name of the Ingress resource to be created."
+            help_text="Name of the Ingress resource to be created.",
         ),
     )
 
@@ -828,7 +927,7 @@ class IngressForm(forms.Form):
         required=False,
         widget=HelpButtonTextInput(
             attrs={"placeholder": "default", "id": "id_ingress_namespace"},
-            help_text="Namespace for the Ingress. Defaults to 'default'."
+            help_text="Namespace for the Ingress. Defaults to 'default'.",
         ),
     )
 
@@ -843,14 +942,18 @@ class IngressForm(forms.Form):
                 "title": "Must be a valid domain, e.g., example.com",
                 "id": "id_ingress_host",
             },
-            help_text="Fully qualified domain name for routing. Example: app.example.com"
+            help_text="Fully qualified domain name for routing. Example: app.example.com",
         ),
     )
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field_name, field in self.fields.items():
             if field.required:
-                field.label = mark_safe(f"{field.label} <span style='color: black;'>* </span>")
+                field.label = mark_safe(
+                    f"{field.label} <span style='color: black;'>* </span>"
+                )
+
 
 class IngressPathForm(forms.Form):
     path = forms.CharField(
@@ -858,7 +961,7 @@ class IngressPathForm(forms.Form):
         max_length=200,
         widget=HelpButtonTextInput(
             attrs={"required": True, "placeholder": "/", "id": "id_path"},
-            help_text="URL path to route traffic to the service. Example: / or /api"
+            help_text="URL path to route traffic to the service. Example: / or /api",
         ),
     )
 
@@ -867,7 +970,7 @@ class IngressPathForm(forms.Form):
         max_length=100,
         widget=HelpButtonTextInput(
             attrs={"required": True, "id": "id_service_name"},
-            help_text="The name of the Kubernetes Service to forward traffic to."
+            help_text="The name of the Kubernetes Service to forward traffic to.",
         ),
     )
 
@@ -875,14 +978,20 @@ class IngressPathForm(forms.Form):
         label="Service Port",
         min_value=1,
         max_value=65535,
-        widget=forms.NumberInput(attrs={"required": True, "id": "id_service_port"}),
-        help_text="Port number on which the target Service is listening."
+        widget=HelpButtonNumberInput(
+            attrs={"required": True, "id": "id_service_port"},
+            help_text="Port number on which the target Service is listening.",
+        ),
     )
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field_name, field in self.fields.items():
             if field.required:
-                field.label = mark_safe(f"{field.label} <span style='color: black;'>* </span>")
+                field.label = mark_safe(
+                    f"{field.label} <span style='color: black;'>* </span>"
+                )
+
 
 class ServiceAccountForm(forms.Form):
     service_account_name = forms.CharField(
@@ -890,7 +999,7 @@ class ServiceAccountForm(forms.Form):
         max_length=100,
         widget=HelpButtonTextInput(
             attrs={"required": True},
-            help_text="The name of the ServiceAccount resource to be created or referenced."
+            help_text="The name of the ServiceAccount resource to be created or referenced.",
         ),
     )
 
@@ -900,14 +1009,18 @@ class ServiceAccountForm(forms.Form):
         required=False,
         widget=HelpButtonTextInput(
             attrs={"placeholder": "default"},
-            help_text="The namespace where the ServiceAccount resides. If omitted, 'default' will be used."
+            help_text="The namespace where the ServiceAccount resides. If omitted, 'default' will be used.",
         ),
     )
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field_name, field in self.fields.items():
             if field.required:
-                field.label = mark_safe(f"{field.label} <span style='color: black;'>* </span>")
+                field.label = mark_safe(
+                    f"{field.label} <span style='color: black;'>* </span>"
+                )
+
 
 class ImagePullSecretForm(forms.Form):
     secret_name = forms.CharField(
@@ -915,14 +1028,18 @@ class ImagePullSecretForm(forms.Form):
         max_length=100,
         widget=HelpButtonTextInput(
             attrs={"required": True},
-            help_text="The name of the Kubernetes secret used to authenticate when pulling images from a private registry."
+            help_text="The name of the Kubernetes secret used to authenticate when pulling images from a private registry.",
         ),
     )
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field_name, field in self.fields.items():
             if field.required:
-                field.label = mark_safe(f"{field.label} <span style='color: black;'>* </span>")
+                field.label = mark_safe(
+                    f"{field.label} <span style='color: black;'>* </span>"
+                )
+
 
 class RoleForm(forms.Form):
     role_type = forms.ChoiceField(
@@ -931,8 +1048,10 @@ class RoleForm(forms.Form):
             ("Role", "Role (namespaced)"),
             ("ClusterRole", "ClusterRole (cluster-wide)"),
         ],
-        widget=forms.Select(attrs={"id": "id_role_type"}),
-        help_text="Select 'Role' to apply permissions within a namespace or 'ClusterRole' for cluster-wide access."
+        widget=HelpButtonSelect(
+            attrs={"id": "id_role_type"},
+            help_text="Select 'Role' to apply permissions within a namespace or 'ClusterRole' for cluster-wide access.",
+        ),
     )
 
     role_name = forms.CharField(
@@ -940,7 +1059,7 @@ class RoleForm(forms.Form):
         max_length=100,
         widget=HelpButtonTextInput(
             attrs={"required": True},
-            help_text="The name of the Role or ClusterRole to create or bind to."
+            help_text="The name of the Role or ClusterRole to create or bind to.",
         ),
     )
 
@@ -949,15 +1068,22 @@ class RoleForm(forms.Form):
         max_length=100,
         required=False,
         widget=HelpButtonTextInput(
-            attrs={"id": "id_namespace_name", "placeholder": "Leave empty for ClusterRole,"},
-            help_text="Required only when creating a Role. Leave empty for ClusterRoles."
+            attrs={
+                "id": "id_namespace_name",
+                "placeholder": "Leave empty for ClusterRole,",
+            },
+            help_text="Required only when creating a Role. Leave empty for ClusterRoles.",
         ),
     )
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field_name, field in self.fields.items():
             if field.required:
-                field.label = mark_safe(f"{field.label} <span style='color: black;'>* </span>")
+                field.label = mark_safe(
+                    f"{field.label} <span style='color: black;'>* </span>"
+                )
+
 
 class RuleForm(forms.Form):
     api_groups = forms.CharField(
@@ -965,7 +1091,7 @@ class RuleForm(forms.Form):
         required=False,
         widget=HelpButtonTextInput(
             attrs={"placeholder": ""},
-            help_text="Comma-separated list of API groups this rule applies to. Leave empty for the core API group."
+            help_text="Comma-separated list of API groups this rule applies to. Leave empty for the core API group.",
         ),
     )
 
@@ -974,7 +1100,7 @@ class RuleForm(forms.Form):
         required=True,
         widget=HelpButtonTextInput(
             attrs={"required": True},
-            help_text="List of resource types (e.g., pods, services) this rule applies to."
+            help_text="List of resource types (e.g., pods, services) this rule applies to.",
         ),
     )
 
@@ -983,14 +1109,18 @@ class RuleForm(forms.Form):
         required=True,
         widget=HelpButtonTextInput(
             attrs={"required": True},
-            help_text="Actions allowed: e.g., get, list, watch, create, delete, update."
+            help_text="Actions allowed: e.g., get, list, watch, create, delete, update.",
         ),
     )
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field_name, field in self.fields.items():
             if field.required:
-                field.label = mark_safe(f"{field.label} <span style='color: black;'>* </span>")
+                field.label = mark_safe(
+                    f"{field.label} <span style='color: black;'>* </span>"
+                )
+
 
 class RoleBindingForm(forms.Form):
     binding_name = forms.CharField(
@@ -998,7 +1128,7 @@ class RoleBindingForm(forms.Form):
         max_length=100,
         widget=HelpButtonTextInput(
             attrs={"required": True},
-            help_text="The name of the RoleBinding or ClusterRoleBinding."
+            help_text="The name of the RoleBinding or ClusterRoleBinding.",
         ),
     )
 
@@ -1007,15 +1137,22 @@ class RoleBindingForm(forms.Form):
         max_length=100,
         required=False,
         widget=HelpButtonTextInput(
-            attrs={"id": "id_binding_namespace", "placeholder": "Leave empty for ClusterRoleBinding"},
-            help_text="Specify the namespace only if creating a RoleBinding."
+            attrs={
+                "id": "id_binding_namespace",
+                "placeholder": "Leave empty for ClusterRoleBinding",
+            },
+            help_text="Specify the namespace only if creating a RoleBinding.",
         ),
     )
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field_name, field in self.fields.items():
             if field.required:
-                field.label = mark_safe(f"{field.label} <span style='color: black;'>* </span>")
+                field.label = mark_safe(
+                    f"{field.label} <span style='color: black;'>* </span>"
+                )
+
 
 class SubjectForm(forms.Form):
     kind = forms.ChoiceField(
@@ -1025,7 +1162,9 @@ class SubjectForm(forms.Form):
             ("Group", "Group"),
             ("ServiceAccount", "ServiceAccount"),
         ],
-        help_text="Select the type of subject to bind: a User, a Group, or a ServiceAccount."
+        widget=HelpButtonSelect(
+            help_text="Select the type of subject to bind: a User, a Group, or a ServiceAccount."
+        ),
     )
 
     name = forms.CharField(
@@ -1033,7 +1172,7 @@ class SubjectForm(forms.Form):
         max_length=100,
         widget=HelpButtonTextInput(
             attrs={"required": True},
-            help_text="The name of the user, group, or service account to grant access to."
+            help_text="The name of the user, group, or service account to grant access to.",
         ),
     )
 
@@ -1043,14 +1182,18 @@ class SubjectForm(forms.Form):
         required=False,
         widget=HelpButtonTextInput(
             attrs={"placeholder": "Only required for ServiceAccount"},
-            help_text="Required only if the subject is a ServiceAccount. Leave empty otherwise."
+            help_text="Required only if the subject is a ServiceAccount. Leave empty otherwise.",
         ),
     )
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field_name, field in self.fields.items():
             if field.required:
-                field.label = mark_safe(f"{field.label} <span style='color: black;'>* </span>")
+                field.label = mark_safe(
+                    f"{field.label} <span style='color: black;'>* </span>"
+                )
+
 
 class NetworkPolicyForm(forms.Form):
     name = forms.CharField(
@@ -1058,7 +1201,7 @@ class NetworkPolicyForm(forms.Form):
         max_length=100,
         widget=HelpButtonTextInput(
             attrs={"required": True},
-            help_text="The name of the NetworkPolicy resource. It must be unique within the namespace."
+            help_text="The name of the NetworkPolicy resource. It must be unique within the namespace.",
         ),
     )
 
@@ -1068,7 +1211,7 @@ class NetworkPolicyForm(forms.Form):
         required=False,
         widget=HelpButtonTextInput(
             attrs={"required": False},
-            help_text="The namespace to which this NetworkPolicy will apply. Defaults to 'default' if left blank."
+            help_text="The namespace to which this NetworkPolicy will apply. Defaults to 'default' if left blank.",
         ),
     )
 
@@ -1081,29 +1224,36 @@ class NetworkPolicyForm(forms.Form):
                 "pattern": r"^([^=\,]+=[^=\,]+)(,\s*[^=\,]+=[^=\,]+)*$",
                 "title": "Format: key=value, separated by commas",
             },
-            help_text="Selects the pods to which this policy applies. Format: key=value pairs separated by commas."
+            help_text="Selects the pods to which this policy applies. Format: key=value pairs separated by commas.",
         ),
     )
 
     policy_types = forms.MultipleChoiceField(
         label="Policy Types",
         choices=[("Ingress", "Ingress"), ("Egress", "Egress")],
-        widget=forms.CheckboxSelectMultiple,
+        widget=HelpButtonCheckboxSelectMultiple(
+            help_text="Choose one or both to specify the traffic direction: 'Ingress' for incoming or 'Egress' for outgoing."
+        ),
         required=True,
-        help_text="Choose one or both to specify the traffic direction: 'Ingress' for incoming or 'Egress' for outgoing."
     )
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field_name, field in self.fields.items():
             if field.required:
-                field.label = mark_safe(f"{field.label} <span style='color: black;'>* </span>")
+                field.label = mark_safe(
+                    f"{field.label} <span style='color: black;'>* </span>"
+                )
+
 
 class NetworkRuleForm(forms.Form):
     direction = forms.ChoiceField(
         label="Direction",
         choices=[("Ingress", "Ingress"), ("Egress", "Egress")],
-        widget=forms.Select(attrs={"class": "direction-select"}),
-        help_text="Defines the direction of traffic this rule applies to: Ingress (incoming) or Egress (outgoing)."
+        widget=HelpButtonSelect(
+            attrs={"class": "direction-select"},
+            help_text="Defines the direction of traffic this rule applies to: Ingress (incoming) or Egress (outgoing).",
+        ),
     )
 
     ports = forms.CharField(
@@ -1111,7 +1261,7 @@ class NetworkRuleForm(forms.Form):
         required=False,
         widget=HelpButtonTextInput(
             attrs={"pattern": r"^(\d{1,5})(,\d{1,5})*$"},
-            help_text="List of ports to allow or restrict, separated by commas. Example: 80,443,8080"
+            help_text="List of ports to allow or restrict, separated by commas. Example: 80,443,8080",
         ),
     )
 
@@ -1120,7 +1270,7 @@ class NetworkRuleForm(forms.Form):
         required=False,
         widget=HelpButtonTextInput(
             attrs={"placeholder": "role=db"},
-            help_text="Applies the rule to traffic from/to pods matching these labels. Format: key=value"
+            help_text="Applies the rule to traffic from/to pods matching these labels. Format: key=value",
         ),
     )
 
@@ -1129,7 +1279,7 @@ class NetworkRuleForm(forms.Form):
         required=False,
         widget=HelpButtonTextInput(
             attrs={"placeholder": "env=prod"},
-            help_text="Restrict the rule to namespaces matching these labels. Format: key=value"
+            help_text="Restrict the rule to namespaces matching these labels. Format: key=value",
         ),
     )
 
@@ -1138,7 +1288,7 @@ class NetworkRuleForm(forms.Form):
         required=False,
         widget=HelpButtonTextInput(
             attrs={"placeholder": "192.168.1.0/24"},
-            help_text="Specify a CIDR range to apply the rule to a set of IPs."
+            help_text="Specify a CIDR range to apply the rule to a set of IPs.",
         ),
     )
 
@@ -1147,14 +1297,18 @@ class NetworkRuleForm(forms.Form):
         required=False,
         widget=HelpButtonTextInput(
             attrs={"placeholder": "192.168.1.5/32,192.168.1.6/32"},
-            help_text="List of CIDR IPs to exclude from the IP block. Separate multiple entries with commas."
+            help_text="List of CIDR IPs to exclude from the IP block. Separate multiple entries with commas.",
         ),
     )
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field_name, field in self.fields.items():
             if field.required:
-                field.label = mark_safe(f"{field.label} <span style='color: black;'>* </span>")
+                field.label = mark_safe(
+                    f"{field.label} <span style='color: black;'>* </span>"
+                )
+
 
 class RequiredContainerFormSet(BaseFormSet):
     def clean(self):
