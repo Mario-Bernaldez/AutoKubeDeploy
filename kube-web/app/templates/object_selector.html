@@ -302,41 +302,37 @@
           <section class="recommendation-box" role="note" aria-label="Recomendación de configuración">
             <button class="toggle-button" type="button" aria-expanded="false" aria-controls="recommendation-content"
               onclick="toggleRecommendation(this)">
-              🧭 Recomendación de configuración
+              🧭 {% trans 'Configuration recommendation' %}
               <span class="icon" aria-hidden="true">▼</span>
             </button>
 
             <div id="recommendation-content" class="content" hidden>
-              <p>Puedes configurar únicamente los objetos que necesites. Algunos recursos podrían ya existir o no ser
-                necesarios, según la configuración actual de tu clúster.</p>
+              <p>{% trans "You can configure only the objects you need. Some resources may already exist or not be required depending on your cluster's current setup." %}</p>
 
-              <p>Para un flujo ordenado y funcional, se recomienda este orden:</p>
+              <p>{% trans "For a functional and orderly setup, we recommend the following order:" %}</p>
 
               <ol>
                 <li>
-                  <strong>Namespace</strong>: define un entorno lógico que agrupa y aísla recursos. Útil para separar
-                  ambientes (dev, QA, prod).
+                  <strong>Namespace</strong>: {% trans "defines a logical environment to group and isolate resources. Useful to separate environments (dev, QA, prod)." %}
                 </li>
                 <li>
-                  <strong>RBAC</strong>: establece qué usuarios, servicios o grupos pueden acceder a qué recursos. Es
-                  clave para la seguridad.
+                  <strong>RBAC</strong>: {% trans "sets who can access which resources. It is key for security." %}
                 </li>
                 <li>
-                  <strong>Service Account</strong> → <strong>Network Policy</strong>: controlan la identidad del pod y
-                  sus comunicaciones.
+                  <strong>Service Account</strong> → <strong>Network Policy</strong>: {% trans "control pod identity and communications." %}
                 </li>
                 <li>
-                  <strong>ConfigMap</strong>, <strong>Secret</strong>, <strong>PVC</strong>: almacenan configuraciones,
-                  credenciales y datos persistentes.
+                  <strong>ConfigMap</strong>, <strong>Secret</strong>, <strong>PVC</strong>: {% trans "store configurations, credentials and persistent data." %}
                 </li>
                 <li>
-                  <strong>Horizontal Pod Autoscaler</strong>: ajusta réplicas automáticamente con base en la carga.
+                  <strong>Horizontal Pod Autoscaler</strong>: {% trans "automatically adjusts replicas based on load."%}
                 </li>
                 <li>
-                  <strong>Deployment</strong>: gestiona el ciclo de vida de los pods.
+                  <strong>Deployment</strong>: {% trans "manages pod lifecycle." %}
                 </li>
                 <li>
-                  <strong>Service</strong> → <strong>Ingress</strong>: expone tus apps dentro o fuera del clúster.
+                  <strong>Service</strong> → <strong>Ingress</strong>: {% trans "expose your apps inside or outside the cluster." %}
+
                 </li>
               </ol>
             </div>

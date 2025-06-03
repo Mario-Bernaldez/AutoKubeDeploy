@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-29 14:43+0200\n"
+"POT-Creation-Date: 2025-06-03 11:39+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,6 +18,1055 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+#: .\app\forms.py:29
+msgid "Port"
+msgstr "Port"
+
+#: .\app\forms.py:34
+msgid "Port exposed by the Service (e.g. 80)."
+msgstr "Port exposed by the Service (e.g. 80)."
+
+#: .\app\forms.py:39
+msgid "Target Port"
+msgstr "Target Port"
+
+#: .\app\forms.py:44
+msgid "Port on the target container (e.g. 8080)."
+msgstr "Port on the target container (e.g. 8080)."
+
+#: .\app\forms.py:49
+msgid "Protocol"
+msgstr "Protocol"
+
+#: .\app\forms.py:53
+msgid "Network protocol used by this port."
+msgstr "Network protocol used by this port."
+
+#: .\app\forms.py:58
+msgid "Node Port"
+msgstr "Node Port"
+
+#: .\app\forms.py:65
+msgid "Optional: External port to expose if Service type is NodePort."
+msgstr "Optional: External port to expose if Service type is NodePort."
+
+#: .\app\forms.py:98
+msgid "Deployment Name"
+msgstr "Deployment Name"
+
+#: .\app\forms.py:102
+msgid "Name of the Deployment to be created."
+msgstr "Name of the Deployment to be created."
+
+#: .\app\forms.py:107 .\app\forms.py:545 .\app\forms.py:608 .\app\forms.py:728
+#: .\app\forms.py:804 .\app\forms.py:930 .\app\forms.py:1007
+#: .\app\forms.py:1093 .\app\forms.py:1317
+msgid "Namespace"
+msgstr "Namespace"
+
+#: .\app\forms.py:112
+msgid "Namespace for the deployment. Defaults to 'default'."
+msgstr "Namespace for the deployment. Defaults to 'default'."
+
+#: .\app\forms.py:117
+msgid "Replicas"
+msgstr "Replicas"
+
+#: .\app\forms.py:122
+msgid "Number of pod replicas to maintain."
+msgstr "Number of pod replicas to maintain."
+
+#: .\app\forms.py:127
+msgid "Rolling Update"
+msgstr "Rolling Update"
+
+#: .\app\forms.py:128
+msgid "Recreate"
+msgstr "Recreate"
+
+#: .\app\forms.py:131
+msgid "Deployment Strategy"
+msgstr "Deployment Strategy"
+
+#: .\app\forms.py:135
+msgid "Choose how updates are rolled out."
+msgstr "Choose how updates are rolled out."
+
+#: .\app\forms.py:140
+msgid "Max Unavailable (RollingUpdate)"
+msgstr "Max Unavailable (RollingUpdate)"
+
+#: .\app\forms.py:146 .\app\forms.py:163
+msgid "Must be an integer or percentage (e.g. 1 or 25%)"
+msgstr "Must be an integer or percentage (e.g. 1 or 25%)"
+
+#: .\app\forms.py:149
+msgid "Max number of pods that can be unavailable during the update."
+msgstr "Max number of pods that can be unavailable during the update."
+
+#: .\app\forms.py:157
+msgid "Max Surge (RollingUpdate)"
+msgstr "Max Surge (RollingUpdate)"
+
+#: .\app\forms.py:165
+msgid "Max number of extra pods to create during the update."
+msgstr "Max number of extra pods to create during the update."
+
+#: .\app\forms.py:182
+msgid "Pod Name"
+msgstr "Pod Name"
+
+#: .\app\forms.py:187
+msgid "Optional name for the pod template."
+msgstr "Optional name for the pod template."
+
+#: .\app\forms.py:192
+msgid "Pod Labels (key=value, comma-separated)"
+msgstr "Pod Labels (key=value, comma-separated)"
+
+#: .\app\forms.py:198 .\app\forms.py:297 .\app\forms.py:516 .\app\forms.py:576
+msgid "Must follow the format key=value, comma-separated."
+msgstr "Must follow the format key=value, comma-separated."
+
+#: .\app\forms.py:201
+msgid "Define labels to assign to the pod. Format: key=value,key2=value2"
+msgstr "Define labels to assign to the pod. Format: key=value,key2=value2"
+
+#: .\app\forms.py:217
+msgid "Is Init Container?"
+msgstr "Is Init Container?"
+
+#: .\app\forms.py:222
+msgid "Check this if the container should run before regular containers."
+msgstr "Check this if the container should run before regular containers."
+
+#: .\app\forms.py:228
+msgid "Container Name"
+msgstr "Container Name"
+
+#: .\app\forms.py:232
+msgid "Name of the container."
+msgstr "Name of the container."
+
+#: .\app\forms.py:237
+msgid "Container Image"
+msgstr "Container Image"
+
+#: .\app\forms.py:241
+msgid "Container image name, e.g. nginx:latest."
+msgstr "Container image name, e.g. nginx:latest."
+
+#: .\app\forms.py:246
+msgid "Always"
+msgstr "Always"
+
+#: .\app\forms.py:247
+msgid "If Not Present"
+msgstr "If Not Present"
+
+#: .\app\forms.py:248
+msgid "Never"
+msgstr "Never"
+
+#: .\app\forms.py:251
+msgid "Image Pull Policy"
+msgstr "Image Pull Policy"
+
+#: .\app\forms.py:255
+msgid "Specify when to pull the image from the registry."
+msgstr "Specify when to pull the image from the registry."
+
+#: .\app\forms.py:260
+msgid "Command (space-separated)"
+msgstr "Command (space-separated)"
+
+#: .\app\forms.py:262
+msgid "Example: /bin/sh -c 'echo hello'"
+msgstr "Example: /bin/sh -c 'echo hello'"
+
+#: .\app\forms.py:268
+msgid "Should be a space-separated list, e.g. /bin/sh -c 'echo hello'"
+msgstr "Should be a space-separated list, e.g. /bin/sh -c 'echo hello'"
+
+#: .\app\forms.py:272
+msgid "Command to execute in the container. Format: space-separated tokens."
+msgstr "Command to execute in the container. Format: space-separated tokens."
+
+#: .\app\forms.py:278
+msgid "Ports (comma-separated numbers)"
+msgstr "Ports (comma-separated numbers)"
+
+#: .\app\forms.py:286
+msgid "Container ports exposed, e.g. 80,443"
+msgstr "Container ports exposed, e.g. 80,443"
+
+#: .\app\forms.py:291
+msgid "Environment Variables (key=value, comma-separated)"
+msgstr "Environment Variables (key=value, comma-separated)"
+
+#: .\app\forms.py:300
+msgid ""
+"Define environment variables for the container. Format: key=value,key2=value2"
+msgstr ""
+"Define environment variables for the container. Format: key=value,key2=value2"
+
+#: .\app\forms.py:316 .\app\forms.py:346
+msgid "Volume Name"
+msgstr "Volume Name"
+
+#: .\app\forms.py:320
+msgid "Name of the volume to mount."
+msgstr "Name of the volume to mount."
+
+#: .\app\forms.py:325
+msgid "Mount Path"
+msgstr "Mount Path"
+
+#: .\app\forms.py:330
+msgid "Filesystem path inside the container where the volume will be mounted."
+msgstr "Filesystem path inside the container where the volume will be mounted."
+
+#: .\app\forms.py:350
+msgid "Unique name for the volume within the pod specification."
+msgstr "Unique name for the volume within the pod specification."
+
+#: .\app\forms.py:355
+msgid "Volume Type"
+msgstr "Volume Type"
+
+#: .\app\forms.py:357
+msgid "emptyDir"
+msgstr "emptyDir"
+
+#: .\app\forms.py:358
+msgid "hostPath"
+msgstr "hostPath"
+
+#: .\app\forms.py:359
+msgid "configMap"
+msgstr "configMap"
+
+#: .\app\forms.py:360
+msgid "Secret"
+msgstr "Secret"
+
+#: .\app\forms.py:361
+msgid "PersistentVolumeClaim"
+msgstr "PersistentVolumeClaim"
+
+#: .\app\forms.py:365
+msgid "Select the type of volume to mount into the pod."
+msgstr "Select the type of volume to mount into the pod."
+
+#: .\app\forms.py:370
+msgid "Medium (for emptyDir)"
+msgstr "Medium (for emptyDir)"
+
+#: .\app\forms.py:377
+msgid "Leave empty or enter 'Memory' (case-sensitive)."
+msgstr "Leave empty or enter 'Memory' (case-sensitive)."
+
+#: .\app\forms.py:380
+msgid ""
+"Enter 'Memory' to use memory-backed storage or leave blank for disk-backed."
+msgstr ""
+"Enter 'Memory' to use memory-backed storage or leave blank for disk-backed."
+
+#: .\app\forms.py:386
+msgid "Size Limit (for emptyDir)"
+msgstr "Size Limit (for emptyDir)"
+
+#: .\app\forms.py:393
+msgid "Example: 1Gi, 500Mi, 100Ki, etc."
+msgstr "Example: 1Gi, 500Mi, 100Ki, etc."
+
+#: .\app\forms.py:395
+msgid "Optional limit for volume size (e.g., 1Gi, 500Mi)."
+msgstr "Optional limit for volume size (e.g., 1Gi, 500Mi)."
+
+#: .\app\forms.py:400
+msgid "Path (for hostPath)"
+msgstr "Path (for hostPath)"
+
+#: .\app\forms.py:407
+msgid "Must be an absolute path, e.g. /data/volume"
+msgstr "Must be an absolute path, e.g. /data/volume"
+
+#: .\app\forms.py:410
+msgid "Absolute path on the host machine to mount inside the container."
+msgstr "Absolute path on the host machine to mount inside the container."
+
+#: .\app\forms.py:416
+msgid "— (empty) —"
+msgstr "— (empty) —"
+
+#: .\app\forms.py:417
+msgid "Directory"
+msgstr "Directory"
+
+#: .\app\forms.py:418
+msgid "DirectoryOrCreate"
+msgstr "DirectoryOrCreate"
+
+#: .\app\forms.py:419
+msgid "File"
+msgstr "File"
+
+#: .\app\forms.py:420
+msgid "FileOrCreate"
+msgstr "FileOrCreate"
+
+#: .\app\forms.py:421
+msgid "Socket"
+msgstr "Socket"
+
+#: .\app\forms.py:422
+msgid "CharDevice"
+msgstr "CharDevice"
+
+#: .\app\forms.py:423
+msgid "BlockDevice"
+msgstr "BlockDevice"
+
+#: .\app\forms.py:427
+msgid "HostPath Type (for hostPath)"
+msgstr "HostPath Type (for hostPath)"
+
+#: .\app\forms.py:433
+msgid "Specify the type of the host path if required (e.g., File, Directory)."
+msgstr "Specify the type of the host path if required (e.g., File, Directory)."
+
+#: .\app\forms.py:439
+msgid "ConfigMap Name (for configMap)"
+msgstr "ConfigMap Name (for configMap)"
+
+#: .\app\forms.py:443
+msgid "Name of the ConfigMap resource to mount as a volume."
+msgstr "Name of the ConfigMap resource to mount as a volume."
+
+#: .\app\forms.py:448
+msgid "Secret Name (for Secret)"
+msgstr "Secret Name (for Secret)"
+
+#: .\app\forms.py:452
+msgid "Name of the Secret to mount as a volume."
+msgstr "Name of the Secret to mount as a volume."
+
+#: .\app\forms.py:457
+msgid "PVC Claim Name (for PersistentVolumeClaim)"
+msgstr "PVC Claim Name (for PersistentVolumeClaim)"
+
+#: .\app\forms.py:461
+msgid "Name of the PersistentVolumeClaim to bind to this volume."
+msgstr "Name of the PersistentVolumeClaim to bind to this volume."
+
+#: .\app\forms.py:470
+msgid "This field is required for hostPath."
+msgstr "This field is required for hostPath."
+
+#: .\app\forms.py:474
+msgid "This field is required for configMap."
+msgstr "This field is required for configMap."
+
+#: .\app\forms.py:478
+msgid "This field is required for Secret."
+msgstr "This field is required for Secret."
+
+#: .\app\forms.py:482
+msgid "This field is required for PersistentVolumeClaim."
+msgstr "This field is required for PersistentVolumeClaim."
+
+#: .\app\forms.py:496
+msgid "Namespace Name"
+msgstr "Namespace Name"
+
+#: .\app\forms.py:504
+msgid ""
+"The name of the namespace. This will be used to logically separate resources "
+"in your cluster."
+msgstr ""
+"The name of the namespace. This will be used to logically separate resources "
+"in your cluster."
+
+#: .\app\forms.py:510
+msgid "Namespace Labels"
+msgstr "Namespace Labels"
+
+#: .\app\forms.py:520
+msgid ""
+"Optional key=value pairs used to organize and select resources. Default: "
+"empty."
+msgstr ""
+"Optional key=value pairs used to organize and select resources. Default: "
+"empty."
+
+#: .\app\forms.py:536 .\app\forms.py:1053
+msgid "Service Name"
+msgstr "Service Name"
+
+#: .\app\forms.py:540
+msgid "Name of the Service resource."
+msgstr "Name of the Service resource."
+
+#: .\app\forms.py:550
+msgid "Namespace for the Service. Defaults to 'default'."
+msgstr "Namespace for the Service. Defaults to 'default'."
+
+#: .\app\forms.py:555
+msgid "Service Type"
+msgstr "Service Type"
+
+#: .\app\forms.py:557
+msgid "ClusterIP"
+msgstr "ClusterIP"
+
+#: .\app\forms.py:558
+msgid "NodePort"
+msgstr "NodePort"
+
+#: .\app\forms.py:559
+msgid "LoadBalancer"
+msgstr "LoadBalancer"
+
+#: .\app\forms.py:564
+msgid ""
+"Select how the Service is exposed: internal, via node ports, or load "
+"balancer."
+msgstr ""
+"Select how the Service is exposed: internal, via node ports, or load "
+"balancer."
+
+#: .\app\forms.py:570
+msgid "Service Selector (key=value, comma-separated)"
+msgstr "Service Selector (key=value, comma-separated)"
+
+#: .\app\forms.py:579
+msgid "Label selector to match the target pods. Format: app=frontend,role=api"
+msgstr "Label selector to match the target pods. Format: app=frontend,role=api"
+
+#: .\app\forms.py:599
+msgid "HPA Name"
+msgstr "HPA Name"
+
+#: .\app\forms.py:603
+msgid "Name of the HorizontalPodAutoscaler resource."
+msgstr "Name of the HorizontalPodAutoscaler resource."
+
+#: .\app\forms.py:614
+msgid "Namespace where the HPA will be created. Defaults to 'default'."
+msgstr "Namespace where the HPA will be created. Defaults to 'default'."
+
+#: .\app\forms.py:620
+msgid "Target Deployment Name"
+msgstr "Target Deployment Name"
+
+#: .\app\forms.py:624
+msgid "The name of the Deployment the HPA will scale."
+msgstr "The name of the Deployment the HPA will scale."
+
+#: .\app\forms.py:629
+msgid "Minimum Replicas"
+msgstr "Minimum Replicas"
+
+#: .\app\forms.py:634
+msgid "Minimum number of pod replicas allowed."
+msgstr "Minimum number of pod replicas allowed."
+
+#: .\app\forms.py:639
+msgid "Maximum Replicas"
+msgstr "Maximum Replicas"
+
+#: .\app\forms.py:644
+msgid "Maximum number of pod replicas allowed."
+msgstr "Maximum number of pod replicas allowed."
+
+#: .\app\forms.py:656
+msgid "Minimum Replicas cannot be greater than Maximum Replicas."
+msgstr "Minimum Replicas cannot be greater than Maximum Replicas."
+
+#: .\app\forms.py:670
+msgid "Resource Name"
+msgstr "Resource Name"
+
+#: .\app\forms.py:672
+msgid "CPU"
+msgstr "CPU"
+
+#: .\app\forms.py:673
+msgid "Memory"
+msgstr "Memory"
+
+#: .\app\forms.py:677
+msgid "The resource type to scale by: CPU or Memory."
+msgstr "The resource type to scale by: CPU or Memory."
+
+#: .\app\forms.py:682
+msgid "Target Type"
+msgstr "Target Type"
+
+#: .\app\forms.py:684
+msgid "Utilization (%)"
+msgstr "Utilization (%)"
+
+#: .\app\forms.py:685
+msgid "Value (absolute)"
+msgstr "Value (absolute)"
+
+#: .\app\forms.py:690
+msgid ""
+"Choose whether to scale based on percentage utilization or an absolute value."
+msgstr ""
+"Choose whether to scale based on percentage utilization or an absolute value."
+
+#: .\app\forms.py:696
+msgid "Target Value"
+msgstr "Target Value"
+
+#: .\app\forms.py:701
+msgid ""
+"Use a percentage (e.g. 80) for utilization or an absolute unit (e.g. 500Mi) "
+"for value."
+msgstr ""
+"Use a percentage (e.g. 80) for utilization or an absolute unit (e.g. 500Mi) "
+"for value."
+
+#: .\app\forms.py:717
+msgid "ConfigMap Name"
+msgstr "ConfigMap Name"
+
+#: .\app\forms.py:722
+msgid ""
+"The name of the ConfigMap object that will store key-value configuration "
+"data."
+msgstr ""
+"The name of the ConfigMap object that will store key-value configuration "
+"data."
+
+#: .\app\forms.py:734
+msgid ""
+"The namespace where the ConfigMap will be created. Defaults to 'default' if "
+"left blank."
+msgstr ""
+"The namespace where the ConfigMap will be created. Defaults to 'default' if "
+"left blank."
+
+#: .\app\forms.py:750 .\app\forms.py:844
+msgid "Key"
+msgstr "Key"
+
+#: .\app\forms.py:755
+msgid ""
+"The key under which the value will be stored in the ConfigMap. Must be "
+"unique within the ConfigMap."
+msgstr ""
+"The key under which the value will be stored in the ConfigMap. Must be "
+"unique within the ConfigMap."
+
+#: .\app\forms.py:761
+msgid "Multiline content (like file data)?"
+msgstr "Multiline content (like file data)?"
+
+#: .\app\forms.py:767
+msgid ""
+"Check this box if the value is multiline, such as file content or scripts."
+msgstr ""
+"Check this box if the value is multiline, such as file content or scripts."
+
+#: .\app\forms.py:773 .\app\forms.py:853
+msgid "Value"
+msgstr "Value"
+
+#: .\app\forms.py:777
+msgid ""
+"The content to store for this key. If multiline, use \\n or enable the "
+"checkbox above."
+msgstr ""
+"The content to store for this key. If multiline, use \\n or enable the "
+"checkbox above."
+
+#: .\app\forms.py:793
+msgid "Secret Name"
+msgstr "Secret Name"
+
+#: .\app\forms.py:798
+msgid "Name of the Secret resource. Must be unique within the namespace."
+msgstr "Name of the Secret resource. Must be unique within the namespace."
+
+#: .\app\forms.py:810
+msgid "Namespace to store the secret. Defaults to 'default' if left blank."
+msgstr "Namespace to store the secret. Defaults to 'default' if left blank."
+
+#: .\app\forms.py:816
+msgid "Secret Type"
+msgstr "Secret Type"
+
+#: .\app\forms.py:818
+msgid "Opaque (key-value)"
+msgstr "Opaque (key-value)"
+
+#: .\app\forms.py:819
+msgid "TLS (Certificate and Private Key)"
+msgstr "TLS (Certificate and Private Key)"
+
+#: .\app\forms.py:822 .\app\forms.py:899
+msgid "Docker Config JSON (.dockerconfigjson)"
+msgstr "Docker Config JSON (.dockerconfigjson)"
+
+#: .\app\forms.py:828
+msgid ""
+"Select the type of secret depending on its purpose: generic data, TLS certs, "
+"or Docker credentials."
+msgstr ""
+"Select the type of secret depending on its purpose: generic data, TLS certs, "
+"or Docker credentials."
+
+#: .\app\forms.py:848
+msgid "The key under which the value will be stored in the secret."
+msgstr "The key under which the value will be stored in the secret."
+
+#: .\app\forms.py:856
+msgid "The value corresponding to the specified key."
+msgstr "The value corresponding to the specified key."
+
+#: .\app\forms.py:871
+msgid "TLS Certificate (tls.crt)"
+msgstr "TLS Certificate (tls.crt)"
+
+#: .\app\forms.py:875
+msgid ""
+"Paste the full TLS certificate content (usually starts with -----BEGIN "
+"CERTIFICATE-----)."
+msgstr ""
+"Paste the full TLS certificate content (usually starts with -----BEGIN "
+"CERTIFICATE-----)."
+
+#: .\app\forms.py:881
+msgid "TLS Private Key (tls.key)"
+msgstr "TLS Private Key (tls.key)"
+
+#: .\app\forms.py:884
+msgid "Paste the associated private key for the TLS certificate."
+msgstr "Paste the associated private key for the TLS certificate."
+
+#: .\app\forms.py:903
+msgid ""
+"Paste the entire content of the Docker config JSON used to authenticate with "
+"private registries."
+msgstr ""
+"Paste the entire content of the Docker config JSON used to authenticate with "
+"private registries."
+
+#: .\app\forms.py:919
+msgid "PVC Name"
+msgstr "PVC Name"
+
+#: .\app\forms.py:924
+msgid "Name of the PersistentVolumeClaim. Must be unique within the namespace."
+msgstr ""
+"Name of the PersistentVolumeClaim. Must be unique within the namespace."
+
+#: .\app\forms.py:936
+msgid ""
+"Namespace where the PVC will be created. Defaults to 'default' if left blank."
+msgstr ""
+"Namespace where the PVC will be created. Defaults to 'default' if left blank."
+
+#: .\app\forms.py:942
+msgid "Requested Storage (e.g., 1Gi, 500Mi)"
+msgstr "Requested Storage (e.g., 1Gi, 500Mi)"
+
+#: .\app\forms.py:948
+msgid "Must be a valid size like 1Gi, 500Mi, 100Ki, etc."
+msgstr "Must be a valid size like 1Gi, 500Mi, 100Ki, etc."
+
+#: .\app\forms.py:952
+msgid "Amount of storage to request. Use units like Mi, Gi, Ti, etc."
+msgstr "Amount of storage to request. Use units like Mi, Gi, Ti, etc."
+
+#: .\app\forms.py:958
+msgid "Access Modes"
+msgstr "Access Modes"
+
+#: .\app\forms.py:960
+msgid "ReadWriteOnce"
+msgstr "ReadWriteOnce"
+
+#: .\app\forms.py:961
+msgid "ReadOnlyMany"
+msgstr "ReadOnlyMany"
+
+#: .\app\forms.py:962
+msgid "ReadWriteMany"
+msgstr "ReadWriteMany"
+
+#: .\app\forms.py:967
+msgid "Select one or more access modes. 'ReadWriteOnce' is the most common."
+msgstr "Select one or more access modes. 'ReadWriteOnce' is the most common."
+
+#: .\app\forms.py:973
+msgid "Storage Class Name (Optional)"
+msgstr "Storage Class Name (Optional)"
+
+#: .\app\forms.py:978
+msgid "Leave empty for default"
+msgstr "Leave empty for default"
+
+#: .\app\forms.py:982
+msgid ""
+"Name of the storage class to use. Leave empty to use the cluster's default "
+"class."
+msgstr ""
+"Name of the storage class to use. Leave empty to use the cluster's default "
+"class."
+
+#: .\app\forms.py:998
+msgid "Ingress Name"
+msgstr "Ingress Name"
+
+#: .\app\forms.py:1002
+msgid "Name of the Ingress resource to be created."
+msgstr "Name of the Ingress resource to be created."
+
+#: .\app\forms.py:1012
+msgid "Namespace for the Ingress. Defaults to 'default'."
+msgstr "Namespace for the Ingress. Defaults to 'default'."
+
+#: .\app\forms.py:1017
+msgid "Host"
+msgstr "Host"
+
+#: .\app\forms.py:1022
+msgid "example.com"
+msgstr "example.com"
+
+#: .\app\forms.py:1024
+msgid "Must be a valid domain, e.g., example.com"
+msgstr "Must be a valid domain, e.g., example.com"
+
+#: .\app\forms.py:1028
+msgid "Fully qualified domain name for routing. Example: app.example.com"
+msgstr "Fully qualified domain name for routing. Example: app.example.com"
+
+#: .\app\forms.py:1044
+msgid "Path"
+msgstr "Path"
+
+#: .\app\forms.py:1048
+msgid "URL path to route traffic to the service. Example: / or /api"
+msgstr "URL path to route traffic to the service. Example: / or /api"
+
+#: .\app\forms.py:1057
+msgid "The name of the Kubernetes Service to forward traffic to."
+msgstr "The name of the Kubernetes Service to forward traffic to."
+
+#: .\app\forms.py:1062
+msgid "Service Port"
+msgstr "Service Port"
+
+#: .\app\forms.py:1067
+msgid "Port number on which the target Service is listening."
+msgstr "Port number on which the target Service is listening."
+
+#: .\app\forms.py:1082
+msgid "ServiceAccount Name"
+msgstr "ServiceAccount Name"
+
+#: .\app\forms.py:1087
+msgid "The name of the ServiceAccount resource to be created or referenced."
+msgstr "The name of the ServiceAccount resource to be created or referenced."
+
+#: .\app\forms.py:1099
+msgid ""
+"The namespace where the ServiceAccount resides. If omitted, 'default' will "
+"be used."
+msgstr ""
+"The namespace where the ServiceAccount resides. If omitted, 'default' will "
+"be used."
+
+#: .\app\forms.py:1115
+msgid "Image Pull Secret Name"
+msgstr "Image Pull Secret Name"
+
+#: .\app\forms.py:1120
+msgid ""
+"The name of the Kubernetes secret used to authenticate when pulling images "
+"from a private registry."
+msgstr ""
+"The name of the Kubernetes secret used to authenticate when pulling images "
+"from a private registry."
+
+#: .\app\forms.py:1136
+msgid "Role Type"
+msgstr "Role Type"
+
+#: .\app\forms.py:1138
+msgid "Role (namespaced)"
+msgstr "Role (namespaced)"
+
+#: .\app\forms.py:1139
+msgid "ClusterRole (cluster-wide)"
+msgstr "ClusterRole (cluster-wide)"
+
+#: .\app\forms.py:1144
+msgid ""
+"Select 'Role' to apply permissions within a namespace or 'ClusterRole' for "
+"cluster-wide access."
+msgstr ""
+"Select 'Role' to apply permissions within a namespace or 'ClusterRole' for "
+"cluster-wide access."
+
+#: .\app\forms.py:1150
+msgid "Role/ClusterRole Name"
+msgstr "Role/ClusterRole Name"
+
+#: .\app\forms.py:1154
+msgid "The name of the Role or ClusterRole to create or bind to."
+msgstr "The name of the Role or ClusterRole to create or bind to."
+
+#: .\app\forms.py:1159
+msgid "Namespace (only for Role)"
+msgstr "Namespace (only for Role)"
+
+#: .\app\forms.py:1165
+msgid "Leave empty for ClusterRole"
+msgstr "Leave empty for ClusterRole"
+
+#: .\app\forms.py:1168
+msgid "Required only when creating a Role. Leave empty for ClusterRoles."
+msgstr "Required only when creating a Role. Leave empty for ClusterRoles."
+
+#: .\app\forms.py:1184
+msgid "API Groups (comma-separated, empty for core)"
+msgstr "API Groups (comma-separated, empty for core)"
+
+#: .\app\forms.py:1189
+msgid ""
+"Comma-separated list of API groups this rule applies to. Leave empty for the "
+"core API group."
+msgstr ""
+"Comma-separated list of API groups this rule applies to. Leave empty for the "
+"core API group."
+
+#: .\app\forms.py:1195
+msgid "Resources (comma-separated)"
+msgstr "Resources (comma-separated)"
+
+#: .\app\forms.py:1200
+msgid "List of resource types (e.g., pods, services) this rule applies to."
+msgstr "List of resource types (e.g., pods, services) this rule applies to."
+
+#: .\app\forms.py:1206
+msgid "Verbs (comma-separated)"
+msgstr "Verbs (comma-separated)"
+
+#: .\app\forms.py:1211
+msgid "Actions allowed: e.g., get, list, watch, create, delete, update."
+msgstr "Actions allowed: e.g., get, list, watch, create, delete, update."
+
+#: .\app\forms.py:1227
+msgid "Binding Name"
+msgstr "Binding Name"
+
+#: .\app\forms.py:1231
+msgid "The name of the RoleBinding or ClusterRoleBinding."
+msgstr "The name of the RoleBinding or ClusterRoleBinding."
+
+#: .\app\forms.py:1236
+msgid "Namespace (only for RoleBinding)"
+msgstr "Namespace (only for RoleBinding)"
+
+#: .\app\forms.py:1242
+msgid "Leave empty for ClusterRoleBinding"
+msgstr "Leave empty for ClusterRoleBinding"
+
+#: .\app\forms.py:1244
+msgid "Specify the namespace only if creating a RoleBinding."
+msgstr "Specify the namespace only if creating a RoleBinding."
+
+#: .\app\forms.py:1259
+msgid "Subject Kind"
+msgstr "Subject Kind"
+
+#: .\app\forms.py:1261 .\app\templates\history.html:66
+msgid "User"
+msgstr "User"
+
+#: .\app\forms.py:1262
+msgid "Group"
+msgstr "Group"
+
+#: .\app\forms.py:1263
+msgid "ServiceAccount"
+msgstr "ServiceAccount"
+
+#: .\app\forms.py:1267
+msgid ""
+"Select the type of subject to bind: a User, a Group, or a ServiceAccount."
+msgstr ""
+"Select the type of subject to bind: a User, a Group, or a ServiceAccount."
+
+#: .\app\forms.py:1273
+msgid "Subject Name"
+msgstr "Subject Name"
+
+#: .\app\forms.py:1278
+msgid "The name of the user, group, or service account to grant access to."
+msgstr "The name of the user, group, or service account to grant access to."
+
+#: .\app\forms.py:1284
+msgid "Subject Namespace (only for ServiceAccount)"
+msgstr "Subject Namespace (only for ServiceAccount)"
+
+#: .\app\forms.py:1288
+msgid "Only required for ServiceAccount"
+msgstr "Only required for ServiceAccount"
+
+#: .\app\forms.py:1290
+msgid ""
+"Required only if the subject is a ServiceAccount. Leave empty otherwise."
+msgstr ""
+"Required only if the subject is a ServiceAccount. Leave empty otherwise."
+
+#: .\app\forms.py:1306
+msgid "NetworkPolicy Name"
+msgstr "NetworkPolicy Name"
+
+#: .\app\forms.py:1311
+msgid ""
+"The name of the NetworkPolicy resource. It must be unique within the "
+"namespace."
+msgstr ""
+"The name of the NetworkPolicy resource. It must be unique within the "
+"namespace."
+
+#: .\app\forms.py:1323
+msgid ""
+"The namespace to which this NetworkPolicy will apply. Defaults to 'default' "
+"if left blank."
+msgstr ""
+"The namespace to which this NetworkPolicy will apply. Defaults to 'default' "
+"if left blank."
+
+#: .\app\forms.py:1329 .\app\forms.py:1387
+msgid "Pod Selector (key=value, comma-separated)"
+msgstr "Pod Selector (key=value, comma-separated)"
+
+#: .\app\forms.py:1333
+msgid "app=frontend,role=api"
+msgstr "app=frontend,role=api"
+
+#: .\app\forms.py:1335
+msgid "Format: key=value, separated by commas"
+msgstr "Format: key=value, separated by commas"
+
+#: .\app\forms.py:1338
+msgid ""
+"Selects the pods to which this policy applies. Format: key=value pairs "
+"separated by commas."
+msgstr ""
+"Selects the pods to which this policy applies. Format: key=value pairs "
+"separated by commas."
+
+#: .\app\forms.py:1344
+msgid "Policy Types"
+msgstr "Policy Types"
+
+#: .\app\forms.py:1345 .\app\forms.py:1366
+msgid "Ingress"
+msgstr "Ingress"
+
+#: .\app\forms.py:1345 .\app\forms.py:1366
+msgid "Egress"
+msgstr "Egress"
+
+#: .\app\forms.py:1348
+msgid ""
+"Choose one or both to specify the traffic direction: 'Ingress' for incoming "
+"or 'Egress' for outgoing."
+msgstr ""
+"Choose one or both to specify the traffic direction: 'Ingress' for incoming "
+"or 'Egress' for outgoing."
+
+#: .\app\forms.py:1365
+msgid "Direction"
+msgstr "Direction"
+
+#: .\app\forms.py:1370
+msgid ""
+"Defines the direction of traffic this rule applies to: Ingress (incoming) or "
+"Egress (outgoing)."
+msgstr ""
+"Defines the direction of traffic this rule applies to: Ingress (incoming) or "
+"Egress (outgoing)."
+
+#: .\app\forms.py:1376
+msgid "Ports (comma-separated)"
+msgstr "Ports (comma-separated)"
+
+#: .\app\forms.py:1381
+msgid ""
+"List of ports to allow or restrict, separated by commas. Example: 80,443,8080"
+msgstr ""
+"List of ports to allow or restrict, separated by commas. Example: 80,443,8080"
+
+#: .\app\forms.py:1390
+msgid "role=db"
+msgstr "role=db"
+
+#: .\app\forms.py:1392
+msgid ""
+"Applies the rule to traffic from/to pods matching these labels. Format: "
+"key=value"
+msgstr ""
+"Applies the rule to traffic from/to pods matching these labels. Format: "
+"key=value"
+
+#: .\app\forms.py:1398
+msgid "Namespace Selector (key=value, comma-separated)"
+msgstr "Namespace Selector (key=value, comma-separated)"
+
+#: .\app\forms.py:1401
+msgid "env=prod"
+msgstr "env=prod"
+
+#: .\app\forms.py:1403
+msgid ""
+"Restrict the rule to namespaces matching these labels. Format: key=value"
+msgstr ""
+"Restrict the rule to namespaces matching these labels. Format: key=value"
+
+#: .\app\forms.py:1409
+msgid "IP Block (CIDR)"
+msgstr "IP Block (CIDR)"
+
+#: .\app\forms.py:1412
+msgid "192.168.1.0/24"
+msgstr "192.168.1.0/24"
+
+#: .\app\forms.py:1413
+msgid "Specify a CIDR range to apply the rule to a set of IPs."
+msgstr "Specify a CIDR range to apply the rule to a set of IPs."
+
+#: .\app\forms.py:1418
+msgid "IP Exceptions (comma-separated CIDRs)"
+msgstr "IP Exceptions (comma-separated CIDRs)"
+
+#: .\app\forms.py:1421
+msgid "192.168.1.5/32,192.168.1.6/32"
+msgstr "192.168.1.5/32,192.168.1.6/32"
+
+#: .\app\forms.py:1423
+msgid ""
+"List of CIDR IPs to exclude from the IP block. Separate multiple entries "
+"with commas."
+msgstr ""
+"List of CIDR IPs to exclude from the IP block. Separate multiple entries "
+"with commas."
+
+#: .\app\forms.py:1455
+msgid "You must add at least one container."
+msgstr "You must add at least one container."
+
 #: .\app\templates\configmap_config.html:8
 #: .\app\templates\configmap_config.html:19
 msgid "Configure ConfigMap"
@@ -26,60 +1075,72 @@ msgstr "Configure ConfigMap"
 #: .\app\templates\configmap_config.html:16 .\app\templates\explore.html:142
 #: .\app\templates\hpa_config.html:15 .\app\templates\ingress_config.html:15
 #: .\app\templates\namespace_config.html:15
-#: .\app\templates\networkpolicy_config.html:16
+#: .\app\templates\networkpolicy_config.html:15
 #: .\app\templates\pvc_config.html:16 .\app\templates\rbac_config.html:15
-#: .\app\templates\secret_config.html:16
+#: .\app\templates\register_user.html:121 .\app\templates\secret_config.html:16
 #: .\app\templates\service_account_config.html:16
-#: .\app\templates\service_config.html:16 .\app\templates\yaml_result.html:78
+#: .\app\templates\service_config.html:16 .\app\templates\yaml_result.html:208
 msgid "Back"
 msgstr "Back"
 
-#: .\app\templates\configmap_config.html:26
+#: .\app\templates\configmap_config.html:31
+msgid ""
+"A ConfigMap is a Kubernetes resource used to store non-confidential "
+"configuration data in key-value pairs. It allows you to decouple "
+"configuration artifacts from container images, enabling easier updates and "
+"management of application settings across environments."
+msgstr ""
+"A ConfigMap is a Kubernetes resource used to store non-confidential "
+"configuration data in key-value pairs. It allows you to decouple "
+"configuration artifacts from container images, enabling easier updates and "
+"management of application settings across environments."
+
+#: .\app\templates\configmap_config.html:38
 msgid "ConfigMap Configuration"
 msgstr "ConfigMap Configuration"
 
-#: .\app\templates\configmap_config.html:33
+#: .\app\templates\configmap_config.html:45
 msgid "Properties"
 msgstr "Properties"
 
-#: .\app\templates\configmap_config.html:38
-#: .\app\templates\configmap_config.html:54
-#: .\app\templates\deployment_config.html:47
-#: .\app\templates\deployment_config.html:54
-#: .\app\templates\deployment_config.html:65
-#: .\app\templates\deployment_config.html:85
-#: .\app\templates\deployment_config.html:91
-#: .\app\templates\deployment_config.html:97
-#: .\app\templates\deployment_config.html:103
-#: .\app\templates\hpa_config.html:36 .\app\templates\hpa_config.html:52
-#: .\app\templates\ingress_config.html:37
-#: .\app\templates\ingress_config.html:53
-#: .\app\templates\networkpolicy_config.html:38
-#: .\app\templates\networkpolicy_config.html:54
-#: .\app\templates\rbac_config.html:38 .\app\templates\rbac_config.html:58
-#: .\app\templates\rbac_config.html:74 .\app\templates\rbac_config.html:81
-#: .\app\templates\secret_config.html:38 .\app\templates\secret_config.html:68
-#: .\app\templates\service_account_config.html:38
-#: .\app\templates\service_account_config.html:54
-#: .\app\templates\service_config.html:36
-#: .\app\templates\service_config.html:52
+#: .\app\templates\configmap_config.html:50
+#: .\app\templates\configmap_config.html:66
+#: .\app\templates\deployment_config.html:60
+#: .\app\templates\deployment_config.html:67
+#: .\app\templates\deployment_config.html:78
+#: .\app\templates\deployment_config.html:98
+#: .\app\templates\deployment_config.html:104
+#: .\app\templates\deployment_config.html:110
+#: .\app\templates\deployment_config.html:116
+#: .\app\templates\hpa_config.html:50 .\app\templates\hpa_config.html:66
+#: .\app\templates\ingress_config.html:49
+#: .\app\templates\ingress_config.html:65
+#: .\app\templates\networkpolicy_config.html:49
+#: .\app\templates\networkpolicy_config.html:65
+#: .\app\templates\rbac_config.html:50 .\app\templates\rbac_config.html:70
+#: .\app\templates\rbac_config.html:86 .\app\templates\rbac_config.html:93
+#: .\app\templates\secret_config.html:50 .\app\templates\secret_config.html:80
+#: .\app\templates\service_account_config.html:50
+#: .\app\templates\service_account_config.html:66
+#: .\app\templates\service_config.html:48
+#: .\app\templates\service_config.html:64
 msgid "Remove"
 msgstr "Remove"
 
-#: .\app\templates\configmap_config.html:41
-#: .\app\templates\secret_config.html:41
+#: .\app\templates\configmap_config.html:53
+#: .\app\templates\secret_config.html:53
 msgid "Add Property"
 msgstr "Add Property"
 
-#: .\app\templates\configmap_config.html:47
-#: .\app\templates\deployment_config.html:74 .\app\templates\hpa_config.html:45
-#: .\app\templates\ingress_config.html:46
-#: .\app\templates\namespace_config.html:23
-#: .\app\templates\networkpolicy_config.html:47
-#: .\app\templates\pvc_config.html:34 .\app\templates\rbac_config.html:67
-#: .\app\templates\secret_config.html:61
-#: .\app\templates\service_account_config.html:47
-#: .\app\templates\service_config.html:45
+#: .\app\templates\configmap_config.html:59
+#: .\app\templates\deployment_config.html:87 .\app\templates\hpa_config.html:59
+#: .\app\templates\ingress_config.html:58
+#: .\app\templates\namespace_config.html:37
+#: .\app\templates\networkpolicy_config.html:58
+#: .\app\templates\pvc_config.html:46 .\app\templates\rbac_config.html:79
+#: .\app\templates\secret_config.html:73
+#: .\app\templates\service_account_config.html:59
+#: .\app\templates\service_config.html:57
 msgid "Generate YAML"
 msgstr "Generate YAML"
 
@@ -88,24 +1149,38 @@ msgstr "Generate YAML"
 msgid "Configure Deployment"
 msgstr "Configure Deployment"
 
-#: .\app\templates\deployment_config.html:28
+#: .\app\templates\deployment_config.html:29
+msgid ""
+"A Deployment is a Kubernetes resource used to manage and update a set of "
+"replicated Pods. It provides declarative updates, rollback functionality, "
+"and ensures the desired number of replicas are running and available. "
+"Deployments simplify the management of stateless applications and support "
+"rolling updates with minimal downtime."
+msgstr ""
+"A Deployment is a Kubernetes resource used to manage and update a set of "
+"replicated Pods. It provides declarative updates, rollback functionality, "
+"and ensures the desired number of replicas are running and available. "
+"Deployments simplify the management of stateless applications and support "
+"rolling updates with minimal downtime."
+
+#: .\app\templates\deployment_config.html:41
 msgid "Pod Template"
 msgstr "Pod Template"
 
-#: .\app\templates\deployment_config.html:32
+#: .\app\templates\deployment_config.html:45
 msgid "Containers"
 msgstr "Containers"
 
-#: .\app\templates\deployment_config.html:50
-#: .\app\templates\deployment_config.html:88
+#: .\app\templates\deployment_config.html:63
+#: .\app\templates\deployment_config.html:101
 msgid "Add Volume Mount"
 msgstr "Add Volume Mount"
 
-#: .\app\templates\deployment_config.html:56
+#: .\app\templates\deployment_config.html:69
 msgid "Add Container"
 msgstr "Add Container"
 
-#: .\app\templates\deployment_config.html:68
+#: .\app\templates\deployment_config.html:81
 msgid "Add Volume"
 msgstr "Add Volume"
 
@@ -113,48 +1188,52 @@ msgstr "Add Volume"
 msgid "Resources"
 msgstr "Resources"
 
-#: .\app\templates\explore.html:152 .\app\templates\explore.html:173
+#: .\app\templates\explore.html:155 .\app\templates\explore.html:178
 msgid "Delete"
 msgstr "Delete"
 
-#: .\app\templates\explore.html:162
+#: .\app\templates\explore.html:166
 msgid "No resources found."
 msgstr "No resources found."
 
-#: .\app\templates\explore.html:166
+#: .\app\templates\explore.html:170
 msgid "Are you sure you want to delete"
 msgstr "Are you sure you want to delete"
 
-#: .\app\templates\explore.html:172
+#: .\app\templates\explore.html:177
 msgid "Cancel"
 msgstr "Cancel"
 
-#: .\app\templates\history.html:6 .\app\templates\history.html:58
-#: .\app\templates\object_selector.html:196
+#: .\app\templates\history.html:7 .\app\templates\history.html:59
+#: .\app\templates\object_selector.html:415
 msgid "Deployment History"
 msgstr "Deployment History"
 
-#: .\app\templates\history.html:62
+#: .\app\templates\history.html:63
 msgid "Date"
 msgstr "Date"
 
-#: .\app\templates\history.html:63
+#: .\app\templates\history.html:64
 msgid "Type"
 msgstr "Type"
 
-#: .\app\templates\history.html:64
+#: .\app\templates\history.html:65
 msgid "Name"
 msgstr "Name"
 
-#: .\app\templates\history.html:74
+#: .\app\templates\history.html:78
+msgid "Unknown"
+msgstr "Unknown"
+
+#: .\app\templates\history.html:80
 msgid "View"
 msgstr "View"
 
-#: .\app\templates\history.html:78
+#: .\app\templates\history.html:84
 msgid "No deployments have been recorded yet."
 msgstr "No deployments have been recorded yet."
 
-#: .\app\templates\history.html:84
+#: .\app\templates\history.html:90
 msgid "⬅ Back to Home"
 msgstr "⬅ Back to Home"
 
@@ -166,15 +1245,27 @@ msgstr "Configure HPA"
 msgid "Configure Horizontal Pod Autoscaler"
 msgstr "Configure Horizontal Pod Autoscaler"
 
-#: .\app\templates\hpa_config.html:24
+#: .\app\templates\hpa_config.html:30
+msgid ""
+"A Horizontal Pod Autoscaler (HPA) automatically scales the number of pod "
+"replicas for a deployment or other scalable resource based on observed CPU "
+"utilization or custom metrics. It helps maintain performance and optimize "
+"resource usage by adjusting the number of running pods in response to demand."
+msgstr ""
+"A Horizontal Pod Autoscaler (HPA) automatically scales the number of pod "
+"replicas for a deployment or other scalable resource based on observed CPU "
+"utilization or custom metrics. It helps maintain performance and optimize "
+"resource usage by adjusting the number of running pods in response to demand."
+
+#: .\app\templates\hpa_config.html:38
 msgid "HPA Configuration"
 msgstr "HPA Configuration"
 
-#: .\app\templates\hpa_config.html:31
+#: .\app\templates\hpa_config.html:45
 msgid "Metrics"
 msgstr "Metrics"
 
-#: .\app\templates\hpa_config.html:39
+#: .\app\templates\hpa_config.html:53
 msgid "Add Metric"
 msgstr "Add Metric"
 
@@ -182,17 +1273,51 @@ msgstr "Add Metric"
 msgid "Configure Ingress"
 msgstr "Configure Ingress"
 
-#: .\app\templates\ingress_config.html:25
+#: .\app\templates\ingress_config.html:30
+msgid ""
+"An Ingress is a Kubernetes resource that manages external access to services "
+"within a cluster, typically HTTP and HTTPS. It provides routing rules to map "
+"incoming traffic to internal services based on hostnames or paths. Ingress "
+"can also handle TLS termination and virtual host configuration for better "
+"traffic control."
+msgstr ""
+"An Ingress is a Kubernetes resource that manages external access to services "
+"within a cluster, typically HTTP and HTTPS. It provides routing rules to map "
+"incoming traffic to internal services based on hostnames or paths. Ingress "
+"can also handle TLS termination and virtual host configuration for better "
+"traffic control."
+
+#: .\app\templates\ingress_config.html:37
 msgid "Ingress Configuration"
 msgstr "Ingress Configuration"
 
-#: .\app\templates\ingress_config.html:32
+#: .\app\templates\ingress_config.html:44
 msgid "Paths"
 msgstr "Paths"
 
-#: .\app\templates\ingress_config.html:40
+#: .\app\templates\ingress_config.html:52
 msgid "Add Path"
 msgstr "Add Path"
+
+#: .\app\templates\login.html:8 .\app\templates\login.html:118
+msgid "Login"
+msgstr "Login"
+
+#: .\app\templates\login.html:126 .\app\templates\register_user.html:129
+msgid "Username"
+msgstr "Username"
+
+#: .\app\templates\login.html:129 .\app\templates\register_user.html:134
+msgid "Password"
+msgstr "Password"
+
+#: .\app\templates\login.html:132
+msgid "Sign in"
+msgstr "Sign in"
+
+#: .\app\templates\login.html:135
+msgid "Only registered users can access the platform."
+msgstr "Only registered users can access the platform."
 
 #: .\app\templates\namespace_config.html:8
 msgid "Namespace Configuration"
@@ -202,21 +1327,49 @@ msgstr "Namespace Configuration"
 msgid "Configure Namespace"
 msgstr "Configure Namespace"
 
-#: .\app\templates\networkpolicy_config.html:8
-#: .\app\templates\networkpolicy_config.html:19
+#: .\app\templates\namespace_config.html:29
+msgid ""
+"A namespace defines a logical grouping of related configuration objects "
+"within the system. It helps organize resources under a common context, "
+"enabling better isolation, structure, and control. Each namespace typically "
+"includes metadata and settings that influence how components interact, and "
+"may represent a distinct environment, customer space, or feature domain."
+msgstr ""
+"A namespace defines a logical grouping of related configuration objects "
+"within the system. It helps organize resources under a common context, "
+"enabling better isolation, structure, and control. Each namespace typically "
+"includes metadata and settings that influence how components interact, and "
+"may represent a distinct environment, customer space, or feature domain."
+
+#: .\app\templates\networkpolicy_config.html:7
+#: .\app\templates\networkpolicy_config.html:18
 msgid "Configure NetworkPolicy"
 msgstr "Configure NetworkPolicy"
 
-#: .\app\templates\networkpolicy_config.html:26
+#: .\app\templates\networkpolicy_config.html:30
+msgid ""
+"A NetworkPolicy is a Kubernetes resource used to control the traffic flow "
+"between pods and/or network endpoints. It defines rules for ingress and "
+"egress traffic, enabling fine-grained network segmentation within the "
+"cluster. Proper configuration of NetworkPolicies enhances the security "
+"posture by limiting communication to only what is necessary."
+msgstr ""
+"A NetworkPolicy is a Kubernetes resource used to control the traffic flow "
+"between pods and/or network endpoints. It defines rules for ingress and "
+"egress traffic, enabling fine-grained network segmentation within the "
+"cluster. Proper configuration of NetworkPolicies enhances the security "
+"posture by limiting communication to only what is necessary."
+
+#: .\app\templates\networkpolicy_config.html:37
 msgid "NetworkPolicy Configuration"
 msgstr "NetworkPolicy Configuration"
 
-#: .\app\templates\networkpolicy_config.html:33
+#: .\app\templates\networkpolicy_config.html:44
 msgid "Traffic Rules"
 msgstr "Traffic Rules"
 
-#: .\app\templates\networkpolicy_config.html:41
-#: .\app\templates\rbac_config.html:41
+#: .\app\templates\networkpolicy_config.html:52
+#: .\app\templates\rbac_config.html:53
 msgid "Add Rule"
 msgstr "Add Rule"
 
@@ -224,59 +1377,150 @@ msgstr "Add Rule"
 msgid "Select Object Type"
 msgstr "Select Object Type"
 
-#: .\app\templates\object_selector.html:144
+#: .\app\templates\object_selector.html:286
+msgid "Log out"
+msgstr "Log out"
+
+#: .\app\templates\object_selector.html:291
+msgid "Kubernetes Resource Configurator"
+msgstr "Kubernetes Resource Configurator"
+
+#: .\app\templates\object_selector.html:292
+msgid ""
+"Configure, monitor and manage your Kubernetes resources easily from a single "
+"interface."
+msgstr ""
+"Configure, monitor and manage your Kubernetes resources easily from a single "
+"interface."
+
+#: .\app\templates\object_selector.html:301
 msgid "Which object do you want to configure?"
 msgstr "Which object do you want to configure?"
 
-#: .\app\templates\object_selector.html:158
+#: .\app\templates\object_selector.html:305
+msgid "Configuration recommendation"
+msgstr "Configuration recommendation"
+
+#: .\app\templates\object_selector.html:310
+msgid ""
+"You can configure only the objects you need. Some resources may already "
+"exist or not be required depending on your cluster's current setup."
+msgstr ""
+"You can configure only the objects you need. Some resources may already "
+"exist or not be required depending on your cluster's current setup."
+
+#: .\app\templates\object_selector.html:312
+msgid "For a functional and orderly setup, we recommend the following order:"
+msgstr "For a functional and orderly setup, we recommend the following order:"
+
+#: .\app\templates\object_selector.html:316
+msgid ""
+"defines a logical environment to group and isolate resources. Useful to "
+"separate environments (dev, QA, prod)."
+msgstr ""
+"defines a logical environment to group and isolate resources. Useful to "
+"separate environments (dev, QA, prod)."
+
+#: .\app\templates\object_selector.html:319
+msgid "sets who can access which resources. It is key for security."
+msgstr "sets who can access which resources. It is key for security."
+
+#: .\app\templates\object_selector.html:322
+msgid "control pod identity and communications."
+msgstr "control pod identity and communications."
+
+#: .\app\templates\object_selector.html:325
+msgid "store configurations, credentials and persistent data."
+msgstr "store configurations, credentials and persistent data."
+
+#: .\app\templates\object_selector.html:328
+msgid "automatically adjusts replicas based on load."
+msgstr "automatically adjusts replicas based on load."
+
+#: .\app\templates\object_selector.html:331
+msgid "manages pod lifecycle."
+msgstr "manages pod lifecycle."
+
+#: .\app\templates\object_selector.html:334
+msgid "expose your apps inside or outside the cluster."
+msgstr "expose your apps inside or outside the cluster."
+
+#: .\app\templates\object_selector.html:377
 msgid "Continue"
 msgstr "Continue"
 
-#: .\app\templates\object_selector.html:165
+#: .\app\templates\object_selector.html:384
 msgid "Monitoring"
 msgstr "Monitoring"
 
-#: .\app\templates\object_selector.html:166
+#: .\app\templates\object_selector.html:385
 msgid "Access cluster metrics with Grafana."
 msgstr "Access cluster metrics with Grafana."
 
-#: .\app\templates\object_selector.html:167
+#: .\app\templates\object_selector.html:386
 msgid "Go to Grafana"
 msgstr "Go to Grafana"
 
-#: .\app\templates\object_selector.html:171
+#: .\app\templates\object_selector.html:390
 msgid "Explore Resources"
 msgstr "Explore Resources"
 
-#: .\app\templates\object_selector.html:172
+#: .\app\templates\object_selector.html:391
 msgid "Browse existing resources in the cluster."
 msgstr "Browse existing resources in the cluster."
 
-#: .\app\templates\object_selector.html:191
+#: .\app\templates\object_selector.html:410
 msgid "View Resources"
 msgstr "View Resources"
 
-#: .\app\templates\object_selector.html:197
+#: .\app\templates\object_selector.html:416
 msgid "Review recently deployed YAMLs and re-apply them."
 msgstr "Review recently deployed YAMLs and re-apply them."
 
-#: .\app\templates\object_selector.html:198
+#: .\app\templates\object_selector.html:417
 msgid "View History"
 msgstr "View History"
 
-#: .\app\templates\object_selector.html:201
+#: .\app\templates\object_selector.html:420
 msgid "Language"
 msgstr "Language"
 
-#: .\app\templates\object_selector.html:202
+#: .\app\templates\object_selector.html:421
 msgid "Select your preferred language."
 msgstr "Select your preferred language."
+
+#: .\app\templates\object_selector.html:429
+#: .\app\templates\register_user.html:7 .\app\templates\register_user.html:143
+msgid "Create User"
+msgstr "Create User"
+
+#: .\app\templates\object_selector.html:430
+msgid "Register a new user with access to the platform."
+msgstr "Register a new user with access to the platform."
+
+#: .\app\templates\object_selector.html:431
+msgid "Register User"
+msgstr "Register User"
 
 #: .\app\templates\pvc_config.html:8 .\app\templates\pvc_config.html:19
 msgid "Configure PersistentVolumeClaim"
 msgstr "Configure PersistentVolumeClaim"
 
-#: .\app\templates\pvc_config.html:26
+#: .\app\templates\pvc_config.html:31
+msgid ""
+"A PersistentVolumeClaim (PVC) is a request for storage by a user in "
+"Kubernetes. It abstracts the details of how storage is provided, allowing "
+"workloads to claim persistent storage resources dynamically. PVCs specify "
+"size, access modes, and optionally a storage class to match suitable "
+"PersistentVolumes."
+msgstr ""
+"A PersistentVolumeClaim (PVC) is a request for storage by a user in "
+"Kubernetes. It abstracts the details of how storage is provided, allowing "
+"workloads to claim persistent storage resources dynamically. PVCs specify "
+"size, access modes, and optionally a storage class to match suitable "
+"PersistentVolumes."
+
+#: .\app\templates\pvc_config.html:38
 msgid "PVC Configuration"
 msgstr "PVC Configuration"
 
@@ -288,43 +1532,77 @@ msgstr "Configure RBAC"
 msgid "Configure Role / ClusterRole and Binding"
 msgstr "Configure Role / ClusterRole and Binding"
 
-#: .\app\templates\rbac_config.html:26
+#: .\app\templates\rbac_config.html:30
+msgid ""
+"RBAC configuration in Kubernetes involves defining Roles or ClusterRoles "
+"that specify a set of permissions, and then binding those roles to users, "
+"groups, or service accounts using RoleBindings or ClusterRoleBindings. This "
+"setup allows for fine-grained access control to cluster resources."
+msgstr ""
+"RBAC configuration in Kubernetes involves defining Roles or ClusterRoles "
+"that specify a set of permissions, and then binding those roles to users, "
+"groups, or service accounts using RoleBindings or ClusterRoleBindings. This "
+"setup allows for fine-grained access control to cluster resources."
+
+#: .\app\templates\rbac_config.html:38
 msgid "Role / ClusterRole"
 msgstr "Role / ClusterRole"
 
-#: .\app\templates\rbac_config.html:33
+#: .\app\templates\rbac_config.html:45
 msgid "Rules"
 msgstr "Rules"
 
-#: .\app\templates\rbac_config.html:46
+#: .\app\templates\rbac_config.html:58
 msgid "Binding"
 msgstr "Binding"
 
-#: .\app\templates\rbac_config.html:53
+#: .\app\templates\rbac_config.html:65
 msgid "Subjects"
 msgstr "Subjects"
 
-#: .\app\templates\rbac_config.html:61
+#: .\app\templates\rbac_config.html:73
 msgid "Add Subject"
 msgstr "Add Subject"
+
+#: .\app\templates\register_user.html:124
+msgid "Create a new user"
+msgstr "Create a new user"
+
+#: .\app\templates\register_user.html:140
+msgid "Grant staff access"
+msgstr "Grant staff access"
 
 #: .\app\templates\secret_config.html:8 .\app\templates\secret_config.html:19
 msgid "Configure Secret"
 msgstr "Configure Secret"
 
-#: .\app\templates\secret_config.html:26
+#: .\app\templates\secret_config.html:31
+msgid ""
+"A Secret is a Kubernetes object used to store sensitive data such as "
+"passwords, tokens, or keys. Unlike ConfigMaps, Secrets are base64-encoded "
+"and can be used to securely inject confidential information into containers "
+"at runtime. Kubernetes supports various secret types like Opaque, TLS, and "
+"Docker config."
+msgstr ""
+"A Secret is a Kubernetes object used to store sensitive data such as "
+"passwords, tokens, or keys. Unlike ConfigMaps, Secrets are base64-encoded "
+"and can be used to securely inject confidential information into containers "
+"at runtime. Kubernetes supports various secret types like Opaque, TLS, and "
+"Docker config."
+
+#: .\app\templates\secret_config.html:38
 msgid "Secret Configuration"
 msgstr "Secret Configuration"
 
-#: .\app\templates\secret_config.html:33
+#: .\app\templates\secret_config.html:45
 msgid "Opaque Secret Properties"
 msgstr "Opaque Secret Properties"
 
-#: .\app\templates\secret_config.html:46
+#: .\app\templates\secret_config.html:58
 msgid "TLS Secret"
 msgstr "TLS Secret"
 
-#: .\app\templates\secret_config.html:53
+#: .\app\templates\secret_config.html:65
 msgid "Docker Config JSON Secret"
 msgstr "Docker Config JSON Secret"
 
@@ -333,15 +1611,29 @@ msgstr "Docker Config JSON Secret"
 msgid "Configure ServiceAccount"
 msgstr "Configure ServiceAccount"
 
-#: .\app\templates\service_account_config.html:26
+#: .\app\templates\service_account_config.html:31
+msgid ""
+"A ServiceAccount is an identity used by processes within a pod to interact "
+"with the Kubernetes API. It provides scoped permissions through role "
+"bindings and is essential for securely managing access to cluster resources. "
+"Configuring a ServiceAccount ensures that workloads run with the appropriate "
+"access controls."
+msgstr ""
+"A ServiceAccount is an identity used by processes within a pod to interact "
+"with the Kubernetes API. It provides scoped permissions through role "
+"bindings and is essential for securely managing access to cluster resources. "
+"Configuring a ServiceAccount ensures that workloads run with the appropriate "
+"access controls."
+
+#: .\app\templates\service_account_config.html:38
 msgid "ServiceAccount Configuration"
 msgstr "ServiceAccount Configuration"
 
-#: .\app\templates\service_account_config.html:33
+#: .\app\templates\service_account_config.html:45
 msgid "Image Pull Secrets"
 msgstr "Image Pull Secrets"
 
-#: .\app\templates\service_account_config.html:41
+#: .\app\templates\service_account_config.html:53
 msgid "Add Secret"
 msgstr "Add Secret"
 
@@ -350,10 +1642,24 @@ msgid "Configure Service"
 msgstr "Configure Service"
 
 #: .\app\templates\service_config.html:31
+msgid ""
+"A Service in Kubernetes is an abstraction that defines a logical set of Pods "
+"and a policy by which to access them. It enables stable networking and load "
+"balancing, allowing other components to reach the backend application "
+"regardless of Pod restarts or IP changes. Services can be ClusterIP, "
+"NodePort, LoadBalancer, or ExternalName."
+msgstr ""
+"A Service in Kubernetes is an abstraction that defines a logical set of Pods "
+"and a policy by which to access them. It enables stable networking and load "
+"balancing, allowing other components to reach the backend application "
+"regardless of Pod restarts or IP changes. Services can be ClusterIP, "
+"NodePort, LoadBalancer, or ExternalName."
+
+#: .\app\templates\service_config.html:43
 msgid "Ports"
 msgstr "Ports"
 
-#: .\app\templates\service_config.html:39
+#: .\app\templates\service_config.html:51
 msgid "Add Port"
 msgstr "Add Port"
 
@@ -361,35 +1667,31 @@ msgstr "Add Port"
 msgid "YAML Result"
 msgstr "YAML Result"
 
-#: .\app\templates\yaml_result.html:81
-msgid "Generated YAML"
-msgstr "Generated YAML"
-
-#: .\app\templates\yaml_result.html:83
+#: .\app\templates\yaml_result.html:214
 msgid "Download YAML"
 msgstr "Download YAML"
 
-#: .\app\templates\yaml_result.html:92
-msgid "Show only free models"
-msgstr "Show only free models"
-
-#: .\app\templates\yaml_result.html:96
-msgid "Select a model:"
-msgstr "Select a model:"
-
-#: .\app\templates\yaml_result.html:110
-msgid "Get Explanation"
-msgstr "Get Explanation"
-
-#: .\app\templates\yaml_result.html:111
+#: .\app\templates\yaml_result.html:218
 msgid "Apply to Kubernetes"
 msgstr "Apply to Kubernetes"
 
-#: .\app\templates\yaml_result.html:112
+#: .\app\templates\yaml_result.html:249
+msgid "Select a model:"
+msgstr "Select a model:"
+
+#: .\app\templates\yaml_result.html:250
+msgid "Model selection"
+msgstr "Model selection"
+
+#: .\app\templates\yaml_result.html:262
+msgid "Get Explanation"
+msgstr "Get Explanation"
+
+#: .\app\templates\yaml_result.html:265
 msgid "Loading explanation..."
 msgstr "Loading explanation..."
 
-#: .\app\templates\yaml_result.html:117
+#: .\app\templates\yaml_result.html:270
 msgid "Explanation"
 msgstr "Explanation"
 
@@ -400,3 +1702,9 @@ msgstr "Spanish"
 #: .\kube-web\settings.py:123
 msgid "English"
 msgstr "English"
+
+#~ msgid "Generated YAML"
+#~ msgstr "Generated YAML"
+
+#~ msgid "Show only free models"
+#~ msgstr "Show only free models"
