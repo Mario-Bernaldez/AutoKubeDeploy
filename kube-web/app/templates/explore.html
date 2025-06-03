@@ -81,7 +81,20 @@
         .delete-btn:hover {
             color: #a71d2a;
         }
+        .metrics-btn {
+            float: right;
+            background-color: transparent;
+            border: none;
+            color: #17a2b8;
+            cursor: pointer;
+            font-size: 16px;
+            margin-right: 10px;
+            transition: color 0.2s;
+        }
 
+        .metrics-btn:hover {
+            color: #117a8b;
+        }
         /* Modal */
 
         .modal {
@@ -148,7 +161,23 @@
         <ul>
         {% for item in names %}
         <li>
-            <span>{{ item.name }} <small style="color: #555;">[{{ item.namespace }}]</small></span>
+            <span style="display: inline-block; width: 70%;">{{ item.name }} <small style="color: #555;">[{{ item.namespace }}]</small></span>
+            {% if resource == 'Pod' %}
+            <button class="delete-btn"
+                        data-name="{{ item.name }}"
+                        data-namespace="{{ item.namespace }}"
+                        title="{% trans 'Delete' %}">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor"
+                        viewBox="0 0 24 24">
+                        <path d="M9 3v1H4v2h16V4h-5V3H9zm-2 5v13h10V8H7zm2 2h2v9H9v-9zm4 0h2v9h-2v-9z" />
+                    </svg>
+                </button>
+                <button class="metrics-btn"
+                        data-name="{{ item.name }}"
+                        data-namespace="{{ item.namespace }}"
+                        title="{% trans 'View Metrics' %}">📊</button>
+                <div class="metrics-iframe-container" style="margin-top: 15px;"></div>
+            {% else %}
             <button class="delete-btn"
                     data-name="{{ item.name }}"
                     data-namespace="{{ item.namespace }}"
@@ -158,6 +187,7 @@
                     <path d="M9 3v1H4v2h16V4h-5V3H9zm-2 5v13h10V8H7zm2 2h2v9H9v-9zm4 0h2v9h-2v-9z" />
                 </svg>
             </button>
+            {% endif %}
         </li>
         {% endfor %}
 
@@ -211,5 +241,39 @@
         }
     }
 </script>
+<script>
+const metricsButtons = document.querySelectorAll('.metrics-btn');
+
+metricsButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+        const name = btn.getAttribute('data-name');
+        const namespace = btn.getAttribute('data-namespace');
+        const iframeContainer = btn.parentElement.querySelector('.metrics-iframe-container');
+
+        if (iframeContainer.innerHTML.trim() !== '') {
+            iframeContainer.innerHTML = '';
+            return;
+        }
+
+        const panels = [41, 39, 40, 50, 30, 29, 51];
+        const baseTimeFrom = 1748893362962;
+        const step = 70000;
+
+        let iframesHTML = '';
+        panels.forEach((panelId, index) => {
+            const from = baseTimeFrom + (index * step);
+            const to = from + 3600000;
+
+            const src = `http://localhost:30090/d-solo/k8s_views_pods/kubernetes-views-pods?orgId=1&from=${from}&to=${to}&timezone=browser&var-datasource=PBFA97CFB590B2093&var-cluster=&var-namespace=${namespace}&var-pod=${name}&var-resolution=30s&var-job=kubernetes-service-endpoints&refresh=30s&panelId=${panelId}&__feature.dashboardSceneSolo`;
+
+            iframesHTML += `<iframe src="${src}" width="100%" height="230" frameborder="0" style="margin: 10px 0;"></iframe>`;
+        });
+
+        iframeContainer.innerHTML = iframesHTML;
+    });
+});
+</script>
+
+
 
 </html>

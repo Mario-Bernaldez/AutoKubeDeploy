@@ -807,6 +807,9 @@ dashboards:
       gnetId: 14623
       revision: 1
       datasource: Prometheus
+    kubernetes-pods:
+      file: dashboards/kubernetes-pod.json
+      datasource: Prometheus
   # default:
   #   some-dashboard:
   #     json: |
@@ -851,6 +854,8 @@ dashboardsConfigMaps: {}
 ##
 
 grafana.ini:
+  security:
+    allow_embedding: true
   auth:
     disable_login_form: true
   auth.anonymous:
