@@ -31,7 +31,10 @@ data:
         params = {"resource": "ConfigMap", "namespace": "default"}
         response = requests.get(f"{BASE_URL}/list", params=params)
         self.assertEqual(response.status_code, 200)
-        names = response.json()
+
+        resources = response.json()
+        names = [item["name"] for item in resources]
+
         self.assertIn("test-configmap", names)
 
     def test_3_delete_existing_resource(self):
