@@ -28,6 +28,65 @@ def is_command_available(command):
     return result.returncode == 0
 
 
+def install_docker():
+    """Installs Docker using the official Docker script if it's not already available."""
+    print("Checking Docker installation...")
+    if is_command_available("docker"):
+        print("✅ Docker is already installed.")
+        return
+
+    print("🔧 Installing Docker using get.docker.com script...")
+    try:
+        subprocess.run(["curl", "-fsSL", "https://get.docker.com", "-o", "get-docker.sh"], check=True)
+        subprocess.run(["sudo", "sh", "get-docker.sh"], check=True)
+
+        # Clean up
+        if os.path.exists("get-docker.sh"):
+            os.remove("get-docker.sh")
+
+        # Enable and start Docker
+        subprocess.run(["sudo", "systemctl", "enable", "--now", "docker"], check=True)
+
+        # Check if Docker is running
+        status = subprocess.run(["sudo", "systemctl", "is-active", "--quiet", "docker"])
+        if status.returncode != 0:
+            raise Exception("Docker service is not active after installation.")
+
+        subprocess.run(["sudo", "usermod", "-aG", "docker", getpass.getuser()], check=True)
+        print("✅ Docker installed and running successfully.")
+    except subprocess.CalledProcessError:
+        print("❌ Failed to install Docker.")
+        sys.exit(1)
+    except Exception as e:
+        print(f"❌ {e}")
+        sys.exit(1)
+
+
+
+def install_helm():
+    """Installs Helm if it's not already available."""
+    print("Checking Helm installation...")
+    if is_command_available("helm"):
+        print("✅ Helm is already installed.")
+        return
+
+    print("🔧 Installing Helm...")
+    try:
+        subprocess.run([
+            "curl", "-fsSL", "-o", "get_helm.sh",
+            "https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3"
+        ], check=True)
+        subprocess.run(["chmod", "700", "get_helm.sh"], check=True)
+        subprocess.run(["./get_helm.sh"], check=True)
+        print("✅ Helm installed successfully.")
+    except subprocess.CalledProcessError:
+        print("❌ Failed to install Helm.")
+        sys.exit(1)
+    finally:
+        if os.path.exists("get_helm.sh"):
+            os.remove("get_helm.sh")
+
+
 def install_microk8s():
     """Installs MicroK8s using Snap if not installed and enables the local registry."""
     print("Installing MicroK8s...")
@@ -41,7 +100,7 @@ def install_microk8s():
 
     print("Adding user to microk8s group...")
     try:
-        subprocess.run(["sudo", "usermod", "-aG", "microk8s", "$USER"], check=True)
+        subprocess.run(["sudo", "usermod", "-aG", "microk8s", getpass.getuser()], check=True)
     except subprocess.CalledProcessError:
         print(
             "⚠️ Failed to add user to microk8s group. You may need to log out and back in."
@@ -49,7 +108,7 @@ def install_microk8s():
 
     print("🔧 Enabling MicroK8s built-in registry...")
     try:
-        subprocess.run(["microk8s", "enable", "registry"], check=True)
+        subprocess.run(["sudo", "microk8s", "enable", "registry"], check=True)
     except subprocess.CalledProcessError:
         print("❌ Failed to enable MicroK8s registry.")
         sys.exit(1)
@@ -58,8 +117,8 @@ def install_microk8s():
 
     print("♻️ Restarting MicroK8s to apply changes...")
     try:
-        subprocess.run(["microk8s", "stop"], check=True)
-        subprocess.run(["microk8s", "start"], check=True)
+        subprocess.run(["sudo", "microk8s", "stop"], check=True)
+        subprocess.run(["sudo", "microk8s", "start"], check=True)
     except subprocess.CalledProcessError:
         print("❌ Failed to restart MicroK8s.")
         sys.exit(1)
@@ -115,17 +174,6 @@ def configure_permissions():
         sys.exit(1)
 
     print("Permissions configured successfully.")
-
-
-def apply_group_changes():
-    """Applies group changes without requiring a logout."""
-    print("Applying group changes without logging out...")
-
-    try:
-        subprocess.run(["newgrp", "microk8s"], check=True)
-    except subprocess.CalledProcessError:
-        print("Failed to apply microk8s group. Try logging out or rebooting.")
-        sys.exit(1)
 
 
 def configure_kubeconfig():
@@ -241,6 +289,8 @@ def main():
     args = parser.parse_args()
 
     if args.all or args.install:
+        install_docker()
+        install_helm()
         if not is_command_available("microk8s"):
             print("MicroK8s is not installed. Proceeding with installation...")
             install_microk8s()
@@ -250,7 +300,6 @@ def main():
         start_microk8s()
         configure_kubectl()
         configure_permissions()
-        apply_group_changes()
         configure_kubeconfig()
 
     modules_config = load_modules_config()

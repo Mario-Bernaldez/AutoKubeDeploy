@@ -9,5 +9,5 @@ service:
   type: ClusterIP
   port: 8080
 env:
-  OPENROUTER_API_KEY: "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"
+  OPENROUTER_API_KEY: "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"
 

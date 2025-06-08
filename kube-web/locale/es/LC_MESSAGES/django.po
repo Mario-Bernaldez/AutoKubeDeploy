@@ -1242,7 +1242,7 @@ msgstr "Cancelar"
 #: .\app\templates\history.html:7 .\app\templates\history.html:59
 #: .\app\templates\object_selector.html:415
 msgid "Deployment History"
-msgstr "Historial de Deployments"
+msgstr "Historial de despliegues"
 
 #: .\app\templates\history.html:63
 msgid "Date"
